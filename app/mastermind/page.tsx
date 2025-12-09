@@ -67,8 +67,8 @@ export default function MastermindPage() {
           style={{ border: '4px solid #FCFF52' }}
         >
           <div className="text-6xl mb-2">🎯</div>
-          <h1 className="text-4xl font-black text-gray-900">Mastermind</h1>
-          <p className="text-sm text-gray-700 mt-2 font-medium">Crack the color code!</p>
+          <h1 className="text-4xl font-black text-gray-900">Crypto Mastermind</h1>
+          <p className="text-sm text-gray-700 mt-2 font-medium">Crack the crypto code!</p>
         </motion.div>
 
         {/* Mode Toggle */}

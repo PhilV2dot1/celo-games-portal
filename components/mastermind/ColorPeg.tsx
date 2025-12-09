@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Color, COLOR_CONFIG } from "@/lib/games/mastermind-logic";
 
 interface ColorPegProps {
@@ -17,6 +18,12 @@ export function ColorPeg({ color, size = 'medium', onClick, showEmpty = true }: 
     large: 'w-11 h-11 sm:w-14 sm:h-14',
   };
 
+  const imageSizes = {
+    small: 20,
+    medium: 28,
+    large: 40,
+  };
+
   if (!color && !showEmpty) return null;
 
   const config = color ? COLOR_CONFIG[color] : null;
@@ -29,12 +36,23 @@ export function ColorPeg({ color, size = 'medium', onClick, showEmpty = true }: 
       disabled={!onClick}
       className={`${sizeClasses[size]} rounded-full border-2 sm:border-4 ${
         onClick ? 'cursor-pointer' : 'cursor-default'
-      }`}
+      } flex items-center justify-center relative overflow-hidden`}
       style={{
         backgroundColor: config?.bg || 'rgba(255, 255, 255, 0.2)',
         borderColor: config?.border || 'rgba(255, 255, 255, 0.4)',
         boxShadow: config ? `0 4px 12px ${config.shadow}` : 'none',
       }}
-    />
+    >
+      {config?.logo && (
+        <Image
+          src={config.logo}
+          alt={config.name}
+          width={imageSizes[size]}
+          height={imageSizes[size]}
+          className="rounded-full"
+          unoptimized
+        />
+      )}
+    </motion.button>
   );
 }

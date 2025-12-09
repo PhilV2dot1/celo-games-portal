@@ -65,8 +65,8 @@ export const GAMES: Record<GameId, GameMetadata> = {
   },
   mastermind: {
     id: "mastermind",
-    name: "Mastermind",
-    description: "Crack the color code!",
+    name: "Crypto Mastermind",
+    description: "Crack the crypto code!",
     icon: "🎯",
     route: "/mastermind",
     contractAddress: "0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9",

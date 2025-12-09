@@ -1,16 +1,58 @@
-// Mastermind Game Logic - Pure TypeScript implementation
+// Crypto Mastermind Game Logic - Pure TypeScript implementation
 
-// Color palette
-export type Color = 'red' | 'blue' | 'green' | 'yellow' | 'orange' | 'purple';
-export const COLORS: Color[] = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
+// Crypto symbols
+export type Color = 'btc' | 'eth' | 'op' | 'celo' | 'near' | 'base';
+export const COLORS: Color[] = ['btc', 'eth', 'op', 'celo', 'near', 'base'];
 
-export const COLOR_CONFIG: Record<Color, { bg: string; border: string; shadow: string }> = {
-  red: { bg: '#ef4444', border: '#dc2626', shadow: 'rgba(239, 68, 68, 0.5)' },
-  blue: { bg: '#3b82f6', border: '#2563eb', shadow: 'rgba(59, 130, 246, 0.5)' },
-  green: { bg: '#22c55e', border: '#16a34a', shadow: 'rgba(34, 197, 94, 0.5)' },
-  yellow: { bg: '#eab308', border: '#ca8a04', shadow: 'rgba(234, 179, 8, 0.5)' },
-  orange: { bg: '#f97316', border: '#ea580c', shadow: 'rgba(249, 115, 22, 0.5)' },
-  purple: { bg: '#a855f7', border: '#9333ea', shadow: 'rgba(168, 85, 247, 0.5)' },
+export const COLOR_CONFIG: Record<Color, {
+  name: string;
+  bg: string;
+  border: string;
+  shadow: string;
+  logo: string;
+}> = {
+  btc: {
+    name: 'BTC',
+    bg: '#F7931A',
+    border: '#E68A00',
+    shadow: 'rgba(247, 147, 26, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png'
+  },
+  eth: {
+    name: 'ETH',
+    bg: '#6B7280',
+    border: '#4B5563',
+    shadow: 'rgba(107, 114, 128, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png'
+  },
+  op: {
+    name: 'OP',
+    bg: '#FF0420',
+    border: '#DC0000',
+    shadow: 'rgba(255, 4, 32, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/25244/small/Optimism.png'
+  },
+  celo: {
+    name: 'CELO',
+    bg: '#FBCC5C',
+    border: '#F5B800',
+    shadow: 'rgba(251, 204, 92, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/11090/small/InjXBNx9_400x400.jpg'
+  },
+  near: {
+    name: 'NEAR',
+    bg: '#00C08B',
+    border: '#00A67D',
+    shadow: 'rgba(0, 192, 139, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/10365/small/near.jpg'
+  },
+  base: {
+    name: 'BASE',
+    bg: '#0052FF',
+    border: '#0040CC',
+    shadow: 'rgba(0, 82, 255, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/50828/small/basethumb.png'
+  },
 };
 
 // Game constants
