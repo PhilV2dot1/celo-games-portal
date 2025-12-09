@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       query = query.eq('wallet_address', walletAddress);
     }
 
-    const { data: user, error: userError } = await query.single();
+    const { data: user, error: userError } = await query.maybeSingle();
 
     if (userError || !user) {
       return NextResponse.json(
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
       .from('leaderboard')
       .select('rank')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     // Calculate per-game stats
     interface GameStat {

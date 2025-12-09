@@ -49,14 +49,14 @@ export async function POST(request: NextRequest) {
         .from('users')
         .select('id')
         .eq('fid', fid)
-        .single();
+        .maybeSingle();
       existingUser = data;
     } else if (walletAddress) {
       const { data } = await supabase
         .from('users')
         .select('id')
         .eq('wallet_address', walletAddress)
-        .single();
+        .maybeSingle();
       existingUser = data;
     }
 
