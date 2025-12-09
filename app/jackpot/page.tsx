@@ -7,8 +7,7 @@ import { useLocalStats } from "@/hooks/useLocalStats";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { JackpotMachine } from "@/components/jackpot/JackpotMachine";
-import { SlotMachineLever } from "@/components/jackpot/SlotMachineLever";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function JackpotPage() {
   const {
@@ -61,7 +60,7 @@ export default function JackpotPage() {
         setLocalSpinning(false);
         spinTimeoutRef.current = null;
       }, 800);
-    } catch (error) {
+    } catch (_error) {
       setLocalSpinning(false);
     }
   };
