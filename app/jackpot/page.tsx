@@ -60,7 +60,7 @@ export default function JackpotPage() {
         setLocalSpinning(false);
         spinTimeoutRef.current = null;
       }, 800);
-    } catch (_error) {
+    } catch {
       setLocalSpinning(false);
     }
   };
