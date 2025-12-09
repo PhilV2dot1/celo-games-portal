@@ -32,7 +32,7 @@ export function GameGrid({ games }: GameGridProps) {
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
     >
       {games.map((game) => (
         <motion.div key={game.id} variants={item}>
