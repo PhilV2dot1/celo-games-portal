@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
         fid,
         wallet_address: walletAddress,
         total_points: totalPoints,
-      })
+      } as any)
       .select('id')
       .single();
 
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     if (sessions.length > 0) {
       const { error: sessionsError } = await supabase
         .from('game_sessions')
-        .insert(sessions);
+        .insert(sessions as any);
 
       if (sessionsError) {
         console.error('Error creating game sessions:', sessionsError);

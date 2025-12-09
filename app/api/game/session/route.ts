@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
           .insert({
             fid,
             wallet_address: walletAddress,
-          })
+          } as any)
           .select('id')
           .single();
 
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
           .from('users')
           .insert({
             wallet_address: walletAddress,
-          })
+          } as any)
           .select('id')
           .single();
 
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
         result,
         points_earned: pointsEarned,
         tx_hash: txHash,
-      })
+      } as any)
       .select('*')
       .single();
 
