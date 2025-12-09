@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { GameMetadata } from "@/lib/types";
 import { useLocalStats } from "@/hooks/useLocalStats";
@@ -45,8 +46,16 @@ export function GameCard({ game, isNew = false }: GameCardProps) {
         {/* Content */}
         <div className="relative z-10">
           {/* Icon */}
-          <div className="text-6xl mb-4 text-center">
-            {game.icon}
+          <div className="flex justify-center mb-4">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 relative">
+              <Image
+                src={game.icon}
+                alt={game.name}
+                width={96}
+                height={96}
+                className="object-contain"
+              />
+            </div>
           </div>
 
           {/* Title */}

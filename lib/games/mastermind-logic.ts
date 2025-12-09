@@ -1,8 +1,8 @@
 // Crypto Mastermind Game Logic - Pure TypeScript implementation
 
 // Crypto symbols
-export type Color = 'btc' | 'eth' | 'op' | 'celo' | 'near' | 'base';
-export const COLORS: Color[] = ['btc', 'eth', 'op', 'celo', 'near', 'base'];
+export type Color = 'btc' | 'eth' | 'avax' | 'celo' | 'near' | 'link';
+export const COLORS: Color[] = ['btc', 'eth', 'avax', 'celo', 'near', 'link'];
 
 export const COLOR_CONFIG: Record<Color, {
   name: string;
@@ -25,12 +25,12 @@ export const COLOR_CONFIG: Record<Color, {
     shadow: 'rgba(107, 114, 128, 0.5)',
     logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png'
   },
-  op: {
-    name: 'OP',
-    bg: '#FF0420',
-    border: '#DC0000',
-    shadow: 'rgba(255, 4, 32, 0.5)',
-    logo: 'https://assets.coingecko.com/coins/images/25244/small/Optimism.png'
+  avax: {
+    name: 'AVAX',
+    bg: '#E84142',
+    border: '#D43030',
+    shadow: 'rgba(232, 65, 66, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/12559/small/Avalanche_Circle_RedWhite_Trans.png'
   },
   celo: {
     name: 'CELO',
@@ -46,12 +46,12 @@ export const COLOR_CONFIG: Record<Color, {
     shadow: 'rgba(0, 192, 139, 0.5)',
     logo: 'https://assets.coingecko.com/coins/images/10365/small/near.jpg'
   },
-  base: {
-    name: 'BASE',
-    bg: '#0052FF',
-    border: '#0040CC',
-    shadow: 'rgba(0, 82, 255, 0.5)',
-    logo: 'https://assets.coingecko.com/coins/images/50828/small/basethumb.png'
+  link: {
+    name: 'LINK',
+    bg: '#2A5ADA',
+    border: '#1E4BB8',
+    shadow: 'rgba(42, 90, 218, 0.5)',
+    logo: 'https://assets.coingecko.com/coins/images/877/small/chainlink-new-logo.png'
   },
 };
 
