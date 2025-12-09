@@ -20,9 +20,9 @@ export const COLOR_CONFIG: Record<Color, {
   },
   eth: {
     name: 'ETH',
-    bg: '#6B7280',
-    border: '#4B5563',
-    shadow: 'rgba(107, 114, 128, 0.5)',
+    bg: '#D1D5DB',
+    border: '#9CA3AF',
+    shadow: 'rgba(209, 213, 219, 0.5)',
     logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png'
   },
   avax: {
@@ -48,9 +48,9 @@ export const COLOR_CONFIG: Record<Color, {
   },
   link: {
     name: 'LINK',
-    bg: '#2A5ADA',
-    border: '#1E4BB8',
-    shadow: 'rgba(42, 90, 218, 0.5)',
+    bg: '#60A5FA',
+    border: '#3B82F6',
+    shadow: 'rgba(96, 165, 250, 0.5)',
     logo: 'https://assets.coingecko.com/coins/images/877/small/chainlink-new-logo.png'
   },
 };
