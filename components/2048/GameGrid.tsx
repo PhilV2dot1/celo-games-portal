@@ -30,6 +30,8 @@ export function GameGrid({ grid }: GameGridProps) {
             <Tile
               key={`${rowIndex}-${colIndex}`}
               value={value}
+              row={rowIndex}
+              col={colIndex}
             />
           ))
         )}

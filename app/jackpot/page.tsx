@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useJackpot } from "@/hooks/useJackpot";
 import { useLocalStats } from "@/hooks/useLocalStats";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
+import { JackpotMachine } from "@/components/jackpot/JackpotMachine";
+import { SlotMachineLever } from "@/components/jackpot/SlotMachineLever";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function JackpotPage() {
@@ -24,6 +26,19 @@ export default function JackpotPage() {
 
   const { recordGame } = useLocalStats();
 
+  const [localSpinning, setLocalSpinning] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const spinTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (spinTimeoutRef.current) clearTimeout(spinTimeoutRef.current);
+      if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
+    };
+  }, []);
+
   // Record game to portal stats when result is shown
   useEffect(() => {
     if (state === 'result' && lastResult) {
@@ -32,6 +47,35 @@ export default function JackpotPage() {
       recordGame('jackpot', mode, result);
     }
   }, [state, lastResult, mode, recordGame]);
+
+  const handleSpin = async () => {
+    if (spinTimeoutRef.current) clearTimeout(spinTimeoutRef.current);
+    if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
+
+    setLocalSpinning(true);
+    setShowResult(false);
+
+    try {
+      await spin();
+      spinTimeoutRef.current = setTimeout(() => {
+        setLocalSpinning(false);
+        spinTimeoutRef.current = null;
+      }, 800);
+    } catch (error) {
+      setLocalSpinning(false);
+    }
+  };
+
+  const handleSpinComplete = () => {
+    if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
+
+    if (!localSpinning) {
+      resultTimeoutRef.current = setTimeout(() => {
+        setShowResult(true);
+        resultTimeoutRef.current = null;
+      }, 500);
+    }
+  };
 
   const canSpin = state === "idle" || state === "result";
 
@@ -79,72 +123,49 @@ export default function JackpotPage() {
           <div className="text-4xl font-black text-gray-900">{totalScore}</div>
         </motion.div>
 
-        {/* Wheel Area / Result Display */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-8 min-h-[300px] flex items-center justify-center shadow-xl" style={{ border: '4px solid #FCFF52' }}>
-          <AnimatePresence mode="wait">
-            {state === "idle" && (
-              <motion.div
-                key="idle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-center text-gray-700"
-              >
-                <div className="text-6xl mb-4">🎲</div>
-                <p className="text-lg font-semibold">Ready to spin!</p>
-              </motion.div>
-            )}
+        {/* Jackpot Machine */}
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl" style={{ border: '4px solid #FCFF52' }}>
+          <JackpotMachine
+            isSpinning={localSpinning}
+            finalValue={lastResult?.score}
+            onSpinComplete={handleSpinComplete}
+          />
 
-            {state === "spinning" && (
-              <motion.div
-                key="spinning"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1, rotate: 360 }}
-                exit={{ opacity: 0 }}
-                transition={{ rotate: { duration: 2, repeat: Infinity, ease: "linear" } }}
-                className="text-8xl"
-              >
-                🎰
-              </motion.div>
-            )}
-
-            {state === "result" && lastResult && (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-center"
-              >
-                {lastResult.isJackpot && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 0.5, repeat: 3 }}
-                    className="text-6xl mb-4"
-                  >
-                    🎉 JACKPOT! 🎉
-                  </motion.div>
-                )}
-                <div className="text-7xl mb-4">
-                  {lastResult.score > 0 ? "✨" : "😞"}
+          {/* Result Display */}
+          {lastResult && showResult && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-6 text-center"
+            >
+              {lastResult.isJackpot && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 0.5, repeat: 3 }}
+                  className="text-4xl mb-3 font-black text-celo"
+                >
+                  🎉 JACKPOT! 🎉
+                </motion.div>
+              )}
+              <div className="text-5xl mb-2">
+                {lastResult.score > 0 ? "✨" : "😞"}
+              </div>
+              <div className={`text-4xl font-black mb-1 ${
+                lastResult.score > 0 ? "text-celo" : "text-gray-500"
+              }`}>
+                {lastResult.score}
+              </div>
+              <div className="text-gray-700 font-semibold">
+                {lastResult.score > 0 ? "Points!" : "Try again!"}
+              </div>
+              {lastResult.badge && (
+                <div className="mt-2 text-sm text-gray-900 font-bold">
+                  {lastResult.badge} Badge
                 </div>
-                <div className={`text-5xl font-black mb-2 ${
-                  lastResult.score > 0 ? "text-celo" : "text-gray-500"
-                }`}>
-                  {lastResult.score}
-                </div>
-                <div className="text-gray-700 font-semibold">
-                  {lastResult.score > 0 ? "Points!" : "Try again!"}
-                </div>
-                {lastResult.badge && (
-                  <div className="mt-2 text-sm text-gray-900 font-bold">
-                    {lastResult.badge} Badge
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+            </motion.div>
+          )}
         </div>
 
         {/* Spin Button */}
@@ -154,11 +175,11 @@ export default function JackpotPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              onClick={spin}
-              disabled={isSpinning || (mode === "onchain" && !isConnected)}
+              onClick={handleSpin}
+              disabled={localSpinning || isSpinning || (mode === "onchain" && !isConnected)}
               className="px-10 py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black text-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {isSpinning ? "SPINNING..." : "SPIN"}
+              {localSpinning || isSpinning ? "SPINNING..." : "SPIN"}
             </motion.button>
           )}
 

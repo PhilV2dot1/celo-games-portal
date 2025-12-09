@@ -3,38 +3,57 @@ import { TileValue, TILE_COLORS } from "@/lib/games/2048-logic";
 
 interface TileProps {
   value: TileValue;
+  row: number;
+  col: number;
 }
 
-export function Tile({ value }: TileProps) {
+export function Tile({ value, row, col }: TileProps) {
   const colors = TILE_COLORS[value];
 
-  if (value === 0) {
-    return (
-      <div
-        className="rounded-lg"
-        style={{
-          backgroundColor: colors.bgColor,
-          boxShadow: 'inset 0 0 0 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1)',
-          minHeight: '60px',
-        }}
-      />
-    );
-  }
+  // Calculate font size based on value length
+  const getFontSize = () => {
+    if (value === 0) return 'text-2xl';
+    const digits = value.toString().length;
+    if (digits <= 2) return 'text-3xl sm:text-4xl';
+    if (digits === 3) return 'text-2xl sm:text-3xl';
+    return 'text-xl sm:text-2xl';
+  };
+
+  // Extract color values from Tailwind classes
+  const bgColor = colors.bgColor || '#cdc1b4';
+  const textColor = colors.textColor || '#776e65';
 
   return (
     <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      className="rounded-lg flex items-center justify-center font-black text-center select-none"
+      key={`${row}-${col}`}
+      animate={{
+        scale: 1,
+        opacity: 1,
+        backgroundColor: bgColor,
+      }}
+      initial={false}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        duration: 0.15,
+      }}
+      className={`
+        rounded-xl sm:rounded-2xl
+        flex items-center justify-center
+        font-bold ${getFontSize()}
+        aspect-square
+        ${value >= 8 ? 'shadow-lg' : 'shadow-md'}
+        transition-all duration-100
+      `}
       style={{
-        background: colors.gradient || colors.bgColor,
-        color: colors.textColor,
-        boxShadow: colors.shadow || '0 2px 4px rgba(0, 0, 0, 0.2)',
-        fontSize: value >= 1024 ? '1.75rem' : value >= 128 ? '2rem' : '2.5rem',
-        minHeight: '60px',
+        backgroundColor: bgColor,
+        color: textColor,
+        backgroundImage: colors.gradient,
+        boxShadow: colors.shadow,
       }}
     >
-      {value}
+      {value > 0 ? value : ''}
     </motion.div>
   );
 }
