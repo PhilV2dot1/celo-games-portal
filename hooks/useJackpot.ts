@@ -80,11 +80,24 @@ export function useJackpot() {
         }
 
         try {
-          // For now, simulate the game in on-chain mode
-          // In production, you'd want to integrate with Farcaster SDK for FID
-          // and properly read the sessionId from events
+          // Start party on-chain (use default FID 1 for now)
+          const fid = BigInt(1); // Default FID for testing
 
-          // Simulate spin
+          const tx = await writeContractAsync({
+            address: JACKPOT_CONTRACT_ADDRESS,
+            abi: JACKPOT_CONTRACT_ABI,
+            functionName: "startParty",
+            args: [fid],
+          });
+
+          console.log("Party started, tx:", tx);
+
+          // Get the sessionId from the transaction (would need to parse events in production)
+          // For now, use a timestamp as sessionId approximation
+          const newSessionId = BigInt(Date.now());
+          setSessionId(newSessionId);
+
+          // Simulate spin animation
           await new Promise(resolve => setTimeout(resolve, 3000));
           const result = getRandomOutcome();
 
@@ -106,12 +119,39 @@ export function useJackpot() {
       setState("idle");
       setIsSpinning(false);
     }
-  }, [mode, isConnected, address, isSpinning]);
+  }, [mode, isConnected, address, isSpinning, writeContractAsync]);
+
+  const submitScore = useCallback(async () => {
+    if (!sessionId || !lastResult || mode !== "onchain") return;
+
+    try {
+      setIsSpinning(true);
+
+      await writeContractAsync({
+        address: JACKPOT_CONTRACT_ADDRESS,
+        abi: JACKPOT_CONTRACT_ABI,
+        functionName: "submitScore",
+        args: [sessionId, BigInt(lastResult.score)],
+      });
+
+      console.log("Score submitted successfully");
+
+      // Reset after successful submission
+      setState("idle");
+      setLastResult(null);
+      setSessionId(null);
+    } catch (error) {
+      console.error("Error submitting score:", error);
+    } finally {
+      setIsSpinning(false);
+    }
+  }, [sessionId, lastResult, mode, writeContractAsync]);
 
   const resetGame = useCallback(() => {
     setState("idle");
     setLastResult(null);
     setIsSpinning(false);
+    setSessionId(null);
   }, []);
 
   const switchMode = useCallback((newMode: GameMode) => {
@@ -124,6 +164,7 @@ export function useJackpot() {
     mode,
     setMode: switchMode,
     spin,
+    submitScore,
     lastResult,
     totalScore,
     sessionId,

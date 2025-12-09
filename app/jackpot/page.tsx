@@ -14,8 +14,10 @@ export default function JackpotPage() {
     mode,
     setMode,
     spin,
+    submitScore,
     lastResult,
     totalScore,
+    sessionId,
     isSpinning,
     isConnected,
   } = useJackpot();
@@ -146,7 +148,7 @@ export default function JackpotPage() {
         </div>
 
         {/* Spin Button */}
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-3 justify-center flex-wrap">
           {canSpin && (
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -157,6 +159,20 @@ export default function JackpotPage() {
               className="px-10 py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black text-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isSpinning ? "SPINNING..." : "SPIN"}
+            </motion.button>
+          )}
+
+          {/* Submit Score Button (On-Chain Mode) */}
+          {mode === "onchain" && state === "result" && sessionId && lastResult && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              onClick={submitScore}
+              disabled={isSpinning}
+              className="px-8 py-3 bg-white border-[3px] border-celo hover:bg-gray-50 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {isSpinning ? "Submitting..." : "Submit Score"}
             </motion.button>
           )}
         </div>
