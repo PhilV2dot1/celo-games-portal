@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       .order('rank', { ascending: true })
       .range(offset, offset + limit - 1);
 
-    if (error) {
+    if (error || !leaderboard) {
       return NextResponse.json(
         { error: 'Failed to fetch leaderboard', details: error },
         { status: 500 }
@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Format response
-    const formattedLeaderboard = leaderboard.map(entry => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formattedLeaderboard = (leaderboard as any[]).map((entry: any) => ({
       rank: entry.rank,
       userId: entry.user_id,
       username: entry.username || `Player ${entry.fid || 'Unknown'}`,
