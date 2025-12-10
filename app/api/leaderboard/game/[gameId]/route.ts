@@ -28,7 +28,8 @@ export async function GET(
       .rpc('get_game_leaderboard', {
         p_game_id: gameId,
         p_limit: limit,
-      });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
 
     if (error) {
       return NextResponse.json(
