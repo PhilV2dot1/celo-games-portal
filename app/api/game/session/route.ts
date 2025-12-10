@@ -129,10 +129,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user total points
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error: updateError } = await supabase.rpc('increment_user_points', {
       p_user_id: userId,
       p_points: pointsEarned,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     // If the RPC doesn't exist yet, do manual update
@@ -141,11 +141,12 @@ export async function POST(request: NextRequest) {
         .from('users')
         .select('total_points')
         .eq('id', userId)
-        .single();
+        .single<{ total_points: number }>();
 
       if (userData) {
         await supabase
           .from('users')
+          // @ts-expect-error - Supabase type inference issue in Edge runtime
           .update({ total_points: userData.total_points + pointsEarned })
           .eq('id', userId);
       }
