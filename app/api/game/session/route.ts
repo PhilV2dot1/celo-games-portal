@@ -129,10 +129,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user total points
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error: updateError } = await supabase.rpc('increment_user_points', {
       p_user_id: userId,
       p_points: pointsEarned,
-    });
+    } as any);
 
     // If the RPC doesn't exist yet, do manual update
     if (updateError) {
