@@ -39,19 +39,21 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch recent game sessions (last 50)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sessions, error: sessionsError } = await supabase
       .from('game_sessions')
       .select('*, games(name, icon)')
       .eq('user_id', user.id)
       .order('played_at', { ascending: false })
-      .limit(50);
+      .limit(50) as { data: any[] | null; error: any };
 
     // Fetch earned badges
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: badges } = await supabase
       .from('user_badges')
       .select('*, badges(*)')
       .eq('user_id', user.id)
-      .order('earned_at', { ascending: false });
+      .order('earned_at', { ascending: false }) as { data: any[] | null; error: any };
 
     // Fetch user rank from leaderboard
     const { data: leaderboardEntry } = await supabase
