@@ -98,7 +98,7 @@ export default function JackpotPage() {
           style={{ border: '4px solid #FCFF52' }}
         >
           <div className="text-6xl mb-2">🎰</div>
-          <h1 className="text-4xl font-black text-gray-900">Solo Jackpot</h1>
+          <h1 className="text-4xl font-black text-gray-900">Crypto Jackpot</h1>
           <p className="text-sm text-gray-700 mt-2 font-medium">Spin the crypto wheel!</p>
         </motion.div>
 

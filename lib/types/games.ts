@@ -45,7 +45,7 @@ export const GAMES: Record<GameId, GameMetadata> = {
   },
   jackpot: {
     id: "jackpot",
-    name: "Solo Jackpot",
+    name: "Crypto Jackpot",
     description: "Spin the crypto wheel!",
     icon: "/icons/jackpot.png",
     route: "/jackpot",
