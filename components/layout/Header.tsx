@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLocalStats } from "@/hooks/useLocalStats";
+import Link from "next/link";
 
 export function Header() {
   const { profile } = useLocalStats();
@@ -22,6 +23,22 @@ export function Header() {
       <p className="text-base sm:text-lg text-gray-700 font-medium mb-3">
         Play 6 Mini-Games on the Blockchain
       </p>
+
+      {/* Navigation Links */}
+      <div className="flex justify-center gap-4 mb-3">
+        <Link
+          href="/"
+          className="px-4 py-2 bg-white/80 rounded-lg font-bold text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+        >
+          🎮 Games
+        </Link>
+        <Link
+          href="/leaderboard"
+          className="px-4 py-2 bg-white/80 rounded-lg font-bold text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+        >
+          🏆 Leaderboard
+        </Link>
+      </div>
 
       {profile.gamesPlayed > 0 && (
         <motion.div
