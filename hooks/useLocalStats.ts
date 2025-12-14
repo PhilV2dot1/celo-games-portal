@@ -132,6 +132,30 @@ export function useLocalStats() {
         } else {
           const data = await response.json();
           console.log('Game session recorded to database:', data);
+
+          // Check for new badges
+          if (data.userId) {
+            try {
+              const badgeResponse = await fetch('/api/badges/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: data.userId }),
+              });
+
+              if (badgeResponse.ok) {
+                const badgeData = await badgeResponse.json();
+                if (badgeData.newBadges && badgeData.newBadges.length > 0) {
+                  console.log('New badges earned:', badgeData.newBadges);
+                  // TODO: Show notification to user
+                  badgeData.newBadges.forEach((badge: { name: string; icon: string }) => {
+                    console.log(`🎉 Badge Unlocked: ${badge.icon} ${badge.name}`);
+                  });
+                }
+              }
+            } catch (badgeError) {
+              console.error('Error checking badges:', badgeError);
+            }
+          }
         }
       } catch (error) {
         console.error('Error recording game session:', error);

@@ -68,11 +68,15 @@ export default function LeaderboardPage() {
         </Link>
 
         {/* Page Title */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg" style={{ border: '3px solid #FCFF52' }}>
-          <h1 className="text-3xl font-black text-gray-900 text-center mb-2">
-            🏆 Leaderboard
+        <div
+          className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 mb-6 shadow-xl border-2 border-gray-700 text-center"
+          style={{ boxShadow: '0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+        >
+          <div className="text-5xl mb-2">🏆</div>
+          <h1 className="text-4xl font-black text-gray-900 mb-2">
+            Leaderboard
           </h1>
-          <p className="text-center text-gray-600 text-sm">
+          <p className="text-sm text-gray-600">
             Top players across all games on Celo Games Portal
           </p>
         </div>
@@ -106,29 +110,105 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Leaderboard Table */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
-          {loading ? (
-            <div className="p-12 text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900"></div>
-              <p className="mt-4 text-gray-600">Loading leaderboard...</p>
-            </div>
-          ) : error ? (
-            <div className="p-12 text-center">
-              <p className="text-red-600 font-semibold">Error: {error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="mt-4 px-6 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors"
-              >
-                Retry
-              </button>
-            </div>
-          ) : leaderboard.length === 0 ? (
-            <div className="p-12 text-center">
-              <p className="text-gray-600 text-lg">No players yet. Be the first to play!</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
+        {/* Loading / Error States */}
+        {loading ? (
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900"></div>
+            <p className="mt-4 text-gray-600">Loading leaderboard...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
+            <p className="text-red-600 font-semibold">Error: {error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-6 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        ) : leaderboard.length === 0 ? (
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
+            <p className="text-gray-600 text-lg">No players yet. Be the first to play!</p>
+          </div>
+        ) : (
+          <>
+            {/* Top 3 Podium */}
+            {leaderboard.length >= 3 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {/* 2nd Place */}
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-6 shadow-lg border-2 border-gray-400 transform md:translate-y-4">
+                  <div className="text-center">
+                    <div className="text-6xl mb-2">🥈</div>
+                    <div className="text-2xl font-black text-gray-900 mb-1">#{leaderboard[1].rank}</div>
+                    <div className="text-lg font-bold text-gray-800 mb-2">{leaderboard[1].username}</div>
+                    <div className="text-3xl font-black text-gray-900 mb-1">
+                      {(selectedGame === 'all' ? leaderboard[1].totalPoints : leaderboard[1].gamePoints)?.toLocaleString() || 0}
+                    </div>
+                    <div className="text-xs text-gray-600 mb-2">points</div>
+                    <div className="flex justify-center gap-4 text-sm">
+                      <div>
+                        <div className="font-black text-gray-700">{leaderboard[1].gamesPlayed}</div>
+                        <div className="text-xs text-gray-500">Games</div>
+                      </div>
+                      <div>
+                        <div className="font-black text-green-600">{leaderboard[1].wins}</div>
+                        <div className="text-xs text-gray-500">Wins</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 1st Place */}
+                <div className="bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-xl p-6 shadow-2xl border-4 border-yellow-500 transform scale-105">
+                  <div className="text-center">
+                    <div className="text-7xl mb-2">🥇</div>
+                    <div className="text-3xl font-black text-gray-900 mb-1">#{leaderboard[0].rank}</div>
+                    <div className="text-xl font-black text-gray-900 mb-3">{leaderboard[0].username}</div>
+                    <div className="text-4xl font-black text-gray-900 mb-1">
+                      {(selectedGame === 'all' ? leaderboard[0].totalPoints : leaderboard[0].gamePoints)?.toLocaleString() || 0}
+                    </div>
+                    <div className="text-sm text-gray-700 mb-3 font-bold">points</div>
+                    <div className="flex justify-center gap-6 text-sm">
+                      <div>
+                        <div className="font-black text-gray-900 text-lg">{leaderboard[0].gamesPlayed}</div>
+                        <div className="text-xs text-gray-700 font-semibold">Games</div>
+                      </div>
+                      <div>
+                        <div className="font-black text-green-700 text-lg">{leaderboard[0].wins}</div>
+                        <div className="text-xs text-gray-700 font-semibold">Wins</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3rd Place */}
+                <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl p-6 shadow-lg border-2 border-orange-400 transform md:translate-y-8">
+                  <div className="text-center">
+                    <div className="text-5xl mb-2">🥉</div>
+                    <div className="text-xl font-black text-gray-900 mb-1">#{leaderboard[2].rank}</div>
+                    <div className="text-base font-bold text-gray-800 mb-2">{leaderboard[2].username}</div>
+                    <div className="text-2xl font-black text-gray-900 mb-1">
+                      {(selectedGame === 'all' ? leaderboard[2].totalPoints : leaderboard[2].gamePoints)?.toLocaleString() || 0}
+                    </div>
+                    <div className="text-xs text-gray-600 mb-2">points</div>
+                    <div className="flex justify-center gap-4 text-sm">
+                      <div>
+                        <div className="font-black text-gray-700">{leaderboard[2].gamesPlayed}</div>
+                        <div className="text-xs text-gray-500">Games</div>
+                      </div>
+                      <div>
+                        <div className="font-black text-green-600">{leaderboard[2].wins}</div>
+                        <div className="text-xs text-gray-500">Wins</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Full Leaderboard Table */}
+            <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-100 border-b-2 border-gray-300">
                   <tr>
@@ -212,9 +292,10 @@ export default function LeaderboardPage() {
                   })}
                 </tbody>
               </table>
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
 
         {/* Footer Note */}
         <div className="mt-6 text-center text-sm text-gray-600">
