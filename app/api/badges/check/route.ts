@@ -54,14 +54,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's existing badges
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: existingBadges } = await supabase
       .from('user_badges')
       .select('badge_id')
-      .eq('user_id', userId) as { data: any[] | null };
+      .eq('user_id', userId) as { data: any[] | null }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const existingBadgeIds = new Set(existingBadges?.map((b: any) => b.badge_id) || []);
+    const existingBadgeIds = new Set(
+      existingBadges?.map((b: any) => b.badge_id) || [] // eslint-disable-line @typescript-eslint/no-explicit-any
+    );
 
     // Get user stats
     const { data: sessions } = await supabase
