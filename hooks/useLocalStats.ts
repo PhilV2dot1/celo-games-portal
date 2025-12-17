@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { GameId, GameMode, GameResult, UserProfile, GameStats } from "@/lib/types";
 import { useAccount } from "wagmi";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const STORAGE_KEY = "celo_games_portal_stats";
+const ACCOUNT_PROMPT_THRESHOLD = 5; // Show create account modal after 5 games
 
 const DEFAULT_GAME_STATS: GameStats = {
   played: 0,
@@ -56,7 +58,11 @@ function getStreakBonus(currentStreak: number): number {
 export function useLocalStats() {
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showAccountPrompt, setShowAccountPrompt] = useState(false);
+  const [hasSyncedStats, setHasSyncedStats] = useState(false);
+
   const { address } = useAccount();
+  const { user, isAuthenticated, isAnonymous } = useAuth();
 
   // Load stats from localStorage on mount
   useEffect(() => {
@@ -80,6 +86,58 @@ export function useLocalStats() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
     }
   }, [profile, isLoaded]);
+
+  // Sync localStorage stats to database when user becomes authenticated
+  useEffect(() => {
+    const syncStatsToDatabase = async () => {
+      if (!isAuthenticated || !user || hasSyncedStats) return;
+
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) return;
+
+      try {
+        const localStats = JSON.parse(stored);
+
+        // Only sync if user has accumulated stats
+        if (localStats.gamesPlayed > 0) {
+          console.log('Syncing localStorage stats to database...');
+
+          const response = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              authUserId: user.id,
+              localStats,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Stats synced successfully:', data);
+            setHasSyncedStats(true);
+
+            // Optional: Clear localStorage after successful sync
+            // localStorage.removeItem(STORAGE_KEY);
+          }
+        }
+      } catch (error) {
+        console.error('Error syncing stats to database:', error);
+      }
+    };
+
+    syncStatsToDatabase();
+  }, [isAuthenticated, user, hasSyncedStats]);
+
+  // Check if should show account creation prompt
+  useEffect(() => {
+    if (isLoaded && isAnonymous && profile.gamesPlayed >= ACCOUNT_PROMPT_THRESHOLD) {
+      // Check if user has already dismissed the prompt
+      const dismissed = localStorage.getItem('account_prompt_dismissed');
+      if (!dismissed) {
+        setShowAccountPrompt(true);
+      }
+    }
+  }, [isLoaded, isAnonymous, profile.gamesPlayed]);
 
   const recordGame = useCallback(async (
     gameId: GameId,
@@ -112,8 +170,8 @@ export function useLocalStats() {
       };
     });
 
-    // Also record to Supabase if user has wallet connected
-    if (address) {
+    // Also record to Supabase if user has wallet connected or is authenticated
+    if (address || isAuthenticated) {
       try {
         const response = await fetch('/api/game/session', {
           method: 'POST',
@@ -161,7 +219,7 @@ export function useLocalStats() {
         console.error('Error recording game session:', error);
       }
     }
-  }, [address]);
+  }, [address, isAuthenticated]);
 
   const getStats = useCallback((gameId?: GameId): GameStats | UserProfile => {
     if (gameId) {
@@ -174,11 +232,25 @@ export function useLocalStats() {
     setProfile(DEFAULT_PROFILE);
   }, []);
 
+  const dismissAccountPrompt = useCallback(() => {
+    setShowAccountPrompt(false);
+    localStorage.setItem('account_prompt_dismissed', 'true');
+  }, []);
+
+  const clearDismissedPrompt = useCallback(() => {
+    localStorage.removeItem('account_prompt_dismissed');
+  }, []);
+
   return {
     profile,
     recordGame,
     getStats,
     resetStats,
     isLoaded,
+    showAccountPrompt,
+    dismissAccountPrompt,
+    clearDismissedPrompt,
+    isAuthenticated,
+    isAnonymous,
   };
 }
