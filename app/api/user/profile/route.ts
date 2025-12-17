@@ -219,12 +219,13 @@ export async function PUT(request: NextRequest) {
     updateData.updated_at = new Date().toISOString();
 
     // Update user
-    const { data: updatedUser, error: updateError } = await supabaseAdmin
+    const { data: updatedUser, error: updateError } = (await supabaseAdmin
       .from('users')
       .update(updateData)
       .eq('id', userId)
       .select()
-      .single() as { data: any; error: any };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .single()) as { data: any; error: any };
 
     if (updateError) {
       console.error('Error updating profile:', updateError);
@@ -237,6 +238,7 @@ export async function PUT(request: NextRequest) {
     // Refresh leaderboard if username changed
     if (username) {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await supabaseAdmin.rpc('refresh_leaderboard' as any);
       } catch (refreshError) {
         console.error('Error refreshing leaderboard:', refreshError);

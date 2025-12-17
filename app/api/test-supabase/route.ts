@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Test 1: Check environment variables
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     // Test 3: Try a simple query
-    const { data, error } = await supabaseClient
+    const { error } = await supabaseClient
       .from('users')
       .select('count')
       .limit(1);
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const { data: adminData, error: adminError } = await supabaseAdmin
+    const { error: adminError } = await supabaseAdmin
       .from('users')
       .select('count')
       .limit(1);
@@ -82,6 +82,7 @@ export async function GET(request: NextRequest) {
         serviceKeyPrefix: supabaseServiceKey.substring(0, 20) + '...',
       },
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json({
       success: false,

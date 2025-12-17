@@ -35,11 +35,12 @@ export async function GET(request: NextRequest) {
     );
 
     // Check if avatar is already unlocked
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = (await supabase
       .from('users')
       .select('avatar_unlocked')
       .eq('id', userId)
-      .single() as { data: any; error: any };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .single()) as { data: any; error: any };
 
     if (userError || !user) {
       return NextResponse.json(
@@ -58,8 +59,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Check via database function
-    const { data: canUnlock, error: checkError } = await supabase
-      .rpc('can_unlock_custom_avatar', { p_user_id: userId }) as { data: boolean; error: any };
+    const { data: canUnlock, error: checkError } = (await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .rpc('can_unlock_custom_avatar', { p_user_id: userId })) as { data: boolean; error: any };
 
     if (checkError) {
       console.error('Error checking avatar unlock:', checkError);
@@ -78,16 +80,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Get progress info
-    const { data: gamesCount } = await supabase
+    const { data: gamesCount } = (await supabase
       .from('game_sessions')
       .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId) as { data: any; count: number | null };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .eq('user_id', userId)) as { data: any; count: number | null };
 
-    const { data: badges } = await supabase
+    const { data: badges } = (await supabase
       .from('user_badges')
       .select('badge_id')
       .eq('user_id', userId)
-      .eq('badge_id', 'veteran') as { data: any[] | null; error: any };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .eq('badge_id', 'veteran')) as { data: any[] | null; error: any };
 
     const hasVeteranBadge = badges && badges.length > 0;
 

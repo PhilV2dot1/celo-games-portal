@@ -94,6 +94,7 @@ export function AvatarUploadDialog({
         onSuccess(data.avatarUrl);
         handleClose();
       }, 1500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Upload error:', err);
       setError(err.message || 'Une erreur est survenue');

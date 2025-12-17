@@ -45,7 +45,7 @@ export default function TestAuthPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
         <h1 className="text-3xl font-bold mb-6 text-gray-900">
-          🧪 Test d'Authentification
+          🧪 Test d&apos;Authentification
         </h1>
 
         {/* Auth Status */}
@@ -142,7 +142,7 @@ export default function TestAuthPage() {
             href="/"
             className="text-blue-600 hover:text-blue-800 font-semibold underline"
           >
-            ← Retour à l'accueil
+            ← Retour à l&apos;accueil
           </a>
         </div>
       </div>

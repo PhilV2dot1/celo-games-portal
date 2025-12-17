@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,10 +50,13 @@ export async function GET(request: NextRequest) {
     const missingColumns = requiredColumns.filter(col => !existingColumns.includes(col));
 
     // Check for functions
-    const { data: functionData, error: functionError } = await supabase
-      .rpc('can_unlock_custom_avatar', { p_user_id: '00000000-0000-0000-0000-000000000000' })
-      .then(() => ({ data: true, error: null }))
-      .catch((err) => ({ data: false, error: err }));
+    let functionData = false;
+    try {
+      await supabase.rpc('can_unlock_custom_avatar', { p_user_id: '00000000-0000-0000-0000-000000000000' });
+      functionData = true;
+    } catch {
+      functionData = false;
+    }
 
     return NextResponse.json({
       success: missingColumns.length === 0,
@@ -78,6 +81,7 @@ export async function GET(request: NextRequest) {
         'Next: Wrap app with <AuthProvider> in app/layout.tsx',
       ],
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json({
       success: false,

@@ -235,7 +235,7 @@ export function LoginModal({
                   onClick={onClose}
                   className="text-sm text-gray-600 hover:text-gray-900 underline"
                 >
-                  Continuer en tant qu'invité
+                  Continuer en tant qu&apos;invité
                 </button>
               </div>
             </motion.div>

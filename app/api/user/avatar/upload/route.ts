@@ -58,11 +58,12 @@ export async function POST(request: NextRequest) {
     );
 
     // Check if user can upload custom avatar
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = (await supabase
       .from('users')
       .select('avatar_unlocked')
       .eq('id', userId)
-      .single() as { data: any; error: any };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .single()) as { data: any; error: any };
 
     if (userError || !user) {
       return NextResponse.json(
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
     const uint8Array = new Uint8Array(arrayBuffer);
 
     // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('user-avatars')
       .upload(filePath, uint8Array, {
         contentType: file.type,

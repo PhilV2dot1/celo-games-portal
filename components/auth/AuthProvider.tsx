@@ -37,6 +37,7 @@ interface AuthContextType {
   linkFarcaster: (fid: number) => Promise<{ success: boolean; error?: string }>;
 
   // Profile claiming
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   claimProfile: (localStats?: any) => Promise<{ success: boolean; error?: string }>;
 }
 
@@ -269,6 +270,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Claim profile - migrate localStorage stats to authenticated account
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const claimProfile = async (localStats?: any) => {
     if (!user) {
       return { success: false, error: 'Vous devez être connecté' };

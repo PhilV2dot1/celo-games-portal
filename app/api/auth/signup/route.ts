@@ -87,7 +87,8 @@ export async function POST(request: NextRequest) {
         query.eq('fid', fid);
       }
 
-      const { data: anonymousUsers } = await query.maybeSingle() as { data: any };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: anonymousUsers } = (await query.maybeSingle()) as { data: any };
 
       if (anonymousUsers) {
         existingUser = anonymousUsers;
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       // Claim existing anonymous user
-      const { data: updatedUser, error: updateError } = await supabase
+      const { data: updatedUser, error: updateError } = (await supabase
         .from('users')
         .update({
           email,
@@ -110,7 +111,8 @@ export async function POST(request: NextRequest) {
         })
         .eq('id', existingUser.id)
         .select()
-        .single() as { data: any; error: any };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .single()) as { data: any; error: any };
 
       if (updateError) {
         return NextResponse.json(
@@ -123,7 +125,7 @@ export async function POST(request: NextRequest) {
       pointsPreserved = updatedUser.total_points || 0;
     } else {
       // Create new user record
-      const { data: newUser, error: insertError } = await supabase
+      const { data: newUser, error: insertError } = (await supabase
         .from('users')
         .insert({
           email,
@@ -135,7 +137,8 @@ export async function POST(request: NextRequest) {
           username: email ? email.split('@')[0] : `Player_${Date.now()}`,
         })
         .select()
-        .single() as { data: any; error: any };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .single()) as { data: any; error: any };
 
       if (insertError) {
         return NextResponse.json(
@@ -155,6 +158,7 @@ export async function POST(request: NextRequest) {
         const sessions = [];
         const now = new Date();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         for (const [gameId, gameStats] of Object.entries(localStats.games as Record<string, any>)) {
           if (gameStats.played > 0) {
             // Create sessions for wins

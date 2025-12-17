@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/Header";
-import { ProfileCard } from "@/components/profile/ProfileCard";
 import { GAMES } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";

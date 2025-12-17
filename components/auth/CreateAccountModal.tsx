@@ -307,10 +307,10 @@ export function CreateAccountModal({
                   onClick={onClose}
                   className="text-sm text-gray-600 hover:text-gray-900 underline"
                 >
-                  Continuer en tant qu'invité
+                  Continuer en tant qu&apos;invité
                 </button>
                 <p className="text-xs text-gray-500">
-                  En créant un compte, vous acceptez nos conditions d'utilisation
+                  En créant un compte, vous acceptez nos conditions d&apos;utilisation
                 </p>
               </div>
             </motion.div>

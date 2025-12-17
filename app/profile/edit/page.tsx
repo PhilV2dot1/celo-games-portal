@@ -196,6 +196,7 @@ export default function ProfileEditPage() {
       setTimeout(() => {
         router.push('/profile');
       }, 1500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Error saving profile:', err);
       setError(err.message || 'Une erreur est survenue');
@@ -294,7 +295,7 @@ export default function ProfileEditPage() {
           {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom d'utilisateur
+              Nom d&apos;utilisateur
             </label>
             <input
               type="text"
