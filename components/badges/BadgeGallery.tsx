@@ -1,0 +1,315 @@
+'use client';
+
+/**
+ * BadgeGallery - Display available badges and user progress
+ *
+ * Shows all badges with:
+ * - Badge icon and name
+ * - Description and requirements
+ * - Locked/unlocked status
+ * - Progress towards earning
+ */
+
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+
+interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  points: number;
+  earned?: boolean;
+  earned_at?: string;
+}
+
+interface BadgeGalleryProps {
+  userId?: string;
+  compact?: boolean;
+  showOnlyEarned?: boolean;
+  maxDisplay?: number;
+}
+
+const ALL_BADGES: Badge[] = [
+  {
+    id: 'first_win',
+    name: 'Première Victoire',
+    description: 'Remportez votre premier jeu',
+    icon: '🏆',
+    category: 'Progression',
+    points: 10,
+  },
+  {
+    id: 'win_streak_5',
+    name: 'Série de 5',
+    description: 'Gagnez 5 parties d&apos;affilée',
+    icon: '🔥',
+    category: 'Performance',
+    points: 50,
+  },
+  {
+    id: 'win_streak_10',
+    name: 'Série de 10',
+    description: 'Gagnez 10 parties d&apos;affilée',
+    icon: '⚡',
+    category: 'Performance',
+    points: 100,
+  },
+  {
+    id: 'games_10',
+    name: 'Débutant',
+    description: 'Jouez 10 parties',
+    icon: '🎮',
+    category: 'Progression',
+    points: 25,
+  },
+  {
+    id: 'games_50',
+    name: 'Joueur Régulier',
+    description: 'Jouez 50 parties',
+    icon: '🎯',
+    category: 'Progression',
+    points: 75,
+  },
+  {
+    id: 'veteran',
+    name: 'Vétéran',
+    description: 'Jouez 100 parties',
+    icon: '⭐',
+    category: 'Progression',
+    points: 150,
+  },
+  {
+    id: 'master',
+    name: 'Maître du Jeu',
+    description: 'Jouez 500 parties',
+    icon: '👑',
+    category: 'Elite',
+    points: 500,
+  },
+  {
+    id: 'all_games',
+    name: 'Touche-à-tout',
+    description: 'Jouez à tous les jeux',
+    icon: '🌟',
+    category: 'Collection',
+    points: 100,
+  },
+  {
+    id: 'perfect_week',
+    name: 'Semaine Parfaite',
+    description: 'Gagnez au moins une partie chaque jour pendant 7 jours',
+    icon: '📅',
+    category: 'Engagement',
+    points: 200,
+  },
+  {
+    id: 'high_roller',
+    name: 'Gros Joueur',
+    description: 'Accumulez 1000 points',
+    icon: '💎',
+    category: 'Points',
+    points: 250,
+  },
+  {
+    id: 'points_5000',
+    name: 'Champion',
+    description: 'Accumulez 5000 points',
+    icon: '🏅',
+    category: 'Points',
+    points: 500,
+  },
+  {
+    id: 'leaderboard_top10',
+    name: 'Top 10',
+    description: 'Atteignez le top 10 du classement',
+    icon: '📊',
+    category: 'Classement',
+    points: 300,
+  },
+  {
+    id: 'leaderboard_top3',
+    name: 'Podium',
+    description: 'Atteignez le top 3 du classement',
+    icon: '🥉',
+    category: 'Classement',
+    points: 500,
+  },
+  {
+    id: 'leaderboard_1',
+    name: 'Numéro 1',
+    description: 'Atteignez la 1ère place du classement',
+    icon: '🥇',
+    category: 'Classement',
+    points: 1000,
+  },
+];
+
+export function BadgeGallery({
+  userId,
+  compact = false,
+  showOnlyEarned = false,
+  maxDisplay
+}: BadgeGalleryProps) {
+  const [badges, setBadges] = useState<Badge[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [earnedBadgeIds, setEarnedBadgeIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    async function loadBadges() {
+      if (userId) {
+        try {
+          const response = await fetch(`/api/user/profile?id=${userId}`);
+          if (response.ok) {
+            const data = await response.json();
+            const earnedIds = new Set<string>(data.badges?.map((b: Badge) => b.id) || []);
+            setEarnedBadgeIds(earnedIds);
+          }
+        } catch (error) {
+          console.error('Error loading badges:', error);
+        }
+      }
+
+      let displayBadges = ALL_BADGES.map(badge => ({
+        ...badge,
+        earned: earnedBadgeIds.has(badge.id),
+      }));
+
+      if (showOnlyEarned) {
+        displayBadges = displayBadges.filter(b => b.earned);
+      }
+
+      if (maxDisplay) {
+        displayBadges = displayBadges.slice(0, maxDisplay);
+      }
+
+      setBadges(displayBadges);
+      setLoading(false);
+    }
+
+    loadBadges();
+  }, [userId, showOnlyEarned, maxDisplay, earnedBadgeIds]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-gray-500">Chargement des badges...</div>
+      </div>
+    );
+  }
+
+  const earnedCount = badges.filter(b => b.earned).length;
+  const totalCount = ALL_BADGES.length;
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      {!compact && (
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Badges</h2>
+            <p className="text-sm text-gray-600">
+              {earnedCount} / {totalCount} badges débloqués
+            </p>
+          </div>
+          <Link
+            href="/about"
+            className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
+          >
+            Comment gagner des badges ?
+          </Link>
+        </div>
+      )}
+
+      {/* Progress Bar */}
+      {!compact && (
+        <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${(earnedCount / totalCount) * 100}%` }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-full"
+          />
+        </div>
+      )}
+
+      {/* Badge Grid */}
+      <div className={`grid ${compact ? 'grid-cols-4 sm:grid-cols-6 gap-2' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'}`}>
+        {badges.map((badge, index) => (
+          <motion.div
+            key={badge.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className={`relative ${
+              compact
+                ? 'aspect-square'
+                : 'bg-white/90 backdrop-blur-sm rounded-xl p-4 border-2'
+            } ${
+              badge.earned
+                ? compact
+                  ? 'border-2 border-yellow-400'
+                  : 'border-yellow-400 shadow-lg'
+                : compact
+                ? 'border-2 border-gray-300 opacity-50'
+                : 'border-gray-300'
+            } transition-all hover:scale-105`}
+            title={compact ? `${badge.name}: ${badge.description}` : undefined}
+          >
+            {/* Badge Icon */}
+            <div className={`${compact ? 'text-3xl' : 'text-5xl'} text-center mb-2`}>
+              {badge.earned ? badge.icon : '🔒'}
+            </div>
+
+            {!compact && (
+              <>
+                {/* Badge Name */}
+                <h3 className="font-bold text-gray-900 text-center mb-1">
+                  {badge.name}
+                </h3>
+
+                {/* Badge Description */}
+                <p className="text-xs text-gray-600 text-center mb-2">
+                  {badge.description}
+                </p>
+
+                {/* Badge Points */}
+                <div className="text-center">
+                  <span className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                    +{badge.points} pts
+                  </span>
+                </div>
+
+                {/* Category */}
+                <div className="mt-2 text-center">
+                  <span className="text-xs text-gray-500">{badge.category}</span>
+                </div>
+              </>
+            )}
+
+            {/* Earned Indicator */}
+            {badge.earned && !compact && (
+              <div className="absolute top-2 right-2 bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center">
+                <span className="text-xs font-bold">✓</span>
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* View All Link */}
+      {compact && maxDisplay && badges.length >= maxDisplay && (
+        <div className="text-center pt-2">
+          <Link
+            href="/profile"
+            className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
+          >
+            Voir tous les badges ({totalCount})
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}

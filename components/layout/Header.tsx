@@ -25,24 +25,30 @@ export function Header() {
       </p>
 
       {/* Navigation Links */}
-      <div className="flex justify-center gap-4 mb-3">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-3">
         <Link
           href="/"
-          className="px-4 py-2 bg-white/80 rounded-lg font-bold text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
           🎮 Games
         </Link>
         <Link
           href="/leaderboard"
-          className="px-4 py-2 bg-white/80 rounded-lg font-bold text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
           🏆 Leaderboard
         </Link>
         <Link
           href="/profile"
-          className="px-4 py-2 bg-white/80 rounded-lg font-bold text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
           👤 Profile
+        </Link>
+        <Link
+          href="/about"
+          className="px-3 sm:px-4 py-2 bg-yellow-400/90 rounded-lg font-bold text-xs sm:text-sm text-gray-900 hover:bg-yellow-500 transition-colors shadow-sm"
+        >
+          📖 Guide
         </Link>
       </div>
 
