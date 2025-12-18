@@ -49,6 +49,16 @@ export const translations = {
       availableGames: 'Available Games',
       builtOn: 'Built on Celo blockchain • Powered by Farcaster',
       learnMoreCelo: 'Learn more about Celo',
+      createProfile: 'Create Profile',
+      saveProgress: 'Save your progress and compete on the leaderboard',
+      setupNow: 'Setup Now',
+      edit: 'Edit',
+      profile: 'Profile',
+      leaderboard: 'Leaderboard',
+      gamesPlayed: 'Games',
+      footerBuilt: 'Built on Celo blockchain • Powered by Farcaster',
+      footerLearnCelo: 'Learn more about Celo',
+      learnMoreBadges: 'Learn more about badges',
     },
 
     // Profile Setup
@@ -286,6 +296,16 @@ export const translations = {
       availableGames: 'Jeux Disponibles',
       builtOn: 'Built on Celo blockchain • Powered by Farcaster',
       learnMoreCelo: 'Learn more about Celo',
+      createProfile: 'Créer un Profil',
+      saveProgress: 'Sauvegardez votre progression et participez au classement',
+      setupNow: 'Configurer Maintenant',
+      edit: 'Modifier',
+      profile: 'Profil',
+      leaderboard: 'Classement',
+      gamesPlayed: 'Parties',
+      footerBuilt: 'Construit sur Celo blockchain • Propulsé par Farcaster',
+      footerLearnCelo: 'En savoir plus sur Celo',
+      learnMoreBadges: 'En savoir plus sur les badges',
     },
 
     // Profile Setup

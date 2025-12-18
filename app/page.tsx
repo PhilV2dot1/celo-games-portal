@@ -63,14 +63,14 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-gray-800 via-gray-600 to-gray-300 rounded-xl p-6 mb-6 shadow-xl border-4 border-yellow-400"
+          className="bg-gradient-to-br from-gray-500 via-gray-300 to-gray-100 rounded-xl p-6 mb-6 shadow-xl border-4 border-yellow-400"
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 🎮 {t('home.welcome')}
               </h1>
-              <p className="text-gray-100">
+              <p className="text-gray-800">
                 {t('home.subtitle')}
               </p>
             </div>
@@ -132,12 +132,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-gradient-to-br from-gray-800 via-gray-600 to-gray-300 rounded-xl p-6 mb-6 shadow-xl border-4 border-yellow-400"
+            className="bg-gradient-to-br from-gray-500 via-gray-300 to-gray-100 rounded-xl p-6 mb-6 shadow-xl border-4 border-yellow-400"
           >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-1">👤 {t('home.createProfile')}</h2>
-                <p className="text-gray-100">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">👤 {t('home.createProfile')}</h2>
+                <p className="text-gray-800">
                   {t('home.saveProgress')}
                 </p>
               </div>
