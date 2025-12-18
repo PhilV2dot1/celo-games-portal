@@ -13,6 +13,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface Badge {
   id: string;
@@ -153,6 +154,7 @@ export function BadgeGallery({
   showOnlyEarned = false,
   maxDisplay
 }: BadgeGalleryProps) {
+  const { t } = useLanguage();
   const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
   const [earnedBadgeIds, setEarnedBadgeIds] = useState<Set<string>>(new Set());
@@ -173,9 +175,12 @@ export function BadgeGallery({
         }
       }
 
-      // Always show all badges (locked if not earned)
+      // Always show all badges (locked if not earned) and translate them
       let displayBadges = ALL_BADGES.map(badge => ({
         ...badge,
+        name: t(`badges.${badge.id}`),
+        description: t(`badges.desc_${badge.id}`),
+        category: t(`badges.cat_${badge.category.toLowerCase().replace(' ', '_')}`),
         earned: earnedBadgeIds.has(badge.id),
       }));
 
@@ -197,7 +202,7 @@ export function BadgeGallery({
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="text-gray-500">Chargement des badges...</div>
+        <div className="text-gray-500">{t('loading')}</div>
       </div>
     );
   }
@@ -211,16 +216,16 @@ export function BadgeGallery({
       {!compact && (
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Badges</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t('badges.title')}</h2>
             <p className="text-sm text-gray-600">
-              {earnedCount} / {totalCount} badges débloqués
+              {earnedCount} / {totalCount} {t('badges.unlocked')}
             </p>
           </div>
           <Link
             href="/about"
             className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
           >
-            Comment gagner des badges ?
+            {t('badges.howToEarn')}
           </Link>
         </div>
       )}
@@ -308,7 +313,7 @@ export function BadgeGallery({
             href="/profile"
             className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
           >
-            Voir tous les badges ({totalCount})
+            {t('badges.viewAll')} ({totalCount})
           </Link>
         </div>
       )}

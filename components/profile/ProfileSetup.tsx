@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface ProfileSetupProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ const PREDEFINED_AVATARS = [
 
 export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [step, setStep] = useState<'avatar' | 'username' | 'done'>('avatar');
   const [selectedAvatar, setSelectedAvatar] = useState('/avatars/predefined/default-player.svg');
   const [username, setUsername] = useState('');
@@ -40,12 +42,12 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
 
   const handleSave = async () => {
     if (!username.trim()) {
-      setError('Veuillez entrer un nom d&apos;utilisateur');
+      setError(t('profileSetup.usernameRequired'));
       return;
     }
 
     if (username.length < 3 || username.length > 20) {
-      setError('Le nom doit contenir entre 3 et 20 caractères');
+      setError(t('profileSetup.usernameLength'));
       return;
     }
 
@@ -66,7 +68,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Échec de la sauvegarde');
+        throw new Error(data.error || t('profileSetup.saveFailed'));
       }
 
       setStep('done');
@@ -76,7 +78,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
       }, 2000);
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setError((err as any).message || 'Une erreur est survenue');
+      setError((err as any).message || t('errors.generic'));
     } finally {
       setSaving(false);
     }
@@ -108,10 +110,10 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
               {/* Header */}
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  🎮 Bienvenue sur Celo Games Portal !
+                  🎮 {t('profileSetup.welcome')}
                 </h2>
                 <p className="text-gray-600">
-                  Configurez votre profil pour commencer à jouer
+                  {t('profileSetup.subtitle')}
                 </p>
               </div>
 
@@ -123,7 +125,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                   exit={{ opacity: 0, x: 20 }}
                 >
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
-                    Choisissez votre avatar
+                    {t('profileSetup.chooseAvatar')}
                   </h3>
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 mb-6">
                     {PREDEFINED_AVATARS.map((avatar) => (
@@ -154,7 +156,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                   </div>
                   <div className="bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-300 rounded-xl p-3 text-center">
                     <p className="text-sm text-gray-700">
-                      💡 <span className="font-semibold text-gray-900">Astuce :</span> Vous pourrez débloquer des avatars personnalisés en jouant !
+                      💡 <span className="font-semibold text-gray-900">{t('profileSetup.tip')}:</span> {t('profileSetup.unlockCustom')}
                     </p>
                   </div>
                 </motion.div>
@@ -182,7 +184,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
 
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
-                      Choisissez votre nom d&apos;utilisateur
+                      {t('profileSetup.chooseUsername')}
                     </h3>
                     <input
                       type="text"
@@ -193,7 +195,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-yellow-400 transition-all text-lg text-center"
                     />
                     <p className="text-sm text-gray-500 mt-2 text-center">
-                      3-20 caractères, lettres, chiffres et underscore uniquement
+                      {t('profileSetup.usernameRules')}
                     </p>
                   </div>
 
@@ -208,14 +210,14 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                       onClick={() => setStep('avatar')}
                       className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-3 rounded-xl transition-all"
                     >
-                      ← Retour
+                      ← {t('profileSetup.back')}
                     </button>
                     <button
                       onClick={handleSave}
                       disabled={saving || !username.trim()}
                       className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
                     >
-                      {saving ? 'Sauvegarde...' : 'Commencer à jouer ! 🎮'}
+                      {saving ? t('profileSetup.saving') : t('profileSetup.startPlaying')}
                     </button>
                   </div>
                 </motion.div>
@@ -230,10 +232,10 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                 >
                   <div className="text-6xl mb-4">🎉</div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Profil créé avec succès !
+                    {t('profileSetup.success')}
                   </h3>
                   <p className="text-gray-600">
-                    Prêt à gagner des points et des badges
+                    {t('profileSetup.ready')}
                   </p>
                 </motion.div>
               )}
@@ -244,7 +246,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                   onClick={onClose}
                   className="w-full mt-4 text-sm text-gray-500 hover:text-gray-700 underline"
                 >
-                  Passer pour l&apos;instant
+                  {t('profileSetup.skip')}
                 </button>
               )}
             </motion.div>

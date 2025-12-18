@@ -6,6 +6,7 @@ import { GameGrid } from "@/components/games/GameGrid";
 import { BadgeGallery } from "@/components/badges/BadgeGallery";
 import { ProfileSetup } from "@/components/profile/ProfileSetup";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { GAMES } from "@/lib/types";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -20,6 +21,7 @@ interface UserProfile {
 export default function Home() {
   const games = Object.values(GAMES);
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [hasSeenSetup, setHasSeenSetup] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -66,17 +68,17 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                🎮 Bienvenue sur Celo Games Portal
+                🎮 {t('home.welcome')}
               </h1>
               <p className="text-gray-800">
-                Jouez, gagnez des points et débloquez des badges !
+                {t('home.subtitle')}
               </p>
             </div>
             <Link
               href="/about"
               className="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-lg whitespace-nowrap"
             >
-              📖 Comment Jouer
+              📖 {t('home.howToPlay')}
             </Link>
           </div>
         </motion.div>
@@ -90,35 +92,35 @@ export default function Home() {
             className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Your Profile</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('home.yourProfile')}</h2>
               <Link
                 href="/profile/edit"
                 className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
               >
-                ✏️ Edit
+                ✏️ {t('home.edit')}
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
                 <div className="text-3xl font-bold text-blue-600">{userProfile.total_points || 0}</div>
-                <div className="text-sm text-blue-800 font-semibold">Points</div>
+                <div className="text-sm text-blue-800 font-semibold">{t('home.points')}</div>
               </div>
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
                 <div className="text-3xl font-bold text-green-600">
                   {userProfile.username ? '✓' : '-'}
                 </div>
-                <div className="text-sm text-green-800 font-semibold">Profil</div>
+                <div className="text-sm text-green-800 font-semibold">{t('home.profile')}</div>
               </div>
               <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
                 <div className="text-3xl font-bold text-purple-600">
                   {userProfile.avatar_unlocked ? '🔓' : '🔒'}
                 </div>
-                <div className="text-sm text-purple-800 font-semibold">Avatar Custom</div>
+                <div className="text-sm text-purple-800 font-semibold">{t('home.customAvatar')}</div>
               </div>
               <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center">
                 <Link href="/leaderboard" className="block hover:scale-105 transition-transform">
                   <div className="text-3xl font-bold text-yellow-600">📊</div>
-                  <div className="text-sm text-yellow-800 font-semibold">Classement</div>
+                  <div className="text-sm text-yellow-800 font-semibold">{t('home.leaderboard')}</div>
                 </Link>
               </div>
             </div>
@@ -131,22 +133,22 @@ export default function Home() {
             className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-xl p-6 mb-6 shadow-xl border-2 border-yellow-600"
           >
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">👤 Create Your Profile</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">👤 {t('home.createProfile')}</h2>
               <p className="text-gray-800 mb-4">
-                Save your progress, earn badges, and compete on the leaderboard!
+                {t('home.saveProgress')}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={() => setShowProfileSetup(true)}
                   className="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
                 >
-                  🎮 Set Up Profile Now
+                  🎮 {t('home.setupNow')}
                 </button>
                 <Link
                   href="/about"
                   className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
                 >
-                  📖 Learn More
+                  📖 {t('home.learnMore')}
                 </Link>
               </div>
             </div>
@@ -161,15 +163,15 @@ export default function Home() {
           className="bg-white/90 backdrop-blur-lg rounded-xl p-4 mb-6 shadow-lg"
           style={{ border: '3px solid #FCFF52' }}
         >
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Modes de Jeu</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">{t('home.gameModes')}</h2>
           <div className="grid sm:grid-cols-2 gap-3 text-gray-700">
             <div>
-              <div className="font-semibold text-gray-900 mb-0.5 text-sm">🆓 Mode Gratuit</div>
-              <p className="text-xs">Jouez sans wallet. Stats sauvegardées localement.</p>
+              <div className="font-semibold text-gray-900 mb-0.5 text-sm">🆓 {t('home.freeMode')}</div>
+              <p className="text-xs">{t('home.freeModeDesc')}</p>
             </div>
             <div>
-              <div className="font-semibold text-gray-900 mb-0.5 text-sm">⛓️ Mode On-Chain</div>
-              <p className="text-xs">Connectez votre wallet pour sauvegarder sur Celo.</p>
+              <div className="font-semibold text-gray-900 mb-0.5 text-sm">⛓️ {t('home.onChainMode')}</div>
+              <p className="text-xs">{t('home.onChainModeDesc')}</p>
             </div>
           </div>
           <div className="mt-3 text-center">
@@ -177,7 +179,7 @@ export default function Home() {
               href="/about"
               className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
             >
-              En savoir plus sur les points et badges →
+              {t('home.learnMoreBadges')} →
             </Link>
           </div>
         </motion.div>
@@ -190,12 +192,12 @@ export default function Home() {
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">🏅 Badges Disponibles</h2>
+            <h2 className="text-2xl font-bold text-gray-900">🏅 {t('home.availableBadges')}</h2>
             <Link
               href="/about"
               className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
             >
-              Voir tous les badges →
+              {t('home.viewAllBadges')} →
             </Link>
           </div>
           <BadgeGallery
@@ -211,13 +213,13 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">🎯 Jeux Disponibles</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">🎯 {t('home.availableGames')}</h2>
           <GameGrid games={games} />
         </motion.div>
 
         {/* Footer */}
         <footer className="mt-8 text-center text-gray-600 text-xs">
-          <p>Built on Celo blockchain • Powered by Farcaster</p>
+          <p>{t('home.footerBuilt')}</p>
           <p className="mt-1">
             <a
               href="https://celo.org"
@@ -225,7 +227,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              Learn more about Celo
+              {t('home.footerLearnCelo')}
             </a>
           </p>
         </footer>
