@@ -220,32 +220,32 @@ export default function ProfileEditPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-        <div className="text-center">
-          <div className="text-yellow-400 text-xl font-semibold mb-2">Chargement...</div>
-          <div className="text-sm text-gray-300">Chargement du profil</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400">
+        <div className="text-center bg-white/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300">
+          <div className="text-gray-900 text-xl font-semibold mb-2">Chargement...</div>
+          <div className="text-sm text-gray-600">Chargement du profil</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
           <button
             onClick={() => router.back()}
-            className="text-yellow-400 hover:text-yellow-300 font-semibold mb-4 flex items-center gap-2"
+            className="text-gray-700 hover:text-gray-900 font-semibold mb-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-gray-300 hover:border-yellow-400 transition-all"
           >
             ← Retour
           </button>
-          <h1 className="text-3xl font-bold text-white mb-2">Éditer mon profil</h1>
-          <p className="text-gray-400">Personnalisez votre profil Celo Games Portal</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Éditer mon profil</h1>
+          <p className="text-gray-700">Personnalisez votre profil Celo Games Portal</p>
         </div>
 
         {/* Main form */}
-        <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border-2 border-gray-700 p-6 md:p-8 space-y-6">
+        <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl border-2 border-gray-300 p-6 md:p-8 space-y-6">
           {/* Success message */}
           {success && (
             <motion.div

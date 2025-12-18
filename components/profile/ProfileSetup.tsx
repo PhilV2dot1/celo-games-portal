@@ -127,23 +127,36 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                   </h3>
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 mb-6">
                     {PREDEFINED_AVATARS.map((avatar) => (
-                      <button
+                      <motion.button
                         key={avatar}
                         onClick={() => handleAvatarSelect(avatar)}
-                        className="relative aspect-square rounded-xl overflow-hidden border-4 border-transparent hover:border-yellow-400 transition-all hover:scale-105 bg-gray-100"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-300 hover:border-yellow-400 hover:ring-2 hover:ring-yellow-400 transition-all bg-gradient-to-br from-gray-100 to-gray-200"
                       >
                         <Image
                           src={`/avatars/predefined/${avatar}.svg`}
                           alt={avatar}
                           fill
-                          className="object-cover"
+                          className="object-cover p-1"
+                          onError={(e) => {
+                            // Fallback to emoji if image doesn't exist
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = '<span class="text-2xl">🎮</span>';
+                            }
+                          }}
                         />
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
-                  <p className="text-sm text-gray-500 text-center">
-                    Vous pourrez débloquer des avatars personnalisés en jouant !
-                  </p>
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-300 rounded-xl p-3 text-center">
+                    <p className="text-sm text-gray-700">
+                      💡 <span className="font-semibold text-gray-900">Astuce :</span> Vous pourrez débloquer des avatars personnalisés en jouant !
+                    </p>
+                  </div>
                 </motion.div>
               )}
 

@@ -217,22 +217,22 @@ export function AvatarUploadDialog({
                   <button
                     onClick={handleUpload}
                     disabled={!selectedFile || uploading}
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
                   >
-                    {uploading ? 'Upload en cours...' : 'Upload'}
+                    {uploading ? 'Upload en cours...' : '📤 Upload'}
                   </button>
                   <button
                     onClick={handleClose}
                     disabled={uploading}
-                    className="px-6 py-3 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-all disabled:cursor-not-allowed"
+                    className="px-6 py-3 bg-gradient-to-br from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 disabled:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-all disabled:cursor-not-allowed"
                   >
                     Annuler
                   </button>
                 </div>
 
                 {/* Info */}
-                <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-3 text-xs text-blue-900">
-                  <p className="font-semibold mb-1">💡 Conseils :</p>
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-300 rounded-xl p-3 text-xs text-gray-700">
+                  <p className="font-semibold mb-1 text-gray-900">💡 Conseils :</p>
                   <ul className="list-disc list-inside space-y-1">
                     <li>Utilisez une image carrée pour un meilleur rendu</li>
                     <li>Évitez les images trop complexes (lisibilité)</li>
