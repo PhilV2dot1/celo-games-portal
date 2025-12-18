@@ -81,8 +81,8 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Quick Stats */}
-        {isAuthenticated && userProfile && (
+        {/* Quick Stats or Profile CTA */}
+        {isAuthenticated && userProfile ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -90,12 +90,12 @@ export default function Home() {
             className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Votre Profil</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Your Profile</h2>
               <Link
                 href="/profile/edit"
                 className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
               >
-                ✏️ Éditer
+                ✏️ Edit
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -119,6 +119,34 @@ export default function Home() {
                 <Link href="/leaderboard" className="block hover:scale-105 transition-transform">
                   <div className="text-3xl font-bold text-yellow-600">📊</div>
                   <div className="text-sm text-yellow-800 font-semibold">Classement</div>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-xl p-6 mb-6 shadow-xl border-2 border-yellow-600"
+          >
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">👤 Create Your Profile</h2>
+              <p className="text-gray-800 mb-4">
+                Save your progress, earn badges, and compete on the leaderboard!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => setShowProfileSetup(true)}
+                  className="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
+                >
+                  🎮 Set Up Profile Now
+                </button>
+                <Link
+                  href="/about"
+                  className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
+                >
+                  📖 Learn More
                 </Link>
               </div>
             </div>

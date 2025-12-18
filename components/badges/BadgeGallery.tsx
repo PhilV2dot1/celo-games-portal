@@ -159,6 +159,7 @@ export function BadgeGallery({
 
   useEffect(() => {
     async function loadBadges() {
+      // Load earned badges if user is logged in
       if (userId) {
         try {
           const response = await fetch(`/api/user/profile?id=${userId}`);
@@ -172,6 +173,7 @@ export function BadgeGallery({
         }
       }
 
+      // Always show all badges (locked if not earned)
       let displayBadges = ALL_BADGES.map(badge => ({
         ...badge,
         earned: earnedBadgeIds.has(badge.id),
@@ -190,7 +192,7 @@ export function BadgeGallery({
     }
 
     loadBadges();
-  }, [userId, showOnlyEarned, maxDisplay, earnedBadgeIds]);
+  }, [userId, showOnlyEarned, maxDisplay]); // Removed earnedBadgeIds from deps to avoid infinite loop
 
   if (loading) {
     return (

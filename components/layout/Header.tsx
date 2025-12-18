@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import { useLocalStats } from "@/hooks/useLocalStats";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import Link from "next/link";
 
 export function Header() {
   const { profile } = useLocalStats();
+  const { t } = useLanguage();
 
   return (
     <motion.header
@@ -14,14 +17,17 @@ export function Header() {
       transition={{ duration: 0.3 }}
       className="text-center mb-6"
     >
-      <div className="mb-3">
-        <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-2">
-          Celo Games Portal
-        </h1>
-        <div className="h-1.5 w-48 mx-auto rounded-full" style={{ backgroundColor: '#FCFF52' }}></div>
+      <div className="mb-3 flex items-start justify-between">
+        <div className="flex-1">
+          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-2">
+            Celo Games Portal
+          </h1>
+          <div className="h-1.5 w-48 mx-auto rounded-full" style={{ backgroundColor: '#FCFF52' }}></div>
+        </div>
+        <LanguageSwitcher />
       </div>
       <p className="text-base sm:text-lg text-gray-700 font-medium mb-3">
-        Play 6 Mini-Games on the Blockchain
+        {t('nav.home')} - Play 6 Mini-Games on the Blockchain
       </p>
 
       {/* Navigation Links */}
@@ -30,25 +36,25 @@ export function Header() {
           href="/"
           className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
-          🎮 Games
+          🎮 {t('nav.home')}
         </Link>
         <Link
           href="/leaderboard"
           className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
-          🏆 Leaderboard
+          🏆 {t('nav.leaderboard')}
         </Link>
         <Link
           href="/profile"
           className="px-3 sm:px-4 py-2 bg-white/80 rounded-lg font-bold text-xs sm:text-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
         >
-          👤 Profile
+          👤 {t('nav.profile')}
         </Link>
         <Link
           href="/about"
           className="px-3 sm:px-4 py-2 bg-yellow-400/90 rounded-lg font-bold text-xs sm:text-sm text-gray-900 hover:bg-yellow-500 transition-colors shadow-sm"
         >
-          📖 Guide
+          📖 {t('nav.guide')}
         </Link>
       </div>
 
@@ -62,12 +68,12 @@ export function Header() {
         >
           <div className="text-center">
             <div className="text-xl font-bold text-gray-900">{profile.totalPoints}</div>
-            <div className="text-[10px] text-gray-600 font-medium">Total Points</div>
+            <div className="text-[10px] text-gray-600 font-medium">{t('home.points')}</div>
           </div>
           <div className="w-px h-8 bg-gray-300" />
           <div className="text-center">
             <div className="text-xl font-bold text-gray-900">{profile.gamesPlayed}</div>
-            <div className="text-[10px] text-gray-600 font-medium">Games Played</div>
+            <div className="text-[10px] text-gray-600 font-medium">Games</div>
           </div>
         </motion.div>
       )}
