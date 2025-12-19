@@ -139,7 +139,11 @@ export default function MyProfilePage() {
               {t('home.learnMoreBadges') || 'Learn more'}
             </Link>
           </div>
-          <BadgeGallery compact={false} />
+          <BadgeGallery
+            userId={user?.id}
+            localStats={!user ? profile : undefined}
+            compact={false}
+          />
         </motion.div>
 
         {/* Per-Game Stats */}

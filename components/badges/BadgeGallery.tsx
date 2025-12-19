@@ -26,8 +26,15 @@ interface Badge {
   earned_at?: string;
 }
 
+interface LocalStats {
+  totalPoints: number;
+  gamesPlayed: number;
+  games: Record<string, { played: number; wins: number; losses: number; totalPoints: number; lastPlayed: number }>;
+}
+
 interface BadgeGalleryProps {
   userId?: string;
+  localStats?: LocalStats;
   compact?: boolean;
   showOnlyEarned?: boolean;
   maxDisplay?: number;
@@ -150,6 +157,7 @@ const ALL_BADGES: Badge[] = [
 
 export function BadgeGallery({
   userId,
+  localStats,
   compact = false,
   showOnlyEarned = false,
   maxDisplay
@@ -157,22 +165,50 @@ export function BadgeGallery({
   const { t } = useLanguage();
   const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
-  const [earnedBadgeIds, setEarnedBadgeIds] = useState<Set<string>>(new Set());
+
+  // Helper function to calculate earned badges from local stats
+  function calculateEarnedBadges(stats: LocalStats): Set<string> {
+    const earned = new Set<string>();
+
+    const totalWins = Object.values(stats.games).reduce((sum, game) => sum + game.wins, 0);
+    const gamesPlayedCount = Object.values(stats.games).filter(g => g.played > 0).length;
+
+    // Progression badges
+    if (totalWins >= 1) earned.add('first_win');
+    if (stats.gamesPlayed >= 10) earned.add('games_10');
+    if (stats.gamesPlayed >= 50) earned.add('games_50');
+    if (stats.gamesPlayed >= 100) earned.add('veteran');
+    if (stats.gamesPlayed >= 500) earned.add('master');
+
+    // Points badges
+    if (stats.totalPoints >= 1000) earned.add('points_1000');
+    if (stats.totalPoints >= 5000) earned.add('points_5000');
+
+    // Collection badge
+    if (gamesPlayedCount >= 6) earned.add('all_games'); // All 6 games
+
+    return earned;
+  }
 
   useEffect(() => {
     async function loadBadges() {
-      // Load earned badges if user is logged in
+      let earnedIds = new Set<string>();
+
+      // Load earned badges from API if user is logged in
       if (userId) {
         try {
           const response = await fetch(`/api/user/profile?id=${userId}`);
           if (response.ok) {
             const data = await response.json();
-            const earnedIds = new Set<string>(data.badges?.map((b: Badge) => b.id) || []);
-            setEarnedBadgeIds(earnedIds);
+            earnedIds = new Set<string>(data.badges?.map((b: Badge) => b.id) || []);
           }
         } catch (error) {
           console.error('Error loading badges:', error);
         }
+      }
+      // Calculate earned badges from local stats if available
+      else if (localStats) {
+        earnedIds = calculateEarnedBadges(localStats);
       }
 
       // Always show all badges (locked if not earned) and translate them
@@ -181,7 +217,7 @@ export function BadgeGallery({
         name: t(`badges.${badge.id}`),
         description: t(`badges.desc_${badge.id}`),
         category: t(`badges.cat_${badge.category.toLowerCase().replace(' ', '_')}`),
-        earned: earnedBadgeIds.has(badge.id),
+        earned: earnedIds.has(badge.id),
       }));
 
       if (showOnlyEarned) {
@@ -197,7 +233,7 @@ export function BadgeGallery({
     }
 
     loadBadges();
-  }, [userId, showOnlyEarned, maxDisplay]); // Removed earnedBadgeIds from deps to avoid infinite loop
+  }, [userId, localStats, showOnlyEarned, maxDisplay]); // Added localStats to deps
 
   if (loading) {
     return (
