@@ -66,13 +66,30 @@ export default function Home() {
           className="bg-gradient-to-br from-gray-500 via-gray-300 to-gray-100 rounded-xl p-6 mb-6 shadow-xl border-4 border-yellow-400"
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">
                 🎮 {t('home.welcome')}
               </h1>
-              <p className="text-gray-800">
+              <p className="text-gray-800 mb-3">
                 {t('home.subtitle')}
               </p>
+              {/* Game Modes */}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-xl">🆓</span>
+                  <div>
+                    <div className="font-bold text-gray-900">{t('home.freeMode')}</div>
+                    <p className="text-xs text-gray-700">{t('home.freeModeDesc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-xl">⛓️</span>
+                  <div>
+                    <div className="font-bold text-gray-900">{t('home.onChainMode')}</div>
+                    <p className="text-xs text-gray-700">{t('home.onChainModeDesc')}</p>
+                  </div>
+                </div>
+              </div>
             </div>
             <Link
               href="/about"
@@ -169,40 +186,11 @@ export default function Home() {
           <GameGrid games={games} />
         </motion.div>
 
-        {/* Instructions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-4 mb-6 shadow-lg"
-          style={{ border: '3px solid #FCFF52' }}
-        >
-          <h2 className="text-lg font-bold text-gray-900 mb-2">{t('home.gameModes')}</h2>
-          <div className="grid sm:grid-cols-2 gap-3 text-gray-700">
-            <div>
-              <div className="font-semibold text-gray-900 mb-0.5 text-sm">🆓 {t('home.freeMode')}</div>
-              <p className="text-xs">{t('home.freeModeDesc')}</p>
-            </div>
-            <div>
-              <div className="font-semibold text-gray-900 mb-0.5 text-sm">⛓️ {t('home.onChainMode')}</div>
-              <p className="text-xs">{t('home.onChainModeDesc')}</p>
-            </div>
-          </div>
-          <div className="mt-3 text-center">
-            <Link
-              href="/about"
-              className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline"
-            >
-              {t('home.learnMoreBadges')} →
-            </Link>
-          </div>
-        </motion.div>
-
         {/* Badge Preview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
         >
           <div className="flex items-center justify-between mb-4">
