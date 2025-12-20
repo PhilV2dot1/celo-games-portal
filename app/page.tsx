@@ -7,6 +7,7 @@ import { BadgeGallery } from "@/components/badges/BadgeGallery";
 import { ProfileSetup } from "@/components/profile/ProfileSetup";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useLocalStats } from "@/hooks/useLocalStats";
 import { GAMES } from "@/lib/types";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -22,6 +23,7 @@ export default function Home() {
   const games = Object.values(GAMES);
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
+  const { profile } = useLocalStats();
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [hasSeenSetup, setHasSeenSetup] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -204,6 +206,7 @@ export default function Home() {
           </div>
           <BadgeGallery
             userId={userProfile?.id}
+            localStats={!isAuthenticated ? profile : undefined}
             compact={true}
             maxDisplay={12}
           />
