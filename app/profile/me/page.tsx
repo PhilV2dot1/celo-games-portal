@@ -263,7 +263,7 @@ export default function MyProfilePage() {
           </div>
           <BadgeGallery
             userId={user?.id}
-            localStats={!user ? profile : undefined}
+            localStats={!isAuthenticated ? localProfile : undefined}
             compact={false}
           />
         </motion.div>
