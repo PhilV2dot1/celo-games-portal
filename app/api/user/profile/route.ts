@@ -148,26 +148,59 @@ export async function GET(request: NextRequest) {
  * PUT /api/user/profile
  *
  * Update authenticated user's profile
+ * Supports lookup by userId or walletAddress
  */
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { username, bio, avatar_type, avatar_url, social_links } = body;
+    const { username, bio, avatar_type, avatar_url, social_links, walletAddress } = body;
 
     // Get authenticated user from header or session
-    // For now, we'll require a userId in the body (in production, get from session)
+    // For now, we'll require a userId or walletAddress in the body
     const userId = body.userId || request.headers.get('x-user-id');
 
-    if (!userId) {
+    if (!userId && !walletAddress) {
       return NextResponse.json(
-        { error: 'Authentification requise' },
+        { error: 'Authentification requise - userId ou walletAddress nécessaire' },
         { status: 401 }
       );
     }
 
+    // Initialize Supabase with service role for querying user
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+
+    // Find the user by userId or walletAddress
+    let query = supabaseAdmin.from('users').select('id');
+    if (userId) {
+      query = query.eq('id', userId);
+    } else if (walletAddress) {
+      query = query.eq('wallet_address', walletAddress.toLowerCase());
+    }
+
+    const { data: userData, error: userError } = await query.maybeSingle();
+
+    if (userError || !userData) {
+      console.error('User not found:', { userId, walletAddress, error: userError });
+      return NextResponse.json(
+        { error: 'Utilisateur non trouvé' },
+        { status: 404 }
+      );
+    }
+
+    const actualUserId = userData.id;
+
     // Validate username
     if (username) {
-      const usernameResult = await validateUsername(username, userId);
+      const usernameResult = await validateUsername(username, actualUserId);
       if (!usernameResult.valid) {
         return NextResponse.json(
           { error: usernameResult.error },
@@ -198,18 +231,6 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Initialize Supabase with service role for update
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
-
     // Build update object
     const updateData: Record<string, unknown> = {};
     if (username !== undefined) updateData.username = username;
@@ -223,7 +244,7 @@ export async function PUT(request: NextRequest) {
     const { data: updatedUser, error: updateError } = (await supabaseAdmin
       .from('users')
       .update(updateData)
-      .eq('id', userId)
+      .eq('id', actualUserId)
       .select()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .single()) as { data: any; error: any };

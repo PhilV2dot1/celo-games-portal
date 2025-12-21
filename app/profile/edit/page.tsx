@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { useAccount } from 'wagmi';
 import { AvatarSelector } from '@/components/profile/AvatarSelector';
 import { AvatarUploadDialog } from '@/components/profile/AvatarUploadDialog';
 import {
@@ -26,6 +27,7 @@ import Image from 'next/image';
 export default function ProfileEditPage() {
   const router = useRouter();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { address: walletAddress, isConnected: walletConnected } = useAccount();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -61,23 +63,35 @@ export default function ProfileEditPage() {
   useEffect(() => {
     if (authLoading) return;
 
-    if (!isAuthenticated) {
+    // Allow access if either authenticated OR wallet connected
+    if (!isAuthenticated && !walletConnected) {
       router.push('/');
       return;
     }
 
     loadProfile();
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, walletConnected, authLoading, router]);
 
   const loadProfile = async () => {
-    if (!user?.id) {
+    const hasUserId = user?.id;
+    const hasWallet = walletConnected && walletAddress;
+
+    if (!hasUserId && !hasWallet) {
       setError('Utilisateur non connecté');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(`/api/user/profile?id=${user.id}`);
+      // Build query based on what we have
+      let url = '/api/user/profile?';
+      if (hasUserId) {
+        url += `id=${user.id}`;
+      } else if (hasWallet) {
+        url += `wallet=${walletAddress.toLowerCase()}`;
+      }
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to load profile');
 
       const data = await response.json();
@@ -179,17 +193,25 @@ export default function ProfileEditPage() {
     setSuccess(false);
 
     try {
+      // Build request body with either userId or wallet address
+      const requestBody: Record<string, unknown> = {
+        username,
+        bio,
+        avatar_type: avatarType,
+        avatar_url: avatarUrl,
+        social_links: socialLinks,
+      };
+
+      if (user?.id) {
+        requestBody.userId = user.id;
+      } else if (walletConnected && walletAddress) {
+        requestBody.walletAddress = walletAddress.toLowerCase();
+      }
+
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user?.id,
-          username,
-          bio,
-          avatar_type: avatarType,
-          avatar_url: avatarUrl,
-          social_links: socialLinks,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -201,7 +223,7 @@ export default function ProfileEditPage() {
       setHasUnsavedChanges(false);
 
       setTimeout(() => {
-        router.push('/profile');
+        router.push('/profile/me');
       }, 1500);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
