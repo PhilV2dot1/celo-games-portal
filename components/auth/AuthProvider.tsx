@@ -31,6 +31,7 @@ interface AuthContextType {
   // Social auth
   signInWithGoogle: () => Promise<void>;
   signInWithTwitter: () => Promise<void>;
+  signInWithDiscord: () => Promise<void>;
 
   // Wallet/Farcaster linking
   linkWallet: (address: string) => Promise<{ success: boolean; error?: string }>;
@@ -187,6 +188,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  /**
+   * Sign in with Discord
+   */
+  const signInWithDiscord = async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+    } catch (error) {
+      console.error('Discord sign in error:', error);
+    }
+  };
+
   // ============================================================================
   // Wallet/Farcaster Linking
   // ============================================================================
@@ -326,6 +343,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     signInWithGoogle,
     signInWithTwitter,
+    signInWithDiscord,
     linkWallet,
     linkFarcaster,
     claimProfile,

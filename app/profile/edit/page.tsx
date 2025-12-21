@@ -70,18 +70,24 @@ export default function ProfileEditPage() {
   }, [isAuthenticated, authLoading, router]);
 
   const loadProfile = async () => {
+    if (!user?.id) {
+      setError('Utilisateur non connecté');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/user/profile');
+      const response = await fetch(`/api/user/profile?id=${user.id}`);
       if (!response.ok) throw new Error('Failed to load profile');
 
       const data = await response.json();
 
-      setUsername(data.username || '');
-      setBio(data.bio || '');
-      setAvatarType(data.avatar_type || 'default');
-      setAvatarUrl(data.avatar_url || '/avatars/predefined/default-player.svg');
-      setSocialLinks(data.social_links || { twitter: '', farcaster: '', discord: '' });
-      setCanUploadCustom(data.avatar_unlocked || false);
+      setUsername(data.user?.username || '');
+      setBio(data.user?.bio || '');
+      setAvatarType(data.user?.avatar_type || 'default');
+      setAvatarUrl(data.user?.avatar_url || '/avatars/predefined/default-player.svg');
+      setSocialLinks(data.user?.social_links || { twitter: '', farcaster: '', discord: '' });
+      setCanUploadCustom(data.user?.avatar_unlocked || false);
 
       setLoading(false);
     } catch (err) {
@@ -177,6 +183,7 @@ export default function ProfileEditPage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          userId: user?.id,
           username,
           bio,
           avatar_type: avatarType,
