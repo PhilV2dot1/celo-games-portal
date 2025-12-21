@@ -188,15 +188,50 @@ export async function PUT(request: NextRequest) {
 
     const { data: userData, error: userError } = await query.maybeSingle();
 
-    if (userError || !userData) {
+    let actualUserId: string;
+
+    // If user not found and wallet address provided, create new user
+    if (!userData && walletAddress) {
+      console.log('Creating new user with wallet address:', walletAddress);
+
+      const { data: newUser, error: createError } = await supabaseAdmin
+        .from('users')
+        .insert({
+          wallet_address: walletAddress.toLowerCase(),
+          username: username || `Player_${walletAddress.slice(2, 10)}`,
+          is_anonymous: false,
+          total_points: 0,
+          avatar_type: avatar_type || 'default',
+          avatar_url: avatar_url || '/avatars/predefined/default-player.svg',
+        })
+        .select()
+        .single();
+
+      if (createError || !newUser) {
+        console.error('Error creating user:', createError);
+        return NextResponse.json(
+          { error: 'Échec de la création de l\'utilisateur' },
+          { status: 500 }
+        );
+      }
+
+      actualUserId = newUser.id;
+
+      // Return the newly created user immediately
+      return NextResponse.json({
+        success: true,
+        user: newUser,
+        message: 'Profil créé avec succès',
+      });
+    } else if (userError || !userData) {
       console.error('User not found:', { userId, walletAddress, error: userError });
       return NextResponse.json(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       );
+    } else {
+      actualUserId = userData.id;
     }
-
-    const actualUserId = userData.id;
 
     // Validate username
     if (username) {

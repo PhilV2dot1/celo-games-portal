@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useAccount } from 'wagmi';
 
 interface ProfileSetupProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const PREDEFINED_AVATARS = [
 export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { address: walletAddress, isConnected: walletConnected } = useAccount();
   const [step, setStep] = useState<'avatar' | 'username' | 'done'>('avatar');
   const [selectedAvatar, setSelectedAvatar] = useState('/avatars/predefined/default-player.svg');
   const [username, setUsername] = useState('');
@@ -55,8 +57,8 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
     setError('');
 
     try {
-      // If user is anonymous (not authenticated), save to localStorage
-      if (!user) {
+      // If user is anonymous (not authenticated AND not wallet connected), save to localStorage
+      if (!user && !walletConnected) {
         // Get existing localStorage stats
         const STORAGE_KEY = 'celo_games_portal_stats';
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -82,16 +84,23 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
         return;
       }
 
-      // If user is authenticated, save to database via API
+      // If user is authenticated OR wallet connected, save to database via API
+      const requestBody: Record<string, unknown> = {
+        username,
+        avatar_type: 'predefined',
+        avatar_url: selectedAvatar,
+      };
+
+      if (user?.id) {
+        requestBody.userId = user.id;
+      } else if (walletConnected && walletAddress) {
+        requestBody.walletAddress = walletAddress.toLowerCase();
+      }
+
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          username,
-          avatar_type: 'predefined',
-          avatar_url: selectedAvatar,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
