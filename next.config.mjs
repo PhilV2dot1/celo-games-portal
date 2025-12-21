@@ -11,6 +11,8 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        // Suppress MetaMask SDK React Native dependency warning
+        '@react-native-async-storage/async-storage': false,
       };
 
       // Ignore React Native dependencies
