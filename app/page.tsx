@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { GameGrid } from "@/components/games/GameGrid";
 import { BadgeGallery } from "@/components/badges/BadgeGallery";
 import { ProfileSetup } from "@/components/profile/ProfileSetup";
@@ -213,19 +214,7 @@ export default function Home() {
         </motion.div>
 
         {/* Footer */}
-        <footer className="mt-8 text-center text-gray-600 text-xs">
-          <p>{t('home.footerBuilt')}</p>
-          <p className="mt-1">
-            <a
-              href="https://celo.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-            >
-              {t('home.footerLearnCelo')}
-            </a>
-          </p>
-        </footer>
+        <Footer />
       </div>
 
       {/* Profile Setup Modal */}
