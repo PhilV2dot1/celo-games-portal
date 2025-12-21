@@ -23,6 +23,7 @@ export default function MastermindPage() {
     message,
     stats,
     hasActiveOnChainGame,
+    shouldShowSubmitButton,
     isConnected,
     isPending,
     updateGuess,
@@ -204,7 +205,8 @@ export default function MastermindPage() {
           {/* On-Chain Controls */}
           {mode === "onchain" && (
             <>
-              {!hasActiveOnChainGame && (
+              {/* Show Start button when no game is active AND game phase is NOT won/lost */}
+              {!hasActiveOnChainGame && gamePhase !== "won" && gamePhase !== "lost" && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -217,20 +219,22 @@ export default function MastermindPage() {
                 </motion.button>
               )}
 
-              {hasActiveOnChainGame && (gamePhase === "won" || gamePhase === "lost") && (
+              {/* Show Submit button when game is finished (won/lost) */}
+              {shouldShowSubmitButton && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.15 }}
                   onClick={submitScoreOnChain}
                   disabled={isPending}
-                  className="px-8 py-3 bg-white border-[3px] border-celo hover:bg-gray-50 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:brightness-110 text-white rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {isPending ? "Submitting..." : "Submit Score"}
+                  {isPending ? "Submitting..." : "Submit Score On-Chain"}
                 </motion.button>
               )}
 
-              {hasActiveOnChainGame && (
+              {/* Show Abandon button only when game is active (playing state) */}
+              {hasActiveOnChainGame && gamePhase === "playing" && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

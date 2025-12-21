@@ -490,6 +490,10 @@ export function useMastermind() {
       }
     : freeStats;
 
+  // For on-chain mode, consider game "active" if it's won/lost but not yet submitted
+  // This allows showing the Submit Score button after winning/losing
+  const shouldShowSubmitButton = mode === 'onchain' && (gamePhase === 'won' || gamePhase === 'lost');
+
   return {
     // Game state
     mode,
@@ -501,6 +505,7 @@ export function useMastermind() {
     message,
     stats,
     hasActiveOnChainGame,
+    shouldShowSubmitButton,
 
     // Wallet state
     address,
