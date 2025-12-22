@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
       totalPoints: entry.total_points,
       gamesPlayed: entry.games_played,
       wins: entry.wins,
+      theme_color: entry.theme_color || 'yellow',
       avatar_type: entry.avatar_type,
       avatar_url: entry.avatar_url,
     }));

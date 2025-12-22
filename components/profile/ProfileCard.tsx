@@ -10,12 +10,14 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { getThemeColors, ThemeColor } from '@/lib/constants/themes';
 
 interface ProfileCardProps {
   user: {
     id?: string;
     username: string;
     display_name?: string;
+    theme_color?: ThemeColor;
     avatar_url?: string;
     avatar_type?: 'default' | 'predefined' | 'custom';
     total_points?: number;
@@ -46,6 +48,7 @@ export function ProfileCard({
   onClick,
 }: ProfileCardProps) {
   const avatarUrl = user.avatar_url || '/avatars/predefined/default-player.svg';
+  const themeColors = getThemeColors(user.theme_color);
 
   // Size mappings
   const sizeClasses = {
@@ -82,13 +85,13 @@ export function ProfileCard({
       whileHover={onClick ? { scale: 1.02 } : {}}
       onClick={onClick}
       className={`bg-white/90 backdrop-blur-sm rounded-xl border-2 border-gray-300 ${
-        onClick ? 'cursor-pointer hover:border-yellow-400 hover:shadow-lg' : ''
+        onClick ? `cursor-pointer hover:${themeColors.border} hover:shadow-lg` : ''
       } transition-all ${classes.container} ${className}`}
     >
       <div className="flex items-center gap-4">
         {/* Avatar */}
         <div className={`relative ${classes.avatar} flex-shrink-0`}>
-          <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-yellow-400 shadow-md">
+          <div className={`relative w-full h-full rounded-full overflow-hidden border-4 ${themeColors.border} shadow-md`}>
             <Image
               src={avatarUrl}
               alt={user.username}
@@ -99,8 +102,8 @@ export function ProfileCard({
 
           {/* Rank badge */}
           {showRank && user.rank && user.rank <= 3 && (
-            <div className="absolute -top-1 -right-1 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full w-6 h-6 flex items-center justify-center border-2 border-white shadow-md">
-              <span className="text-xs font-bold text-gray-900">
+            <div className={`absolute -top-1 -right-1 ${themeColors.badge} rounded-full w-6 h-6 flex items-center justify-center border-2 border-white shadow-md`}>
+              <span className={`text-xs font-bold ${themeColors.text}`}>
                 {user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : '🥉'}
               </span>
             </div>

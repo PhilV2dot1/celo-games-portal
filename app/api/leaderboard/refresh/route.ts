@@ -28,6 +28,7 @@ export async function POST() {
     // or we can use a workaround by making a small update
 
     // Try to execute via rpc, but with better error handling
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error: rpcError } = await supabaseAdmin.rpc('refresh_leaderboard' as any);
 
     // If RPC doesn't exist, try alternative: force refresh by querying

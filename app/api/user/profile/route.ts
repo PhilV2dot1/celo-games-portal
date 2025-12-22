@@ -7,6 +7,7 @@ import {
   validateBio,
   validateDisplayName,
 } from '@/lib/validations/profile';
+import { isValidThemeColor } from '@/lib/constants/themes';
 
 export const runtime = 'edge';
 
@@ -118,6 +119,7 @@ export async function GET(request: NextRequest) {
         total_points: user.total_points,
         created_at: user.created_at,
         // Profile fields
+        theme_color: user.theme_color || 'yellow',
         avatar_type: user.avatar_type || 'default',
         avatar_url: user.avatar_url || '/avatars/predefined/default-player.svg',
         avatar_unlocked: user.avatar_unlocked || false,
@@ -155,7 +157,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { display_name, username, bio, avatar_type, avatar_url, social_links, walletAddress } = body;
+    const { display_name, username, bio, theme_color, avatar_type, avatar_url, social_links, walletAddress } = body;
 
     // Get authenticated user from header or session
     // For now, we'll require a userId or walletAddress in the body
@@ -279,11 +281,20 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    // Validate theme color
+    if (theme_color && !isValidThemeColor(theme_color)) {
+      return NextResponse.json(
+        { error: 'Couleur de thème invalide' },
+        { status: 400 }
+      );
+    }
+
     // Build update object
     const updateData: Record<string, unknown> = {};
     if (display_name !== undefined) updateData.display_name = display_name;
     if (username !== undefined) updateData.username = username;
     if (bio !== undefined) updateData.bio = bio;
+    if (theme_color !== undefined) updateData.theme_color = theme_color;
     if (avatar_type !== undefined) updateData.avatar_type = avatar_type;
     if (avatar_url !== undefined) updateData.avatar_url = avatar_url;
     if (social_links !== undefined) updateData.social_links = social_links;

@@ -17,6 +17,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { useAccount } from 'wagmi';
 import { AvatarSelector } from '@/components/profile/AvatarSelector';
 import { AvatarUploadDialog } from '@/components/profile/AvatarUploadDialog';
+import ThemeSelector from '@/components/profile/ThemeSelector';
 import {
   validateUsername,
   validateSocialLinks,
@@ -24,6 +25,7 @@ import {
   validateDisplayName,
   DISPLAY_NAME_MAX_LENGTH,
 } from '@/lib/validations/profile';
+import { ThemeColor } from '@/lib/constants/themes';
 import Image from 'next/image';
 
 export default function ProfileEditPage() {
@@ -41,6 +43,7 @@ export default function ProfileEditPage() {
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
+  const [themeColor, setThemeColor] = useState<ThemeColor>('yellow');
   const [avatarType, setAvatarType] = useState<'default' | 'predefined' | 'custom'>('default');
   const [avatarUrl, setAvatarUrl] = useState('/avatars/predefined/default-player.svg');
   const [socialLinks, setSocialLinks] = useState({
@@ -91,6 +94,7 @@ export default function ProfileEditPage() {
       setDisplayName(data.user?.display_name || data.user?.username || '');
       setUsername(data.user?.username || '');
       setBio(data.user?.bio || '');
+      setThemeColor(data.user?.theme_color || 'yellow');
       setAvatarType(data.user?.avatar_type || 'default');
       setAvatarUrl(data.user?.avatar_url || '/avatars/predefined/default-player.svg');
       setSocialLinks(data.user?.social_links || { twitter: '', farcaster: '', discord: '' });
@@ -195,6 +199,12 @@ export default function ProfileEditPage() {
     setHasUnsavedChanges(true);
   };
 
+  // Handle theme color change
+  const handleThemeChange = (theme: ThemeColor) => {
+    setThemeColor(theme);
+    setHasUnsavedChanges(true);
+  };
+
   // Save profile
   const handleSave = async () => {
     // Validate all fields
@@ -213,6 +223,7 @@ export default function ProfileEditPage() {
         display_name: displayName,
         username,
         bio,
+        theme_color: themeColor,
         avatar_type: avatarType,
         avatar_url: avatarUrl,
         social_links: socialLinks,
@@ -334,6 +345,14 @@ export default function ProfileEditPage() {
               onUploadCustomClick={() => setShowAvatarUpload(true)}
             />
           </div>
+
+          <hr className="border-gray-300" />
+
+          {/* Theme Color Selector */}
+          <ThemeSelector
+            selectedTheme={themeColor}
+            onThemeChange={handleThemeChange}
+          />
 
           <hr className="border-gray-300" />
 

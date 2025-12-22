@@ -64,6 +64,7 @@ SELECT
   u.username,
   u.display_name,
   u.fid,
+  u.theme_color,
   u.avatar_type,
   u.avatar_url,
   u.total_points,
@@ -72,7 +73,7 @@ SELECT
   ROW_NUMBER() OVER (ORDER BY u.total_points DESC, u.created_at ASC) as rank
 FROM users u
 LEFT JOIN game_sessions gs ON u.id = gs.user_id
-GROUP BY u.id, u.username, u.display_name, u.fid, u.avatar_type, u.avatar_url, u.total_points, u.created_at
+GROUP BY u.id, u.username, u.display_name, u.fid, u.theme_color, u.avatar_type, u.avatar_url, u.total_points, u.created_at
 ORDER BY u.total_points DESC;
 
 -- Recreate indexes
