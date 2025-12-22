@@ -21,6 +21,8 @@ import {
   validateUsername,
   validateSocialLinks,
   validateBio,
+  validateDisplayName,
+  DISPLAY_NAME_MAX_LENGTH,
 } from '@/lib/validations/profile';
 import Image from 'next/image';
 
@@ -36,6 +38,7 @@ export default function ProfileEditPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Form state
+  const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [avatarType, setAvatarType] = useState<'default' | 'predefined' | 'custom'>('default');
@@ -51,6 +54,7 @@ export default function ProfileEditPage() {
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
 
   // Validation errors
+  const [displayNameError, setDisplayNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [bioError, setBioError] = useState('');
   const [socialErrors, setSocialErrors] = useState({
@@ -84,6 +88,7 @@ export default function ProfileEditPage() {
 
       const data = await response.json();
 
+      setDisplayName(data.user?.display_name || data.user?.username || '');
       setUsername(data.user?.username || '');
       setBio(data.user?.bio || '');
       setAvatarType(data.user?.avatar_type || 'default');
@@ -129,6 +134,15 @@ export default function ProfileEditPage() {
     } catch (err) {
       console.error('Error checking avatar unlock:', err);
     }
+  };
+
+  // Handle display name change with validation
+  const handleDisplayNameChange = (value: string) => {
+    setDisplayName(value);
+    setHasUnsavedChanges(true);
+
+    const result = validateDisplayName(value);
+    setDisplayNameError(result.valid ? '' : result.error || '');
   };
 
   // Handle username change with validation
@@ -184,7 +198,7 @@ export default function ProfileEditPage() {
   // Save profile
   const handleSave = async () => {
     // Validate all fields
-    if (usernameError || bioError || Object.values(socialErrors).some((e) => e)) {
+    if (displayNameError || usernameError || bioError || Object.values(socialErrors).some((e) => e)) {
       setError('Veuillez corriger les erreurs avant de sauvegarder');
       return;
     }
@@ -196,6 +210,7 @@ export default function ProfileEditPage() {
     try {
       // Build request body with either userId or wallet address
       const requestBody: Record<string, unknown> = {
+        display_name: displayName,
         username,
         bio,
         avatar_type: avatarType,
@@ -322,10 +337,33 @@ export default function ProfileEditPage() {
 
           <hr className="border-gray-300" />
 
+          {/* Display Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nom affiché
+            </label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => handleDisplayNameChange(e.target.value)}
+              placeholder="Mon Super Pseudo 🎮"
+              maxLength={DISPLAY_NAME_MAX_LENGTH}
+              className={`w-full px-4 py-2 border-2 rounded-xl focus:outline-none transition-all ${
+                displayNameError
+                  ? 'border-red-400 focus:border-red-500'
+                  : 'border-gray-300 focus:border-yellow-400'
+              }`}
+            />
+            {displayNameError && <p className="text-red-600 text-xs mt-1">{displayNameError}</p>}
+            <p className="text-gray-500 text-xs mt-1">
+              Votre nom public (max {DISPLAY_NAME_MAX_LENGTH} caractères, espaces et émojis autorisés)
+            </p>
+          </div>
+
           {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom d&apos;utilisateur
+              Nom d&apos;utilisateur <span className="text-gray-500 font-normal">(identifiant unique)</span>
             </label>
             <input
               type="text"
@@ -442,6 +480,7 @@ export default function ProfileEditPage() {
               disabled={
                 saving ||
                 !hasUnsavedChanges ||
+                !!displayNameError ||
                 !!usernameError ||
                 !!bioError ||
                 Object.values(socialErrors).some((e) => e)

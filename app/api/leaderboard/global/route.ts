@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
       rank: entry.rank,
       userId: entry.user_id,
       username: entry.username || `Player ${entry.fid || 'Unknown'}`,
+      displayName: entry.display_name || entry.username || `Player ${entry.fid || 'Unknown'}`,
       fid: entry.fid,
       totalPoints: entry.total_points,
       gamesPlayed: entry.games_played,

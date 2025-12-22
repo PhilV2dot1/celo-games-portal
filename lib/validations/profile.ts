@@ -38,7 +38,10 @@ export const SOCIAL_PATTERNS = {
 };
 
 // Bio maximum length
-export const BIO_MAX_LENGTH = 200;
+export const BIO_MAX_LENGTH = 500; // Increased from 200 to 500 for richer bios
+
+// Display name maximum length
+export const DISPLAY_NAME_MAX_LENGTH = 50;
 
 // Valid avatar types
 export const VALID_AVATAR_TYPES = ['default', 'predefined', 'custom'] as const;
@@ -199,6 +202,42 @@ export function validateBio(bio?: string): ValidationResult {
     return {
       valid: false,
       error: `La bio ne peut pas dépasser ${BIO_MAX_LENGTH} caractères`,
+    };
+  }
+
+  return { valid: true };
+}
+
+// ============================================================================
+// Display Name Validation
+// ============================================================================
+
+/**
+ * Validates a display name
+ * Display names can contain spaces, unicode characters, and emojis
+ * @param displayName The display name to validate
+ * @returns Validation result
+ */
+export function validateDisplayName(displayName: string): ValidationResult {
+  if (!displayName || displayName.trim().length === 0) {
+    return {
+      valid: false,
+      error: 'Le nom affiché est requis',
+    };
+  }
+
+  if (displayName.length > DISPLAY_NAME_MAX_LENGTH) {
+    return {
+      valid: false,
+      error: `Le nom affiché ne peut pas dépasser ${DISPLAY_NAME_MAX_LENGTH} caractères`,
+    };
+  }
+
+  // Check for excessive whitespace
+  if (displayName.trim() !== displayName || /\s{2,}/.test(displayName)) {
+    return {
+      valid: false,
+      error: 'Le nom affiché ne peut pas contenir d\'espaces au début/fin ou multiples espaces consécutifs',
     };
   }
 

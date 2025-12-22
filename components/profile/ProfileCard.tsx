@@ -15,6 +15,7 @@ interface ProfileCardProps {
   user: {
     id?: string;
     username: string;
+    display_name?: string;
     avatar_url?: string;
     avatar_type?: 'default' | 'predefined' | 'custom';
     total_points?: number;
@@ -111,7 +112,7 @@ export function ProfileCard({
           {/* Username and rank */}
           <div className="flex items-center gap-2 mb-1">
             <h3 className={`font-bold text-gray-900 truncate ${classes.username}`}>
-              {user.username}
+              {user.display_name || user.username}
             </h3>
             {showRank && user.rank && user.rank > 3 && (
               <span className={`text-gray-500 font-semibold ${classes.rank}`}>

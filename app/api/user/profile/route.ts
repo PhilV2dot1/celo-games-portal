@@ -5,6 +5,7 @@ import {
   validateUsername,
   validateSocialLinks,
   validateBio,
+  validateDisplayName,
 } from '@/lib/validations/profile';
 
 export const runtime = 'edge';
@@ -112,6 +113,7 @@ export async function GET(request: NextRequest) {
         id: user.id,
         fid: user.fid,
         username: user.username || `Player ${user.id.slice(0, 8)}`,
+        display_name: user.display_name || user.username || `Player ${user.id.slice(0, 8)}`,
         wallet_address: user.wallet_address,
         total_points: user.total_points,
         created_at: user.created_at,
@@ -153,7 +155,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { username, bio, avatar_type, avatar_url, social_links, walletAddress } = body;
+    const { display_name, username, bio, avatar_type, avatar_url, social_links, walletAddress } = body;
 
     // Get authenticated user from header or session
     // For now, we'll require a userId or walletAddress in the body
@@ -233,6 +235,17 @@ export async function PUT(request: NextRequest) {
       actualUserId = userData.id;
     }
 
+    // Validate display name
+    if (display_name) {
+      const displayNameResult = validateDisplayName(display_name);
+      if (!displayNameResult.valid) {
+        return NextResponse.json(
+          { error: displayNameResult.error },
+          { status: 400 }
+        );
+      }
+    }
+
     // Validate username
     if (username) {
       const usernameResult = await validateUsername(username, actualUserId);
@@ -268,6 +281,7 @@ export async function PUT(request: NextRequest) {
 
     // Build update object
     const updateData: Record<string, unknown> = {};
+    if (display_name !== undefined) updateData.display_name = display_name;
     if (username !== undefined) updateData.username = username;
     if (bio !== undefined) updateData.bio = bio;
     if (avatar_type !== undefined) updateData.avatar_type = avatar_type;
