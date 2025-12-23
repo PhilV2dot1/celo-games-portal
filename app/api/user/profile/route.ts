@@ -127,6 +127,11 @@ export async function GET(request: NextRequest) {
         social_links: user.social_links || {},
         email: user.email,
         is_anonymous: user.is_anonymous,
+        // Privacy settings
+        profile_visibility: user.profile_visibility || 'public',
+        show_stats: user.show_stats !== false, // Default true
+        show_badges: user.show_badges !== false, // Default true
+        show_game_history: user.show_game_history !== false, // Default true
       },
       stats: {
         gamesPlayed,
@@ -157,7 +162,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { display_name, username, bio, theme_color, avatar_type, avatar_url, social_links, walletAddress } = body;
+    const { display_name, username, bio, theme_color, avatar_type, avatar_url, social_links, profile_visibility, show_stats, show_badges, show_game_history, walletAddress } = body;
 
     // Get authenticated user from header or session
     // For now, we'll require a userId or walletAddress in the body
@@ -289,6 +294,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Validate profile visibility
+    if (profile_visibility && !['public', 'private'].includes(profile_visibility)) {
+      return NextResponse.json(
+        { error: 'Visibilité de profil invalide' },
+        { status: 400 }
+      );
+    }
+
     // Build update object
     const updateData: Record<string, unknown> = {};
     if (display_name !== undefined) updateData.display_name = display_name;
@@ -298,6 +311,10 @@ export async function PUT(request: NextRequest) {
     if (avatar_type !== undefined) updateData.avatar_type = avatar_type;
     if (avatar_url !== undefined) updateData.avatar_url = avatar_url;
     if (social_links !== undefined) updateData.social_links = social_links;
+    if (profile_visibility !== undefined) updateData.profile_visibility = profile_visibility;
+    if (show_stats !== undefined) updateData.show_stats = show_stats;
+    if (show_badges !== undefined) updateData.show_badges = show_badges;
+    if (show_game_history !== undefined) updateData.show_game_history = show_game_history;
     updateData.updated_at = new Date().toISOString();
 
     // Update user

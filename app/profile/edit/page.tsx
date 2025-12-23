@@ -19,6 +19,7 @@ import { AvatarSelector } from '@/components/profile/AvatarSelector';
 import { AvatarUploadDialog } from '@/components/profile/AvatarUploadDialog';
 import ThemeSelector from '@/components/profile/ThemeSelector';
 import { ProfileCompleteness } from '@/components/profile/ProfileCompleteness';
+import { PrivacySettings, ProfileVisibility } from '@/components/profile/PrivacySettings';
 import {
   validateUsername,
   validateSocialLinks,
@@ -60,6 +61,12 @@ export default function ProfileEditPage() {
   // Profile stats for completeness tracking
   const [profileStats, setProfileStats] = useState<{ gamesPlayed: number }>({ gamesPlayed: 0 });
   const [totalPoints, setTotalPoints] = useState(0);
+
+  // Privacy settings
+  const [profileVisibility, setProfileVisibility] = useState<ProfileVisibility>('public');
+  const [showStats, setShowStats] = useState(true);
+  const [showBadges, setShowBadges] = useState(true);
+  const [showGameHistory, setShowGameHistory] = useState(true);
 
   // Validation errors
   const [displayNameError, setDisplayNameError] = useState('');
@@ -106,6 +113,10 @@ export default function ProfileEditPage() {
       setCanUploadCustom(data.user?.avatar_unlocked || false);
       setTotalPoints(data.user?.total_points || 0);
       setProfileStats({ gamesPlayed: data.stats?.gamesPlayed || 0 });
+      setProfileVisibility(data.user?.profile_visibility || 'public');
+      setShowStats(data.user?.show_stats !== false); // Default true
+      setShowBadges(data.user?.show_badges !== false); // Default true
+      setShowGameHistory(data.user?.show_game_history !== false); // Default true
 
       setLoading(false);
     } catch (err) {
@@ -212,6 +223,27 @@ export default function ProfileEditPage() {
     setHasUnsavedChanges(true);
   };
 
+  // Handle privacy settings changes
+  const handleVisibilityChange = (visibility: ProfileVisibility) => {
+    setProfileVisibility(visibility);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleShowStatsChange = (show: boolean) => {
+    setShowStats(show);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleShowBadgesChange = (show: boolean) => {
+    setShowBadges(show);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleShowGameHistoryChange = (show: boolean) => {
+    setShowGameHistory(show);
+    setHasUnsavedChanges(true);
+  };
+
   // Save profile
   const handleSave = async () => {
     // Validate all fields
@@ -234,6 +266,10 @@ export default function ProfileEditPage() {
         avatar_type: avatarType,
         avatar_url: avatarUrl,
         social_links: socialLinks,
+        profile_visibility: profileVisibility,
+        show_stats: showStats,
+        show_badges: showBadges,
+        show_game_history: showGameHistory,
       };
 
       if (user?.id) {
@@ -511,6 +547,23 @@ export default function ProfileEditPage() {
                 <p className="text-red-600 text-xs mt-1">{socialErrors.discord}</p>
               )}
             </div>
+          </div>
+
+          <hr className="border-gray-300" />
+
+          {/* Privacy Settings */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Confidentialité</h3>
+            <PrivacySettings
+              profileVisibility={profileVisibility}
+              showStats={showStats}
+              showBadges={showBadges}
+              showGameHistory={showGameHistory}
+              onVisibilityChange={handleVisibilityChange}
+              onShowStatsChange={handleShowStatsChange}
+              onShowBadgesChange={handleShowBadgesChange}
+              onShowGameHistoryChange={handleShowGameHistoryChange}
+            />
           </div>
 
           {/* Actions */}
