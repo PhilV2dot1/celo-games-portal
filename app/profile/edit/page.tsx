@@ -18,6 +18,7 @@ import { useAccount } from 'wagmi';
 import { AvatarSelector } from '@/components/profile/AvatarSelector';
 import { AvatarUploadDialog } from '@/components/profile/AvatarUploadDialog';
 import ThemeSelector from '@/components/profile/ThemeSelector';
+import { ProfileCompleteness } from '@/components/profile/ProfileCompleteness';
 import {
   validateUsername,
   validateSocialLinks,
@@ -55,6 +56,10 @@ export default function ProfileEditPage() {
   // Avatar unlock status
   const [canUploadCustom, setCanUploadCustom] = useState(false);
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
+
+  // Profile stats for completeness tracking
+  const [profileStats, setProfileStats] = useState<{ gamesPlayed: number }>({ gamesPlayed: 0 });
+  const [totalPoints, setTotalPoints] = useState(0);
 
   // Validation errors
   const [displayNameError, setDisplayNameError] = useState('');
@@ -99,6 +104,8 @@ export default function ProfileEditPage() {
       setAvatarUrl(data.user?.avatar_url || '/avatars/predefined/default-player.svg');
       setSocialLinks(data.user?.social_links || { twitter: '', farcaster: '', discord: '' });
       setCanUploadCustom(data.user?.avatar_unlocked || false);
+      setTotalPoints(data.user?.total_points || 0);
+      setProfileStats({ gamesPlayed: data.stats?.gamesPlayed || 0 });
 
       setLoading(false);
     } catch (err) {
@@ -325,6 +332,20 @@ export default function ProfileEditPage() {
               <p className="text-red-800 text-sm">⚠️ {error}</p>
             </motion.div>
           )}
+
+          {/* Profile Completeness (compact version) */}
+          <ProfileCompleteness
+            profile={{
+              display_name: displayName,
+              username: username,
+              bio: bio,
+              avatar_type: avatarType,
+              social_links: socialLinks,
+              total_points: totalPoints,
+              stats: profileStats,
+            }}
+            compact={true}
+          />
 
           {/* Avatar section */}
           <div className="space-y-4">

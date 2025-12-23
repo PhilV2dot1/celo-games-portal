@@ -14,6 +14,7 @@ import { Header } from '@/components/layout/Header';
 import { useLocalStats } from '@/hooks/useLocalStats';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { BadgeGallery } from '@/components/badges/BadgeGallery';
+import { ProfileCompleteness } from '@/components/profile/ProfileCompleteness';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
@@ -25,6 +26,7 @@ interface DbProfile {
     id: string;
     fid: number | null;
     username: string;
+    display_name?: string;
     wallet_address: string | null;
     total_points: number;
     created_at: string;
@@ -241,11 +243,35 @@ export default function MyProfilePage() {
           </div>
         </motion.div>
 
+        {/* Profile Completeness */}
+        {hasDbProfile && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-6"
+          >
+            <ProfileCompleteness
+              profile={{
+                display_name: dbProfile.user.display_name,
+                username: dbProfile.user.username,
+                bio: dbProfile.user.bio,
+                avatar_type: dbProfile.user.avatar_type as 'default' | 'predefined' | 'custom',
+                social_links: dbProfile.user.social_links,
+                total_points: dbProfile.user.total_points,
+                stats: {
+                  gamesPlayed: dbProfile.stats.gamesPlayed,
+                },
+              }}
+            />
+          </motion.div>
+        )}
+
         {/* Stats Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.2 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-4">📊 {t('home.stats') || 'Statistiques'}</h2>
@@ -277,7 +303,7 @@ export default function MyProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.3 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg"
         >
           <div className="flex items-center justify-between mb-4">
@@ -300,7 +326,7 @@ export default function MyProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-4">🎮 {t('stats.perGame') || 'Statistiques par Jeu'}</h2>
@@ -358,7 +384,7 @@ export default function MyProfilePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             className="mt-6 bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400 rounded-xl p-6 text-center shadow-lg"
           >
             <h3 className="text-xl font-bold text-gray-900 mb-2">
