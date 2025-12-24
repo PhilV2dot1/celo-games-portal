@@ -225,13 +225,9 @@ export async function PUT(request: NextRequest) {
       }
 
       actualUserId = newUser.id;
+      console.log('New user created, will now apply full profile data:', actualUserId);
 
-      // Return the newly created user immediately
-      return NextResponse.json({
-        success: true,
-        user: newUser,
-        message: 'Profil créé avec succès',
-      });
+      // Don't return early - let the profile data be applied through the normal update flow below
     } else if (userError || !userData) {
       console.error('User not found:', { userId, walletAddress, error: userError });
       return NextResponse.json(
