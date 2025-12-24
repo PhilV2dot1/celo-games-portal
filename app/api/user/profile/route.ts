@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
     let query = supabase.from('users').select('*');
 
     if (userId) {
-      query = query.eq('id', userId);
+      // Try auth_user_id first (for OAuth users), then fall back to id
+      query = query.or(`auth_user_id.eq.${userId},id.eq.${userId}`);
     } else if (fid) {
       query = query.eq('fid', parseInt(fid));
     } else if (walletAddress) {
@@ -43,7 +44,65 @@ export async function GET(request: NextRequest) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: user, error: userError } = await query.maybeSingle<any>();
+    let { data: user, error: userError } = await query.maybeSingle<any>();
+
+    // If OAuth user not found, try to get their auth info and create profile
+    if ((!user || userError) && userId) {
+      console.log('[Profile API] User not found by ID, checking Supabase Auth:', userId);
+
+      // Create admin client for auth operations
+      const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+          },
+        }
+      );
+
+      // Get auth user info
+      const { data: { user: authUser } } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+      if (authUser) {
+        console.log('[Profile API] Auth user found, creating profile:', authUser.email);
+
+        // Create user profile from auth data
+        const username = authUser.email
+          ? authUser.email.split('@')[0]
+          : `Player_${userId.slice(0, 8)}`;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: newUser, error: createError } = (await supabaseAdmin
+          .from('users')
+          .insert({
+            auth_user_id: authUser.id,
+            email: authUser.email,
+            username,
+            auth_provider: authUser.app_metadata?.provider || 'email',
+            is_anonymous: false,
+            total_points: 0,
+            avatar_type: 'default',
+            avatar_url: '/avatars/predefined/default-player.svg',
+          })
+          .select()
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .single()) as { data: any; error: any };
+
+        if (createError) {
+          console.error('[Profile API] Error creating user profile:', createError);
+          return NextResponse.json(
+            { error: 'Échec de la création du profil' },
+            { status: 500 }
+          );
+        }
+
+        user = newUser;
+        userError = null;
+        console.log('[Profile API] Profile created successfully:', user.id);
+      }
+    }
 
     if (userError || !user) {
       console.log('[Profile API] User not found:', { userError, hasUser: !!user });
