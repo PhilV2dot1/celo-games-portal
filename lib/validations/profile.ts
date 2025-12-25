@@ -118,13 +118,8 @@ export async function checkUsernameUniqueness(
   try {
     let query = supabase
       .from('users')
-      .select('id')
+      .select('id, auth_user_id')
       .eq('username', username);
-
-    // Exclude current user from check if provided
-    if (currentUserId) {
-      query = query.neq('id', currentUserId);
-    }
 
     const { data, error } = await query.maybeSingle();
 
@@ -136,14 +131,22 @@ export async function checkUsernameUniqueness(
       };
     }
 
-    if (data) {
-      return {
-        valid: false,
-        error: 'Ce nom est déjà pris',
-      };
+    // If no user found with this username, it's available
+    if (!data) {
+      return { valid: true };
     }
 
-    return { valid: true };
+    // If currentUserId provided, check if this is the same user
+    // (compare against both id and auth_user_id for OAuth users)
+    if (currentUserId && (data.id === currentUserId || data.auth_user_id === currentUserId)) {
+      return { valid: true }; // Same user, username is valid
+    }
+
+    // Different user has this username
+    return {
+      valid: false,
+      error: 'Ce nom est déjà pris',
+    };
   } catch (error) {
     console.error('Error checking username uniqueness:', error);
     return {
