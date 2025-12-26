@@ -23,6 +23,10 @@ export async function GET(request: NextRequest) {
 
     console.log('[Profile API] Query params:', { fid, walletAddress, userId });
 
+    // Get the authenticated user (requester) for privacy checks
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    const requesterId = authUser?.id;
+
     if (!fid && !walletAddress && !userId) {
       return NextResponse.json(
         { error: 'Either fid, wallet, or id is required' },
@@ -236,6 +240,26 @@ export async function GET(request: NextRequest) {
 
     console.log('[Profile API] User found:', user.id);
 
+    // Privacy enforcement: Check if profile is private and requester is not the owner
+    const isOwner = requesterId && (user.id === requesterId || user.auth_user_id === requesterId);
+    const profileVisibility = user.profile_visibility || 'public';
+
+    if (profileVisibility === 'private' && !isOwner) {
+      console.log('[Profile API] Privacy block:', {
+        profileVisibility,
+        requesterId,
+        ownerId: user.id,
+        isOwner,
+      });
+      return NextResponse.json(
+        {
+          error: 'Ce profil est privé',
+          message: 'L\'utilisateur a configuré son profil en mode privé',
+        },
+        { status: 403 }
+      );
+    }
+
     // Fetch recent game sessions (last 50)
     const { data: sessions, error: sessionsError } = await supabase
       .from('game_sessions')
@@ -290,14 +314,21 @@ export async function GET(request: NextRequest) {
     const losses = sessions?.filter(s => s.result === 'lose').length || 0;
     const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
 
-    return NextResponse.json({
+    // Privacy filtering: Only apply if viewer is not the owner
+    const showStats = isOwner || (user.show_stats !== false);
+    const showBadges = isOwner || (user.show_badges !== false);
+    const showGameHistory = isOwner || (user.show_game_history !== false);
+
+    // Build response with conditional data based on privacy settings
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response: any = {
       user: {
         id: user.id,
         fid: user.fid,
         username: user.username || `Player ${user.id.slice(0, 8)}`,
         display_name: user.display_name || user.username || `Player ${user.id.slice(0, 8)}`,
         wallet_address: user.wallet_address,
-        total_points: user.total_points,
+        total_points: showStats ? user.total_points : undefined,
         created_at: user.created_at,
         // Profile fields
         theme_color: user.theme_color || 'yellow',
@@ -308,23 +339,37 @@ export async function GET(request: NextRequest) {
         social_links: user.social_links || {},
         email: user.email,
         is_anonymous: user.is_anonymous,
-        // Privacy settings
-        profile_visibility: user.profile_visibility || 'public',
-        show_stats: user.show_stats !== false, // Default true
-        show_badges: user.show_badges !== false, // Default true
-        show_game_history: user.show_game_history !== false, // Default true
+        // Privacy settings (only visible to owner)
+        profile_visibility: isOwner ? (user.profile_visibility || 'public') : undefined,
+        show_stats: isOwner ? (user.show_stats !== false) : undefined,
+        show_badges: isOwner ? (user.show_badges !== false) : undefined,
+        show_game_history: isOwner ? (user.show_game_history !== false) : undefined,
       },
-      stats: {
+      rank: leaderboardEntry?.rank || null,
+    };
+
+    // Add stats if allowed
+    if (showStats) {
+      response.stats = {
         gamesPlayed,
         wins,
         losses,
         winRate,
-      },
-      recentSessions: sessions || [],
-      badges: badges || [],
-      gameStats,
-      rank: leaderboardEntry?.rank || null,
-    });
+      };
+    }
+
+    // Add game history if allowed
+    if (showGameHistory) {
+      response.recentSessions = sessions || [];
+      response.gameStats = gameStats;
+    }
+
+    // Add badges if allowed
+    if (showBadges) {
+      response.badges = badges || [];
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return NextResponse.json(
