@@ -85,9 +85,9 @@ export function BannerUploadDialog({
       const data = await response.json();
       onSuccess(data.bannerUrl);
       handleClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Banner upload error:', err);
-      setError(err.message || 'Une erreur est survenue');
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
       setUploading(false);
     }

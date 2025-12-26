@@ -79,9 +79,9 @@ export function SecuritySettings() {
 
       // Hide success message after 5 seconds
       setTimeout(() => setSuccess(false), 5000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Password change error:', err);
-      setError(err.message || 'Une erreur est survenue');
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
       setLoading(false);
     }

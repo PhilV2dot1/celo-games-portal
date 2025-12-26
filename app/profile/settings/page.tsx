@@ -15,7 +15,7 @@ import Link from 'next/link';
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const { user, isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
