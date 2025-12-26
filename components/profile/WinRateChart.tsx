@@ -82,7 +82,7 @@ export function WinRateChart({ data }: WinRateChartProps) {
               border: '2px solid #FCFF52',
               borderRadius: '8px',
             }}
-            formatter={(value: number | undefined, name: string) => {
+            formatter={(value: number | undefined, name: string | undefined) => {
               if (name === 'winRate' && typeof value === 'number') {
                 return [`${value.toFixed(1)}%`, 'Taux de victoire'];
               }
