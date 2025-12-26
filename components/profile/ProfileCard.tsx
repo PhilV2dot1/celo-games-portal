@@ -11,6 +11,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getThemeColors, ThemeColor } from '@/lib/constants/themes';
+import { getBannerUrl } from '@/lib/constants/banners';
 
 interface ProfileCardProps {
   user: {
@@ -20,6 +21,8 @@ interface ProfileCardProps {
     theme_color?: ThemeColor;
     avatar_url?: string;
     avatar_type?: 'default' | 'predefined' | 'custom';
+    banner_url?: string;
+    banner_type?: 'default' | 'predefined' | 'custom';
     total_points?: number;
     rank?: number;
     fid?: number;
@@ -48,6 +51,7 @@ export function ProfileCard({
   onClick,
 }: ProfileCardProps) {
   const avatarUrl = user.avatar_url || '/avatars/predefined/default-player.svg';
+  const bannerUrl = getBannerUrl(user.banner_url, user.banner_type);
   const themeColors = getThemeColors(user.theme_color);
 
   // Size mappings
@@ -84,11 +88,29 @@ export function ProfileCard({
     <motion.div
       whileHover={onClick ? { scale: 1.02 } : {}}
       onClick={onClick}
-      className={`bg-white/90 backdrop-blur-sm rounded-xl border-2 border-gray-300 ${
+      className={`bg-white/90 backdrop-blur-sm rounded-xl border-2 border-gray-300 overflow-hidden ${
         onClick ? `cursor-pointer hover:${themeColors.border} hover:shadow-lg` : ''
-      } transition-all ${classes.container} ${className}`}
+      } transition-all ${className}`}
     >
-      <div className="flex items-center gap-4">
+      {/* Banner */}
+      <div className="relative w-full h-24 bg-gradient-to-r from-gray-100 to-gray-200">
+        <Image
+          src={bannerUrl}
+          alt="Profile banner"
+          fill
+          className="object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            if (target.parentElement) {
+              target.parentElement.style.background = 'linear-gradient(135deg, #FCFF52 0%, #f59e0b 100%)';
+            }
+          }}
+        />
+      </div>
+
+      {/* Profile content */}
+      <div className={`flex items-center gap-4 ${classes.container}`}>
         {/* Avatar */}
         <div className={`relative ${classes.avatar} flex-shrink-0`}>
           <div className={`relative w-full h-full rounded-full overflow-hidden border-4 ${themeColors.border} shadow-md`}>
