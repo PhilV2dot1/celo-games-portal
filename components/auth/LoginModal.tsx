@@ -8,6 +8,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthProvider';
 
 interface LoginModalProps {
@@ -23,6 +24,7 @@ export function LoginModal({
   onSwitchToSignup,
   onSuccess,
 }: LoginModalProps) {
+  const router = useRouter();
   const { signIn, signInWithGoogle, signInWithTwitter, signInWithDiscord } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -217,6 +219,10 @@ export function LoginModal({
                   <div className="text-right mt-1">
                     <button
                       type="button"
+                      onClick={() => {
+                        onClose();
+                        router.push('/auth/forgot-password');
+                      }}
                       className="text-xs text-blue-600 hover:text-blue-800 underline"
                     >
                       Mot de passe oublié ?

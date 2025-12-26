@@ -349,12 +349,20 @@ export default function ProfileEditPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="text-gray-700 hover:text-gray-900 font-semibold mb-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-gray-300 hover:border-yellow-400 transition-all"
-          >
-            ← Retour
-          </button>
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => router.back()}
+              className="text-gray-700 hover:text-gray-900 font-semibold flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-gray-300 hover:border-yellow-400 transition-all"
+            >
+              ← Retour
+            </button>
+            <button
+              onClick={() => router.push('/profile/settings')}
+              className="text-gray-700 hover:text-gray-900 font-semibold flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-gray-300 hover:border-yellow-400 transition-all"
+            >
+              ⚙️ Paramètres
+            </button>
+          </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Éditer mon profil</h1>
           <p className="text-gray-700">Personnalisez votre profil Celo Games Portal</p>
         </div>
