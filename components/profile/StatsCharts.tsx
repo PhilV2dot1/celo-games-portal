@@ -32,7 +32,7 @@ interface StatsData {
   }>;
   activityTimeline: Array<{
     activity_type: string;
-    timestamp: string;
+    activity_timestamp: string;
     game_name?: string;
     result?: string;
     points_earned: number;
@@ -164,7 +164,7 @@ export function StatsCharts({ userId, days = 30 }: StatsChartsProps) {
                         : activity.badge_name}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {new Date(activity.timestamp).toLocaleDateString('fr-FR', {
+                      {new Date(activity.activity_timestamp).toLocaleDateString('fr-FR', {
                         month: 'short',
                         day: 'numeric',
                         hour: '2-digit',

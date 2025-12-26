@@ -65,7 +65,7 @@ CREATE OR REPLACE FUNCTION get_user_activity_timeline(p_user_id UUID, p_limit IN
 RETURNS TABLE (
   activity_type TEXT,
   activity_id TEXT,
-  timestamp TIMESTAMPTZ,
+  activity_timestamp TIMESTAMPTZ,
   game_name TEXT,
   game_icon TEXT,
   result TEXT,
@@ -80,7 +80,7 @@ BEGIN
     SELECT
       'game'::TEXT as activity_type,
       gs.id::TEXT as activity_id,
-      gs.played_at as timestamp,
+      gs.played_at as activity_timestamp,
       g.name as game_name,
       g.icon as game_icon,
       gs.result::TEXT,
@@ -97,7 +97,7 @@ BEGIN
     SELECT
       'badge'::TEXT as activity_type,
       ub.badge_id::TEXT as activity_id,
-      ub.earned_at as timestamp,
+      ub.earned_at as activity_timestamp,
       NULL::TEXT as game_name,
       NULL::TEXT as game_icon,
       NULL::TEXT as result,
@@ -108,7 +108,7 @@ BEGIN
     JOIN badges b ON ub.badge_id = b.id
     WHERE ub.user_id = p_user_id
   )
-  ORDER BY timestamp DESC
+  ORDER BY activity_timestamp DESC
   LIMIT p_limit;
 END;
 $$ LANGUAGE plpgsql;
