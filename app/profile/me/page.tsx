@@ -15,6 +15,7 @@ import { useLocalStats } from '@/hooks/useLocalStats';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { BadgeGallery } from '@/components/badges/BadgeGallery';
 import { ProfileCompleteness } from '@/components/profile/ProfileCompleteness';
+import { StatsCharts } from '@/components/profile/StatsCharts';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
@@ -299,11 +300,23 @@ export default function MyProfilePage() {
           </div>
         </motion.div>
 
+        {/* Statistics Charts - Only for database profiles */}
+        {hasDbProfile && dbProfile?.user?.id && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6"
+          >
+            <StatsCharts userId={dbProfile.user.id} days={30} />
+          </motion.div>
+        )}
+
         {/* Badges */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg"
         >
           <div className="flex items-center justify-between mb-4">
@@ -326,7 +339,7 @@ export default function MyProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.5 }}
           className="bg-white/90 backdrop-blur-lg rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-4">🎮 {t('stats.perGame') || 'Statistiques par Jeu'}</h2>
@@ -384,7 +397,7 @@ export default function MyProfilePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.6 }}
             className="mt-6 bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400 rounded-xl p-6 text-center shadow-lg"
           >
             <h3 className="text-xl font-bold text-gray-900 mb-2">
