@@ -115,13 +115,13 @@ export async function POST(request: NextRequest) {
     } = supabase.storage.from('user-banners').getPublicUrl(filePath);
 
     // Update user's banner in database
-    const { error: updateError } = await supabase
+    const { error: updateError } = await (supabase
       .from('users')
       .update({
         banner_url: publicUrl,
         banner_type: 'custom',
-      })
-      .eq('id', userData.id);
+      } as never)
+      .eq('id', userData.id) as Promise<{ error: unknown }>);
 
     if (updateError) {
       console.error('Banner update error:', updateError);
