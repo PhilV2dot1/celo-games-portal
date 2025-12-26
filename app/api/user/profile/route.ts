@@ -335,6 +335,8 @@ export async function GET(request: NextRequest) {
         avatar_type: user.avatar_type || 'default',
         avatar_url: user.avatar_url || '/avatars/predefined/default-player.svg',
         avatar_unlocked: user.avatar_unlocked || false,
+        banner_type: user.banner_type || 'default',
+        banner_url: user.banner_url || '/banners/predefined/gradient-yellow.jpg',
         bio: user.bio || '',
         social_links: user.social_links || {},
         email: user.email,
@@ -388,7 +390,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { display_name, username, bio, theme_color, avatar_type, avatar_url, social_links, profile_visibility, show_stats, show_badges, show_game_history, walletAddress } = body;
+    const { display_name, username, bio, theme_color, avatar_type, avatar_url, banner_type, banner_url, social_links, profile_visibility, show_stats, show_badges, show_game_history, walletAddress } = body;
 
     // Get authenticated user from header or session
     // For now, we'll require a userId or walletAddress in the body
@@ -558,6 +560,8 @@ export async function PUT(request: NextRequest) {
     if (theme_color !== undefined) updateData.theme_color = theme_color;
     if (avatar_type !== undefined) updateData.avatar_type = avatar_type;
     if (avatar_url !== undefined) updateData.avatar_url = avatar_url;
+    if (banner_type !== undefined) updateData.banner_type = banner_type;
+    if (banner_url !== undefined) updateData.banner_url = banner_url;
     if (social_links !== undefined) updateData.social_links = social_links;
     if (profile_visibility !== undefined) updateData.profile_visibility = profile_visibility;
     if (show_stats !== undefined) updateData.show_stats = show_stats;

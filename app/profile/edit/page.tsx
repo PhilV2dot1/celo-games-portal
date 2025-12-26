@@ -17,6 +17,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { useAccount } from 'wagmi';
 import { AvatarSelector } from '@/components/profile/AvatarSelector';
 import { AvatarUploadDialog } from '@/components/profile/AvatarUploadDialog';
+import { BannerSelector } from '@/components/profile/BannerSelector';
+import { BannerUploadDialog } from '@/components/profile/BannerUploadDialog';
 import ThemeSelector from '@/components/profile/ThemeSelector';
 import { ProfileCompleteness } from '@/components/profile/ProfileCompleteness';
 import { PrivacySettings, ProfileVisibility } from '@/components/profile/PrivacySettings';
@@ -57,6 +59,11 @@ export default function ProfileEditPage() {
   // Avatar unlock status
   const [canUploadCustom, setCanUploadCustom] = useState(false);
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
+
+  // Banner state
+  const [bannerType, setBannerType] = useState<'default' | 'predefined' | 'custom'>('default');
+  const [bannerUrl, setBannerUrl] = useState('/banners/predefined/gradient-yellow.jpg');
+  const [showBannerUpload, setShowBannerUpload] = useState(false);
 
   // Profile stats for completeness tracking
   const [profileStats, setProfileStats] = useState<{ gamesPlayed: number }>({ gamesPlayed: 0 });
@@ -109,6 +116,8 @@ export default function ProfileEditPage() {
       setThemeColor(data.user?.theme_color || 'yellow');
       setAvatarType(data.user?.avatar_type || 'default');
       setAvatarUrl(data.user?.avatar_url || '/avatars/predefined/default-player.svg');
+      setBannerType(data.user?.banner_type || 'default');
+      setBannerUrl(data.user?.banner_url || '/banners/predefined/gradient-yellow.jpg');
       setSocialLinks(data.user?.social_links || { twitter: '', farcaster: '', discord: '' });
       setCanUploadCustom(data.user?.avatar_unlocked || false);
       setTotalPoints(data.user?.total_points || 0);
@@ -223,6 +232,13 @@ export default function ProfileEditPage() {
     setHasUnsavedChanges(true);
   };
 
+  // Handle banner selection
+  const handleBannerSelect = (url: string, type: 'predefined') => {
+    setBannerUrl(url);
+    setBannerType(type);
+    setHasUnsavedChanges(true);
+  };
+
   // Handle privacy settings changes
   const handleVisibilityChange = (visibility: ProfileVisibility) => {
     setProfileVisibility(visibility);
@@ -265,6 +281,8 @@ export default function ProfileEditPage() {
         theme_color: themeColor,
         avatar_type: avatarType,
         avatar_url: avatarUrl,
+        banner_type: bannerType,
+        banner_url: bannerUrl,
         social_links: socialLinks,
         profile_visibility: profileVisibility,
         show_stats: showStats,
@@ -426,6 +444,16 @@ export default function ProfileEditPage() {
               onUploadCustomClick={() => setShowAvatarUpload(true)}
             />
           </div>
+
+          <hr className="border-gray-300" />
+
+          {/* Banner Selector */}
+          <BannerSelector
+            currentBanner={bannerUrl}
+            onSelect={handleBannerSelect}
+            canUploadCustom={canUploadCustom}
+            onUploadCustomClick={() => setShowBannerUpload(true)}
+          />
 
           <hr className="border-gray-300" />
 
@@ -631,6 +659,18 @@ export default function ProfileEditPage() {
         onSuccess={(url) => {
           setAvatarUrl(url);
           setAvatarType('custom');
+          setHasUnsavedChanges(true);
+        }}
+      />
+
+      {/* Banner Upload Dialog */}
+      <BannerUploadDialog
+        isOpen={showBannerUpload}
+        onClose={() => setShowBannerUpload(false)}
+        userId={user?.id || ''}
+        onSuccess={(url) => {
+          setBannerUrl(url);
+          setBannerType('custom');
           setHasUnsavedChanges(true);
         }}
       />
