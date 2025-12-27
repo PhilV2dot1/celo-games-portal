@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { GAMES } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface LeaderboardEntry {
   rank: number;
@@ -23,6 +24,7 @@ interface LeaderboardEntry {
 type GameId = 'all' | string;
 
 export default function LeaderboardPage() {
+  const { t } = useLanguage();
   const [selectedGame, setSelectedGame] = useState<GameId>('all');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ export default function LeaderboardPage() {
           href="/"
           className="inline-block mb-6 text-gray-700 hover:text-gray-900 font-semibold transition-colors"
         >
-          ← Back to Games
+          ← {t('back') || 'Back'} to Games
         </Link>
 
         {/* Page Title */}
@@ -78,10 +80,10 @@ export default function LeaderboardPage() {
         >
           <div className="text-5xl mb-2">🏆</div>
           <h1 className="text-4xl font-black text-gray-900 mb-2">
-            Leaderboard
+            {t('leaderboard.title') || 'Leaderboard'}
           </h1>
           <p className="text-sm text-gray-600">
-            Top players across all games on Celo Games Portal
+            {t('leaderboard.subtitle') || 'Top players across all games on Celo Games Portal'}
           </p>
         </div>
 
@@ -118,7 +120,7 @@ export default function LeaderboardPage() {
         {loading ? (
           <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900"></div>
-            <p className="mt-4 text-gray-600">Loading leaderboard...</p>
+            <p className="mt-4 text-gray-600">{t('leaderboard.loadingLeaderboard') || 'Loading leaderboard...'}</p>
           </div>
         ) : error ? (
           <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
@@ -159,15 +161,15 @@ export default function LeaderboardPage() {
                     <div className="text-3xl font-black text-gray-900 mb-1">
                       {(selectedGame === 'all' ? leaderboard[1].totalPoints : leaderboard[1].gamePoints)?.toLocaleString() || 0}
                     </div>
-                    <div className="text-xs text-gray-600 mb-2">points</div>
+                    <div className="text-xs text-gray-600 mb-2">{t('leaderboard.points') || 'points'}</div>
                     <div className="flex justify-center gap-4 text-sm">
                       <div>
                         <div className="font-black text-gray-700">{leaderboard[1].gamesPlayed}</div>
-                        <div className="text-xs text-gray-500">Games</div>
+                        <div className="text-xs text-gray-500">{t('leaderboard.gamesPlayed') || 'Games'}</div>
                       </div>
                       <div>
                         <div className="font-black text-green-600">{leaderboard[1].wins}</div>
-                        <div className="text-xs text-gray-500">Wins</div>
+                        <div className="text-xs text-gray-500">{t('leaderboard.wins') || 'Wins'}</div>
                       </div>
                     </div>
                   </div>
@@ -193,15 +195,15 @@ export default function LeaderboardPage() {
                     <div className="text-4xl font-black text-gray-900 mb-1">
                       {(selectedGame === 'all' ? leaderboard[0].totalPoints : leaderboard[0].gamePoints)?.toLocaleString() || 0}
                     </div>
-                    <div className="text-sm text-gray-700 mb-3 font-bold">points</div>
+                    <div className="text-sm text-gray-700 mb-3 font-bold">{t('leaderboard.points') || 'points'}</div>
                     <div className="flex justify-center gap-6 text-sm">
                       <div>
                         <div className="font-black text-gray-900 text-lg">{leaderboard[0].gamesPlayed}</div>
-                        <div className="text-xs text-gray-700 font-semibold">Games</div>
+                        <div className="text-xs text-gray-700 font-semibold">{t('leaderboard.gamesPlayed') || 'Games'}</div>
                       </div>
                       <div>
                         <div className="font-black text-green-700 text-lg">{leaderboard[0].wins}</div>
-                        <div className="text-xs text-gray-700 font-semibold">Wins</div>
+                        <div className="text-xs text-gray-700 font-semibold">{t('leaderboard.wins') || 'Wins'}</div>
                       </div>
                     </div>
                   </div>
@@ -227,15 +229,15 @@ export default function LeaderboardPage() {
                     <div className="text-2xl font-black text-gray-900 mb-1">
                       {(selectedGame === 'all' ? leaderboard[2].totalPoints : leaderboard[2].gamePoints)?.toLocaleString() || 0}
                     </div>
-                    <div className="text-xs text-gray-600 mb-2">points</div>
+                    <div className="text-xs text-gray-600 mb-2">{t('leaderboard.points') || 'points'}</div>
                     <div className="flex justify-center gap-4 text-sm">
                       <div>
                         <div className="font-black text-gray-700">{leaderboard[2].gamesPlayed}</div>
-                        <div className="text-xs text-gray-500">Games</div>
+                        <div className="text-xs text-gray-500">{t('leaderboard.gamesPlayed') || 'Games'}</div>
                       </div>
                       <div>
                         <div className="font-black text-green-600">{leaderboard[2].wins}</div>
-                        <div className="text-xs text-gray-500">Wins</div>
+                        <div className="text-xs text-gray-500">{t('leaderboard.wins') || 'Wins'}</div>
                       </div>
                     </div>
                   </div>
@@ -250,22 +252,22 @@ export default function LeaderboardPage() {
                 <thead className="bg-gray-100 border-b-2 border-gray-300">
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Rank
+                      {t('leaderboard.rank') || 'Rank'}
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Player
+                      {t('leaderboard.player') || 'Player'}
                     </th>
                     <th className="px-6 py-4 text-right text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Points
+                      {t('leaderboard.points') || 'Points'}
                     </th>
                     <th className="px-6 py-4 text-right text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Games
+                      {t('leaderboard.gamesPlayed') || 'Games'}
                     </th>
                     <th className="px-6 py-4 text-right text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Wins
+                      {t('leaderboard.wins') || 'Wins'}
                     </th>
                     <th className="px-6 py-4 text-right text-xs font-black text-gray-700 uppercase tracking-wider">
-                      Win Rate
+                      {t('stats.winRate') || 'Win Rate'}
                     </th>
                   </tr>
                 </thead>

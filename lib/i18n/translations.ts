@@ -72,6 +72,25 @@ export const translations = {
       winRate: 'Win Rate',
       perGame: 'Per-Game Statistics',
       noGames: 'No games played yet',
+      loading: 'Loading statistics...',
+      loadError: 'Unable to load statistics',
+      noData: 'No statistics yet',
+      title: 'Statistics',
+      recentActivity: 'Recent Activity',
+      win: 'Win',
+      loss: 'Loss',
+      noProgressData: 'No progress data yet',
+      playToSeeProgress: 'Play games to see your progress!',
+      pointsProgress: 'Points Progress',
+      pointsProgressSubtitle: 'Points earned over time (last 30 days)',
+      dailyPoints: 'Daily Points',
+      cumulativeTotal: 'Cumulative Total',
+      noGameStats: 'No game statistics yet',
+      playToSeeWinRate: 'Play games to see your win rates!',
+      winRateByGame: 'Win Rate by Game',
+      performancePerGame: 'Performance in each game',
+      game: 'game',
+      games: 'games',
     },
 
     // Profile
@@ -79,6 +98,17 @@ export const translations = {
       saveYourProgress: 'Save Your Progress!',
       createAccountMessage: 'Create an account to save your stats and compete on the global leaderboard!',
       createAccount: 'Create Account',
+      completion: {
+        profile: 'Profile',
+        completed: 'completed',
+        nextStep: 'Next step',
+        title: 'Profile Completion',
+        actionsToComplete: 'Actions to complete',
+        tip: 'Tip',
+        tipMessage: 'A complete profile helps you stand out and gain the trust of the community!',
+        complete: '100% Complete Profile!',
+        completeMessage: 'You are now an exemplary member of the community!',
+      },
     },
 
     // Profile Setup
@@ -256,6 +286,7 @@ export const translations = {
     // Leaderboard
     leaderboard: {
       title: 'Leaderboard',
+      subtitle: 'Top players across all games on Celo Games Portal',
       globalRanking: 'Global Ranking',
       rank: 'Rank',
       player: 'Player',
@@ -346,6 +377,25 @@ export const translations = {
       winRate: 'Taux de Victoire',
       perGame: 'Statistiques par Jeu',
       noGames: 'Aucune partie jouée pour le moment',
+      loading: 'Chargement des statistiques...',
+      loadError: 'Impossible de charger les statistiques',
+      noData: 'Pas encore de statistiques',
+      title: 'Statistiques',
+      recentActivity: 'Activité Récente',
+      win: 'Victoire',
+      loss: 'Défaite',
+      noProgressData: 'Pas encore de données de progression',
+      playToSeeProgress: 'Jouez pour voir votre progression !',
+      pointsProgress: 'Progression des Points',
+      pointsProgressSubtitle: 'Points gagnés au fil du temps (30 derniers jours)',
+      dailyPoints: 'Points Quotidiens',
+      cumulativeTotal: 'Total Cumulé',
+      noGameStats: 'Pas encore de statistiques de jeu',
+      playToSeeWinRate: 'Jouez pour voir vos taux de victoire !',
+      winRateByGame: 'Taux de Victoire par Jeu',
+      performancePerGame: 'Performance dans chaque jeu',
+      game: 'partie',
+      games: 'parties',
     },
 
     // Profile
@@ -353,6 +403,17 @@ export const translations = {
       saveYourProgress: 'Sauvegardez votre Progression !',
       createAccountMessage: 'Créez un compte pour sauvegarder vos statistiques et participer au classement mondial !',
       createAccount: 'Créer un Compte',
+      completion: {
+        profile: 'Profil',
+        completed: 'complété',
+        nextStep: 'Prochaine étape',
+        title: 'Complétion du profil',
+        actionsToComplete: 'Actions à compléter',
+        tip: 'Astuce',
+        tipMessage: 'Un profil complet vous aide à vous démarquer et à gagner la confiance de la communauté !',
+        complete: 'Profil 100% complet !',
+        completeMessage: 'Vous êtes maintenant un membre exemplaire de la communauté !',
+      },
     },
 
     // Profile Setup
@@ -530,6 +591,7 @@ export const translations = {
     // Leaderboard
     leaderboard: {
       title: 'Classement',
+      subtitle: 'Meilleurs joueurs de tous les jeux sur Celo Games Portal',
       globalRanking: 'Classement Global',
       rank: 'Rang',
       player: 'Joueur',
