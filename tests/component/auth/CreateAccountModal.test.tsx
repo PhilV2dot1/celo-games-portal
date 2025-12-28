@@ -176,9 +176,7 @@ describe('CreateAccountModal', () => {
     const googleButton = screen.getByText('Continuer avec Google');
     fireEvent.click(googleButton);
 
-    await waitFor(() => {
-      expect(mockSignInWithGoogle).toHaveBeenCalled();
-    });
+    expect(mockSignInWithGoogle).toHaveBeenCalled();
   });
 
   test('should call signInWithTwitter when clicking Twitter button', async () => {
@@ -189,9 +187,7 @@ describe('CreateAccountModal', () => {
     const twitterButton = screen.getByText('Continuer avec Twitter');
     fireEvent.click(twitterButton);
 
-    await waitFor(() => {
-      expect(mockSignInWithTwitter).toHaveBeenCalled();
-    });
+    expect(mockSignInWithTwitter).toHaveBeenCalled();
   });
 
   test('should call signInWithDiscord when clicking Discord button', async () => {
@@ -202,9 +198,7 @@ describe('CreateAccountModal', () => {
     const discordButton = screen.getByText('Continuer avec Discord');
     fireEvent.click(discordButton);
 
-    await waitFor(() => {
-      expect(mockSignInWithDiscord).toHaveBeenCalled();
-    });
+    expect(mockSignInWithDiscord).toHaveBeenCalled();
   });
 
   test('should show error when social login fails', async () => {
@@ -216,9 +210,7 @@ describe('CreateAccountModal', () => {
     const googleButton = screen.getByText('Continuer avec Google');
     fireEvent.click(googleButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Échec de la connexion sociale')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Échec de la connexion sociale')).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
   });
@@ -268,9 +260,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
   });
 
   test('should show error when password is empty', async () => {
@@ -284,9 +274,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
   });
 
   test('should show error when password is too short', async () => {
@@ -304,9 +292,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Le mot de passe doit contenir au moins 8 caractères')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Le mot de passe doit contenir au moins 8 caractères')).toBeInTheDocument();
   });
 
   test('should show error when passwords do not match', async () => {
@@ -324,9 +310,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Les mots de passe ne correspondent pas')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Les mots de passe ne correspondent pas')).toBeInTheDocument();
   });
 
   test('should accept password with exactly 8 characters', async () => {
@@ -347,9 +331,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockSignUp).toHaveBeenCalledWith('test@example.com', '12345678');
-    });
+    expect(mockSignUp).toHaveBeenCalledWith('test@example.com', '12345678');
   });
 
   // ============================================================================
@@ -374,9 +356,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockSignUp).toHaveBeenCalledWith('new@example.com', 'mypassword123');
-    });
+    expect(mockSignUp).toHaveBeenCalledWith('new@example.com', 'mypassword123');
   });
 
   test('should claim profile with localStorage stats after signup', async () => {
@@ -405,9 +385,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockClaimProfile).toHaveBeenCalledWith(mockStats);
-    });
+    expect(mockClaimProfile).toHaveBeenCalledWith(mockStats);
   });
 
   test('should remove localStorage stats after successful migration', async () => {
@@ -431,9 +409,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(localStorage.getItem('celo_games_portal_stats')).toBeNull();
-    });
+    expect(localStorage.getItem('celo_games_portal_stats')).toBeNull();
   });
 
   test('should show success message after signup', async () => {
@@ -454,10 +430,8 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('✅ Compte créé avec succès !')).toBeInTheDocument();
-      expect(screen.getByText('Vérifiez votre email pour confirmer')).toBeInTheDocument();
-    });
+        expect(screen.getByText('✅ Compte créé avec succès !')).toBeInTheDocument();
+    expect(screen.getByText('Vérifiez votre email pour confirmer')).toBeInTheDocument();
   });
 
   test('should close modal after 2 seconds on success', async () => {
@@ -478,17 +452,13 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('✅ Compte créé avec succès !')).toBeInTheDocument();
-    });
+    expect(screen.getByText('✅ Compte créé avec succès !')).toBeInTheDocument();
 
     // Fast-forward 2 seconds
-    vi.advanceTimersByTime(2000);
+    await vi.runAllTimersAsync();
 
-    await waitFor(() => {
-      expect(mockOnSuccess).toHaveBeenCalled();
-      expect(mockOnClose).toHaveBeenCalled();
-    });
+        expect(mockOnSuccess).toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
   test('should show error when signUp fails', async () => {
@@ -508,9 +478,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Email already exists')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Email already exists')).toBeInTheDocument();
 
     expect(mockClaimProfile).not.toHaveBeenCalled();
   });
@@ -532,9 +500,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Échec de la création du compte')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Échec de la création du compte')).toBeInTheDocument();
   });
 
   test('should handle exception during signup', async () => {
@@ -555,9 +521,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Une erreur est survenue')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Une erreur est survenue')).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
   });
@@ -583,9 +547,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Création en cours...')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Création en cours...')).toBeInTheDocument();
   });
 
   test('should disable inputs when loading', async () => {
@@ -605,11 +567,9 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(emailInput).toBeDisabled();
-      expect(passwordInputs[0]).toBeDisabled();
-      expect(passwordInputs[1]).toBeDisabled();
-    });
+        expect(emailInput).toBeDisabled();
+    expect(passwordInputs[0]).toBeDisabled();
+    expect(passwordInputs[1]).toBeDisabled();
   });
 
   test('should disable social buttons when loading', async () => {
@@ -629,11 +589,9 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Continuer avec Google').closest('button')).toBeDisabled();
-      expect(screen.getByText('Continuer avec Twitter').closest('button')).toBeDisabled();
-      expect(screen.getByText('Continuer avec Discord').closest('button')).toBeDisabled();
-    });
+        expect(screen.getByText('Continuer avec Google').closest('button')).toBeDisabled();
+    expect(screen.getByText('Continuer avec Twitter').closest('button')).toBeDisabled();
+    expect(screen.getByText('Continuer avec Discord').closest('button')).toBeDisabled();
   });
 
   // ============================================================================
@@ -690,9 +648,7 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockSignUp).toHaveBeenCalled();
-    });
+    expect(mockSignUp).toHaveBeenCalled();
 
     // Should not call claimProfile if no stats
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -716,9 +672,7 @@ describe('CreateAccountModal', () => {
     await user.type(passwordInputs[1], 'password123');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ First error')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ First error')).toBeInTheDocument();
 
     // Second attempt - should clear error
     mockSignUp.mockResolvedValueOnce({ success: true });
@@ -726,9 +680,7 @@ describe('CreateAccountModal', () => {
 
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.queryByText('⚠️ First error')).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText('⚠️ First error')).not.toBeInTheDocument();
   });
 
   test('should handle whitespace in email', async () => {
@@ -749,8 +701,6 @@ describe('CreateAccountModal', () => {
     const submitButton = screen.getByText('Créer mon compte');
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockSignUp).toHaveBeenCalledWith('  test@example.com  ', 'password123');
-    });
+    expect(mockSignUp).toHaveBeenCalledWith('  test@example.com  ', 'password123');
   });
 });

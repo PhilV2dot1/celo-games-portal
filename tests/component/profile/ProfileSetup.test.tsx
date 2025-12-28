@@ -221,9 +221,7 @@ describe('ProfileSetup', () => {
 
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByText('Choose a username')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Choose a username')).toBeInTheDocument();
   });
 
   // ============================================================================
@@ -239,9 +237,7 @@ describe('ProfileSetup', () => {
 
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
   });
 
   test('should allow typing username', async () => {
@@ -255,9 +251,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -275,9 +269,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByText('← Back')).toBeInTheDocument();
-    });
+    expect(screen.getByText('← Back')).toBeInTheDocument();
   });
 
   test('should go back to avatar selection when clicking back', async () => {
@@ -289,16 +281,12 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByText('← Back')).toBeInTheDocument();
-    });
+    expect(screen.getByText('← Back')).toBeInTheDocument();
 
     // Click back
     fireEvent.click(screen.getByText('← Back'));
 
-    await waitFor(() => {
-      expect(screen.getByText('Choose an avatar')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Choose an avatar')).toBeInTheDocument();
   });
 
   test('should disable save button when username is empty', async () => {
@@ -310,10 +298,9 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      const saveButton = screen.getByText('Start Playing');
-      expect(saveButton).toBeDisabled();
-    });
+    // Direct assertion - no waitFor
+    const saveButton = screen.getByText('Start Playing');
+    expect(saveButton).toBeDisabled();
   });
 
   test('should enable save button when username is provided', async () => {
@@ -327,9 +314,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -352,17 +337,19 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Try to save with empty username
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Username is required')).toBeInTheDocument();
+    // Wait for validation and state updates
+    await act(async () => {
+      await Promise.resolve();
+      await vi.runAllTimersAsync();
     });
+
+    expect(screen.getByText('⚠️ Username is required')).toBeInTheDocument();
   });
 
   test('should show error if username is too short', async () => {
@@ -376,9 +363,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type short username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -387,9 +372,7 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Username must be 3-20 characters')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Username must be 3-20 characters')).toBeInTheDocument();
   });
 
   test('should show error if username is too long', async () => {
@@ -403,9 +386,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type long username (input has maxLength=20, but we test validation)
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -414,9 +395,13 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Username must be 3-20 characters')).toBeInTheDocument();
+    // Wait for validation and state updates
+    await act(async () => {
+      await Promise.resolve();
+      await vi.runAllTimersAsync();
     });
+
+    expect(screen.getByText('⚠️ Username must be 3-20 characters')).toBeInTheDocument();
   });
 
   // ============================================================================
@@ -434,9 +419,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -446,10 +429,8 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('🎉')).toBeInTheDocument();
-      expect(screen.getByText('Success!')).toBeInTheDocument();
-    });
+        expect(screen.getByText('🎉')).toBeInTheDocument();
+    expect(screen.getByText('Success!')).toBeInTheDocument();
 
     // Check localStorage
     const stored = localStorage.getItem('celo_games_portal_stats');
@@ -473,9 +454,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -485,17 +464,13 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Success!')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Success!')).toBeInTheDocument();
 
     // Fast-forward timers
-    vi.advanceTimersByTime(2000);
+    await vi.runAllTimersAsync();
 
-    await waitFor(() => {
-      expect(mockOnComplete).toHaveBeenCalled();
-      expect(mockOnClose).toHaveBeenCalled();
-    });
+        expect(mockOnComplete).toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
   // ============================================================================
@@ -536,9 +511,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[1]); // Select second avatar
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -548,8 +521,7 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/user/profile', {
+    expect(global.fetch).toHaveBeenCalledWith('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -560,7 +532,6 @@ describe('ProfileSetup', () => {
           userId: 'user-123',
         }),
       });
-    });
   });
 
   // ============================================================================
@@ -593,9 +564,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[2]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -605,8 +574,7 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/user/profile', {
+    expect(global.fetch).toHaveBeenCalledWith('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -617,7 +585,6 @@ describe('ProfileSetup', () => {
           walletAddress: '0x1234567890abcdef', // lowercase
         }),
       });
-    });
   });
 
   // ============================================================================
@@ -658,9 +625,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -670,9 +635,7 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Username already taken')).toBeInTheDocument();
-    });
+    expect(screen.getByText('⚠️ Username already taken')).toBeInTheDocument();
 
     // Should still be on username step
     expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
@@ -709,9 +672,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -721,9 +682,13 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('⚠️ Network error')).toBeInTheDocument();
+    // Wait for async operations to complete
+    await act(async () => {
+      await Promise.resolve();
+      await vi.runAllTimersAsync();
     });
+
+    expect(screen.getByText('⚠️ Network error')).toBeInTheDocument();
   });
 
   test('should not show skip button on done step', async () => {
@@ -737,9 +702,7 @@ describe('ProfileSetup', () => {
     );
     fireEvent.click(avatarButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
-    });
+    expect(screen.getByPlaceholderText('PlayerOne')).toBeInTheDocument();
 
     // Type username
     const input = screen.getByPlaceholderText('PlayerOne');
@@ -749,9 +712,7 @@ describe('ProfileSetup', () => {
     const saveButton = screen.getByText('Start Playing');
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Success!')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Success!')).toBeInTheDocument();
 
     // Skip button should not be visible
     expect(screen.queryByText('Skip for now')).not.toBeInTheDocument();

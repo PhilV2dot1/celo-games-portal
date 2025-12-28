@@ -68,9 +68,7 @@ describe('BadgeGallery', () => {
   test('should hide loading after badges are loaded', async () => {
     render(<BadgeGallery />);
 
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
 
   // ============================================================================
@@ -90,10 +88,8 @@ describe('BadgeGallery', () => {
   test('should show header with title and progress', async () => {
     render(<BadgeGallery />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Badges')).toBeInTheDocument();
-      expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
-    });
+        expect(screen.getByText('Badges')).toBeInTheDocument();
+    expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
   });
 
   test('should show progress bar', async () => {
@@ -148,9 +144,7 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery localStats={localStats} />);
 
-    await waitFor(() => {
-      expect(screen.getByText('1 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('1 / 14 unlocked')).toBeInTheDocument();
   });
 
   test('should earn games_10 badge with 10 games', async () => {
@@ -281,10 +275,8 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery userId="user-123" />);
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/user/profile?id=user-123');
-      expect(screen.getByText('2 / 14 unlocked')).toBeInTheDocument();
-    });
+        expect(global.fetch).toHaveBeenCalledWith('/api/user/profile?id=user-123');
+    expect(screen.getByText('2 / 14 unlocked')).toBeInTheDocument();
   });
 
   test('should handle API error gracefully', async () => {
@@ -294,9 +286,7 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery userId="user-123" />);
 
-    await waitFor(() => {
-      expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
 
     consoleErrorSpy.mockRestore();
   });
@@ -309,9 +299,7 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery userId="user-123" />);
 
-    await waitFor(() => {
-      expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
   });
 
   // ============================================================================
@@ -343,10 +331,8 @@ describe('BadgeGallery', () => {
   test('should not show header in compact mode', async () => {
     render(<BadgeGallery compact={true} />);
 
-    await waitFor(() => {
-      expect(screen.queryByText('Badges')).not.toBeInTheDocument();
-      expect(screen.queryByText('How to earn')).not.toBeInTheDocument();
-    });
+        expect(screen.queryByText('Badges')).not.toBeInTheDocument();
+    expect(screen.queryByText('How to earn')).not.toBeInTheDocument();
   });
 
   // ============================================================================
@@ -405,18 +391,14 @@ describe('BadgeGallery', () => {
   test('should show "View all" link in compact mode with maxDisplay', async () => {
     render(<BadgeGallery compact={true} maxDisplay={5} />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/View all/)).toBeInTheDocument();
-      expect(screen.getByText('(14)')).toBeInTheDocument();
-    });
+        expect(screen.getByText(/View all/)).toBeInTheDocument();
+    expect(screen.getByText('(14)')).toBeInTheDocument();
   });
 
   test('should not show "View all" link when not compact', async () => {
     render(<BadgeGallery maxDisplay={5} />);
 
-    await waitFor(() => {
-      expect(screen.queryByText(/View all/)).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText(/View all/)).not.toBeInTheDocument();
   });
 
   // ============================================================================
@@ -506,9 +488,7 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery localStats={localStats} />);
 
-    await waitFor(() => {
-      expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
   });
 
   test('should handle stats with 0 wins', async () => {
@@ -586,9 +566,7 @@ describe('BadgeGallery', () => {
 
     render(<BadgeGallery userId="user-123" />);
 
-    await waitFor(() => {
-      expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('0 / 14 unlocked')).toBeInTheDocument();
   });
 
   test('should update when localStats change', async () => {
@@ -604,9 +582,7 @@ describe('BadgeGallery', () => {
       />
     );
 
-    await waitFor(() => {
-      expect(screen.getByText('1 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('1 / 14 unlocked')).toBeInTheDocument();
 
     // Update stats
     rerender(
@@ -621,8 +597,6 @@ describe('BadgeGallery', () => {
       />
     );
 
-    await waitFor(() => {
-      expect(screen.getByText('2 / 14 unlocked')).toBeInTheDocument();
-    });
+    expect(screen.getByText('2 / 14 unlocked')).toBeInTheDocument();
   });
 });

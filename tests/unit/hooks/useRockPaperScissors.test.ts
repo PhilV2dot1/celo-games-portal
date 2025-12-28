@@ -89,17 +89,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(0); // Player chooses Rock
+      result.current.play(0); // Player chooses Rock
+      await vi.runAllTimersAsync();
     });
 
-    // Need to advance timers for the 500ms delay
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('tie');
-    });
+    expect(result.current.lastResult?.result).toBe('tie');
   });
 
   test('should return win when Rock beats Scissors', async () => {
@@ -109,18 +103,13 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.9);
 
     await act(async () => {
-      await result.current.play(0); // Player chooses Rock
+      result.current.play(0); // Player chooses Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('win');
-      expect(result.current.lastResult?.playerChoice).toBe(0);
-      expect(result.current.lastResult?.computerChoice).toBe(2);
-    });
+    expect(result.current.lastResult?.result).toBe('win');
+    expect(result.current.lastResult?.playerChoice).toBe(0);
+    expect(result.current.lastResult?.computerChoice).toBe(2);
   });
 
   test('should return win when Paper beats Rock', async () => {
@@ -130,18 +119,13 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(1); // Player chooses Paper
+      result.current.play(1); // Player chooses Paper
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('win');
-      expect(result.current.lastResult?.playerChoice).toBe(1);
-      expect(result.current.lastResult?.computerChoice).toBe(0);
-    });
+    expect(result.current.lastResult?.result).toBe('win');
+    expect(result.current.lastResult?.playerChoice).toBe(1);
+    expect(result.current.lastResult?.computerChoice).toBe(0);
   });
 
   test('should return win when Scissors beats Paper', async () => {
@@ -151,18 +135,13 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.4);
 
     await act(async () => {
-      await result.current.play(2); // Player chooses Scissors
+      result.current.play(2); // Player chooses Scissors
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('win');
-      expect(result.current.lastResult?.playerChoice).toBe(2);
-      expect(result.current.lastResult?.computerChoice).toBe(1);
-    });
+    expect(result.current.lastResult?.result).toBe('win');
+    expect(result.current.lastResult?.playerChoice).toBe(2);
+    expect(result.current.lastResult?.computerChoice).toBe(1);
   });
 
   test('should return lose when Rock loses to Paper', async () => {
@@ -172,16 +151,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.4);
 
     await act(async () => {
-      await result.current.play(0); // Player chooses Rock
+      result.current.play(0); // Player chooses Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('lose');
-    });
+    expect(result.current.lastResult?.result).toBe('lose');
   });
 
   test('should return lose when Paper loses to Scissors', async () => {
@@ -191,16 +165,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.9);
 
     await act(async () => {
-      await result.current.play(1); // Player chooses Paper
+      result.current.play(1); // Player chooses Paper
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('lose');
-    });
+    expect(result.current.lastResult?.result).toBe('lose');
   });
 
   test('should return lose when Scissors loses to Rock', async () => {
@@ -210,16 +179,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(2); // Player chooses Scissors
+      result.current.play(2); // Player chooses Scissors
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.result).toBe('lose');
-    });
+    expect(result.current.lastResult?.result).toBe('lose');
   });
 
   // ============================================================================
@@ -231,23 +195,21 @@ describe('useRockPaperScissors', () => {
 
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
-    // Start playing
+    // Start playing - don't await yet
     act(() => {
       result.current.play(0);
     });
 
-    // Status should be 'playing' immediately
-    expect(result.current.status).toBe('playing');
+    // Status should be 'processing' immediately (playFree sets it synchronously)
+    expect(result.current.status).toBe('processing');
 
     // Advance timers
     await act(async () => {
-      vi.advanceTimersByTime(500);
+      await vi.runAllTimersAsync();
     });
 
     // Status should be 'finished' after delay
-    await waitFor(() => {
-      expect(result.current.status).toBe('finished');
-    });
+    expect(result.current.status).toBe('finished');
   });
 
   test('should update stats on win in free mode', async () => {
@@ -257,28 +219,20 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.4);
 
     await act(async () => {
-      await result.current.play(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
     // Change mock to win (player Rock vs computer Scissors)
     vi.spyOn(Math, 'random').mockReturnValue(0.9);
 
     await act(async () => {
-      await result.current.play(0);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.stats.wins).toBe(1);
-      expect(result.current.stats.losses).toBe(1);
-    });
+    expect(result.current.stats.wins).toBe(1);
+    expect(result.current.stats.losses).toBe(1);
   });
 
   test('should update stats on loss in free mode', async () => {
@@ -287,16 +241,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.4); // Computer chooses Paper
 
     await act(async () => {
-      await result.current.play(0); // Player chooses Rock
+      result.current.play(0); // Player chooses Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.stats.losses).toBe(1);
-    });
+    expect(result.current.stats.losses).toBe(1);
   });
 
   test('should update stats on tie in free mode', async () => {
@@ -305,16 +254,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0); // Computer chooses Rock
 
     await act(async () => {
-      await result.current.play(0); // Player chooses Rock
+      result.current.play(0); // Player chooses Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.stats.ties).toBe(1);
-    });
+    expect(result.current.stats.ties).toBe(1);
   });
 
   test('should set correct message on win', async () => {
@@ -323,16 +267,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.9); // Scissors
 
     await act(async () => {
-      await result.current.play(0); // Rock
+      result.current.play(0); // Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.message).toContain('You Win');
-    });
+    expect(result.current.message).toContain('You Win');
   });
 
   test('should set correct message on lose', async () => {
@@ -341,16 +280,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.4); // Paper
 
     await act(async () => {
-      await result.current.play(0); // Rock
+      result.current.play(0); // Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.message).toContain('You Lose');
-    });
+    expect(result.current.message).toContain('You Lose');
   });
 
   test('should set correct message on tie', async () => {
@@ -359,16 +293,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0); // Rock
 
     await act(async () => {
-      await result.current.play(0); // Rock
+      result.current.play(0); // Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.message).toContain("It's a Tie");
-    });
+    expect(result.current.message).toContain("It's a Tie");
   });
 
   test('should have 500ms delay before result', async () => {
@@ -376,29 +305,28 @@ describe('useRockPaperScissors', () => {
 
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
-    await act(async () => {
-      await result.current.play(0);
+    // Start playing but don't await yet
+    act(() => {
+      result.current.play(0);
     });
 
-    // Before advancing timers
-    expect(result.current.status).toBe('playing');
+    // Before advancing timers (playFree sets to 'processing' immediately)
+    expect(result.current.status).toBe('processing');
     expect(result.current.lastResult).toBeNull();
 
     // Advance 250ms (not enough)
     await act(async () => {
-      vi.advanceTimersByTime(250);
+      await vi.advanceTimersByTimeAsync(250);
     });
 
     expect(result.current.lastResult).toBeNull();
 
     // Advance another 250ms (total 500ms)
     await act(async () => {
-      vi.advanceTimersByTime(250);
+      await vi.advanceTimersByTimeAsync(250);
     });
 
-    await waitFor(() => {
-      expect(result.current.lastResult).not.toBeNull();
-    });
+    expect(result.current.lastResult).not.toBeNull();
   });
 
   // ============================================================================
@@ -459,16 +387,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(0);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult).not.toBeNull();
-    });
+    expect(result.current.lastResult).not.toBeNull();
 
     // Switch to onchain and play again
     act(() => {
@@ -498,13 +421,11 @@ describe('useRockPaperScissors', () => {
     });
 
     await act(async () => {
-      vi.advanceTimersByTime(500);
+      await vi.runAllTimersAsync();
     });
 
     // Should only have one result
-    await waitFor(() => {
-      expect(result.current.lastResult?.playerChoice).toBe(0);
-    });
+    expect(result.current.lastResult?.playerChoice).toBe(0);
   });
 
   // ============================================================================
@@ -517,16 +438,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(0);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult).not.toBeNull();
-    });
+    expect(result.current.lastResult).not.toBeNull();
 
     act(() => {
       result.current.startGame();
@@ -547,16 +463,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.9); // Win
 
     await act(async () => {
-      await result.current.play(0);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.stats.wins).toBe(1);
-    });
+    expect(result.current.stats.wins).toBe(1);
 
     act(() => {
       result.current.resetStats();
@@ -630,16 +541,11 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
 
     await act(async () => {
-      await result.current.play(0);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult).not.toBeNull();
-    });
+    expect(result.current.lastResult).not.toBeNull();
 
     act(() => {
       result.current.switchMode('onchain');
@@ -678,33 +584,25 @@ describe('useRockPaperScissors', () => {
 
     // Game 1 - Win
     await act(async () => {
-      await result.current.play(0);
-    });
-    await act(async () => {
-      vi.advanceTimersByTime(500);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
     // Game 2 - Lose
     await act(async () => {
-      await result.current.play(0);
-    });
-    await act(async () => {
-      vi.advanceTimersByTime(500);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
     // Game 3 - Tie
     await act(async () => {
-      await result.current.play(0);
-    });
-    await act(async () => {
-      vi.advanceTimersByTime(500);
+      result.current.play(0);
+      await vi.runAllTimersAsync();
     });
 
-    await waitFor(() => {
-      expect(result.current.stats.wins).toBe(1);
-      expect(result.current.stats.losses).toBe(1);
-      expect(result.current.stats.ties).toBe(1);
-    });
+    expect(result.current.stats.wins).toBe(1);
+    expect(result.current.stats.losses).toBe(1);
+    expect(result.current.stats.ties).toBe(1);
   });
 
   test('should handle all three player choices', async () => {
@@ -716,16 +614,11 @@ describe('useRockPaperScissors', () => {
 
     for (const choice of choices) {
       await act(async () => {
-        await result.current.play(choice);
+        result.current.play(choice);
+        await vi.runAllTimersAsync();
       });
 
-      await act(async () => {
-        vi.advanceTimersByTime(500);
-      });
-
-      await waitFor(() => {
-        expect(result.current.lastResult?.playerChoice).toBe(choice);
-      });
+      expect(result.current.lastResult?.playerChoice).toBe(choice);
 
       act(() => {
         result.current.startGame();
@@ -748,13 +641,11 @@ describe('useRockPaperScissors', () => {
     expect(result.current.isPending).toBe(false); // isPending is for write transaction
 
     await act(async () => {
-      vi.advanceTimersByTime(500);
+      await vi.runAllTimersAsync();
     });
 
     // After finished
-    await waitFor(() => {
-      expect(result.current.isPending).toBe(false);
-    });
+    expect(result.current.isPending).toBe(false);
   });
 
   test('should generate result message with choices', async () => {
@@ -763,17 +654,12 @@ describe('useRockPaperScissors', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.9); // Scissors
 
     await act(async () => {
-      await result.current.play(0); // Rock
+      result.current.play(0); // Rock
+      await vi.runAllTimersAsync();
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(result.current.lastResult?.message).toContain('🪨 Rock');
-      expect(result.current.lastResult?.message).toContain('✂️ Scissors');
-      expect(result.current.lastResult?.message).toContain('You Win');
-    });
+    expect(result.current.lastResult?.message).toContain('🪨 Rock');
+    expect(result.current.lastResult?.message).toContain('✂️ Scissors');
+    expect(result.current.lastResult?.message).toContain('You Win');
   });
 });

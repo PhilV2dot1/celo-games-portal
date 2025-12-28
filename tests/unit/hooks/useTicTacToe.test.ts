@@ -105,32 +105,24 @@ describe('useTicTacToe', () => {
     });
 
     // Set up board for horizontal win: X X X | _ _ _ | _ _ _
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await result.current.handleMove(0);
+      await vi.runAllTimersAsync();
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await result.current.handleMove(1);
+      await vi.runAllTimersAsync();
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+      await result.current.handleMove(2);
+      await vi.runAllTimersAsync();
     });
 
     // Should detect win
-    await waitFor(() => {
-      expect(result.current.result).toBe('win');
-      expect(result.current.status).toBe('finished');
-    });
+    expect(result.current.result).toBe('win');
+    expect(result.current.status).toBe('finished');
   });
 
   it('should detect vertical win on first column', async () => {
@@ -141,30 +133,37 @@ describe('useTicTacToe', () => {
     });
 
     // Set up board for vertical win: X _ _ | X _ _ | X _ _
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(3);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(3);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(6);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(6);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      expect(result.current.result).toBe('win');
-    });
+    expect(result.current.result).toBe('win');
   });
 
   it('should detect diagonal win (top-left to bottom-right)', async () => {
@@ -175,30 +174,37 @@ describe('useTicTacToe', () => {
     });
 
     // Set up board for diagonal win: X _ _ | _ X _ | _ _ X
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(4);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(4);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(8);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(8);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      expect(result.current.result).toBe('win');
-    });
+    expect(result.current.result).toBe('win');
   });
 
   it('should detect diagonal win (top-right to bottom-left)', async () => {
@@ -209,30 +215,37 @@ describe('useTicTacToe', () => {
     });
 
     // Set up board for diagonal win: _ _ X | _ X _ | X _ _
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(2);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(4);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(4);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(6);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(6);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      expect(result.current.result).toBe('win');
-    });
+    expect(result.current.result).toBe('win');
   });
 
   it('should detect AI win', async () => {
@@ -244,33 +257,34 @@ describe('useTicTacToe', () => {
 
     // Force AI to win by blocking player and then winning
     // Player: 0, AI: 4 (center)
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
     // Player: 1, AI: 8 (corner)
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(1);
+
+      await vi.runAllTimersAsync();
+
     });
 
     // Player: 7, AI: 2 (completes diagonal win)
-    act(() => {
-      result.current.handleMove(7);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(7);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    await waitFor(() => {
-      expect(result.current.result).toBe('lose');
-      expect(result.current.message).toContain('AI Wins');
-    });
+        expect(result.current.result).toBe('lose');
+    expect(result.current.message).toContain('AI Wins');
   });
 
   // ============================================================
@@ -290,7 +304,7 @@ describe('useTicTacToe', () => {
       result.current.handleMove(6); // Player X at 6
     });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await vi.runAllTimersAsync();
     });
     // AI takes center (4)
 
@@ -298,7 +312,7 @@ describe('useTicTacToe', () => {
       result.current.handleMove(7); // Player X at 7
     });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await vi.runAllTimersAsync();
     });
     // AI should take 3 to create winning opportunity
 
@@ -306,15 +320,13 @@ describe('useTicTacToe', () => {
       result.current.handleMove(0); // Player X at 0
     });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await vi.runAllTimersAsync();
     });
     // AI should complete win if possible
 
     // Check that AI made strategic moves
-    await waitFor(() => {
-      const aiMoves = result.current.board.filter(cell => cell === 2).length;
-      expect(aiMoves).toBeGreaterThan(0);
-    });
+    const aiMoves = result.current.board.filter(cell => cell === 2).length;
+    expect(aiMoves).toBeGreaterThan(0);
   });
 
   it('should block player winning move', async () => {
@@ -325,29 +337,30 @@ describe('useTicTacToe', () => {
     });
 
     // Player takes 0 and 1, AI should block at 2
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
     // AI takes center
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
     // AI should block at position 2
-    await waitFor(() => {
-      const board = result.current.board;
-      if (board[0] === 1 && board[1] === 1 && board[2] === 0) {
-        // If AI didn't block yet, it should on next move
-        expect(result.current.board.some(cell => cell === 2)).toBe(true);
-      }
-    });
+    const board = result.current.board;
+    // AI should have made a move
+    expect(result.current.board.some(cell => cell === 2)).toBe(true);
   });
 
   it('should take center if available', async () => {
@@ -358,16 +371,15 @@ describe('useTicTacToe', () => {
     });
 
     // Player takes corner, AI should take center
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    await waitFor(() => {
-      expect(result.current.board[4]).toBe(2); // AI takes center
-    });
+        expect(result.current.board[4]).toBe(2); // AI takes center
   });
 
   it('should take corner when center is taken', async () => {
@@ -378,20 +390,19 @@ describe('useTicTacToe', () => {
     });
 
     // Player takes center first
-    act(() => {
-      result.current.handleMove(4);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(4);
+
+      await vi.runAllTimersAsync();
+
     });
 
     // AI should take a corner
-    await waitFor(() => {
-      const board = result.current.board;
-      const corners = [0, 2, 6, 8];
-      const aiTookCorner = corners.some(pos => board[pos] === 2);
-      expect(aiTookCorner).toBe(true);
-    });
+    const board = result.current.board;
+    const corners = [0, 2, 6, 8];
+    const aiTookCorner = corners.some(pos => board[pos] === 2);
+    expect(aiTookCorner).toBe(true);
   });
 
   // ============================================================
@@ -417,11 +428,12 @@ describe('useTicTacToe', () => {
     });
 
     // Make first move
-    act(() => {
-      result.current.handleMove(4);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+      await result.current.handleMove(4);
+
+      await vi.runAllTimersAsync();
+
     });
 
     const boardAfterFirstMove = [...result.current.board];
@@ -455,14 +467,12 @@ describe('useTicTacToe', () => {
       });
 
       await act(async () => {
-        await vi.advanceTimersByTime(600);
+        await vi.runAllTimersAsync();
       });
     }
 
     // Eventually should reach a finished state
-    await waitFor(() => {
-      expect(['finished', 'processing'].includes(result.current.status)).toBe(true);
-    });
+    expect(['finished', 'processing'].includes(result.current.status)).toBe(true);
   });
 
   it('should set status to processing during AI turn', async () => {
@@ -480,7 +490,7 @@ describe('useTicTacToe', () => {
     expect(result.current.status).toBe('processing');
 
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await vi.runAllTimersAsync();
     });
   });
 
@@ -495,12 +505,10 @@ describe('useTicTacToe', () => {
       result.current.handleMove(0);
     });
 
-    await waitFor(() => {
-      expect(result.current.message).toBe('AI thinking...');
-    });
+    expect(result.current.message).toBe('AI thinking...');
 
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+      await vi.runAllTimersAsync();
     });
   });
 
@@ -519,20 +527,18 @@ describe('useTicTacToe', () => {
     expect(boardBeforeAI.filter(c => c === 2).length).toBe(0);
 
     await act(async () => {
-      await vi.advanceTimersByTime(599);
+      await vi.runAllTimersAsync();
     });
 
     // AI shouldn't have moved yet
     expect(result.current.board.filter(c => c === 2).length).toBe(0);
 
     await act(async () => {
-      await vi.advanceTimersByTime(1);
+      await vi.runAllTimersAsync();
     });
 
     // Now AI should have moved
-    await waitFor(() => {
-      expect(result.current.board.filter(c => c === 2).length).toBeGreaterThan(0);
-    });
+    expect(result.current.board.filter(c => c === 2).length).toBeGreaterThan(0);
   });
 
   // ============================================================
@@ -547,40 +553,47 @@ describe('useTicTacToe', () => {
     });
 
     // Force a win
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(2);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.result === 'win') {
-        expect(result.current.stats.wins).toBe(1);
-        expect(result.current.stats.games).toBe(1);
-        expect(result.current.message).toContain('Victory');
+    // Check the result is a win
+    expect(result.current.result).toBe('win');
+    expect(result.current.stats.wins).toBe(1);
+    expect(result.current.stats.games).toBe(1);
+    expect(result.current.message).toContain('Victory');
 
-        const saved = localStorage.getItem('tictactoe_celo_stats');
-        expect(saved).toBeTruthy();
-        const parsed = JSON.parse(saved!);
-        expect(parsed.wins).toBe(1);
-        expect(parsed.games).toBe(1);
-      }
-    });
+    const saved = localStorage.getItem('tictactoe_celo_stats');
+    expect(saved).toBeTruthy();
+    const parsed = JSON.parse(saved!);
+    expect(parsed.wins).toBe(1);
+    expect(parsed.games).toBe(1);
   });
 
   it('should update stats on loss in free mode', async () => {
@@ -591,33 +604,40 @@ describe('useTicTacToe', () => {
     });
 
     // Let AI win
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(7);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(7);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.result === 'lose') {
-        expect(result.current.stats.losses).toBe(1);
-        expect(result.current.stats.games).toBe(1);
-      }
-    });
+    // Check the result is a loss
+    expect(result.current.result).toBe('lose');
+    expect(result.current.stats.losses).toBe(1);
+    expect(result.current.stats.games).toBe(1);
   });
 
   it('should call writeContractAsync when ending onchain game', async () => {
@@ -632,37 +652,44 @@ describe('useTicTacToe', () => {
     });
 
     // Make winning moves
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(2);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.result === 'win') {
-        expect(mockWriteContractAsync).toHaveBeenCalledWith(
-          expect.objectContaining({
-            functionName: 'endGame',
-            args: [1], // GAME_RESULT.WIN
-          })
-        );
-      }
-    });
+    // Check that the game ended with a win and contract was called
+    expect(result.current.result).toBe('win');
+    expect(mockWriteContractAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        functionName: 'endGame',
+        args: [1], // GAME_RESULT.WIN
+      })
+    );
   });
 
   it('should not call writeContractAsync if game not started onchain', async () => {
@@ -703,33 +730,39 @@ describe('useTicTacToe', () => {
     });
 
     // Win the game
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(2);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.message.includes('not recorded')) {
-        expect(result.current.message).toContain('not recorded on-chain');
-        expect(result.current.status).toBe('finished');
-      }
-    });
+    // Check the message indicates the game wasn't recorded
+    expect(result.current.message).toContain('not recorded on-chain');
+    expect(result.current.status).toBe('finished');
   });
 
   it('should refetch stats after successful onchain endGame', async () => {
@@ -744,32 +777,39 @@ describe('useTicTacToe', () => {
     });
 
     // Win
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(2);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.result === 'win') {
-        expect(mockRefetchStats).toHaveBeenCalled();
-      }
-    });
+    // Check that the game ended with a win and stats were refetched
+    expect(result.current.result).toBe('win');
+    expect(mockRefetchStats).toHaveBeenCalled();
   });
 
   // ============================================================
@@ -843,10 +883,8 @@ describe('useTicTacToe', () => {
       await result.current.startGame();
     });
 
-    await waitFor(() => {
-      expect(result.current.message).toBe('Transaction rejected');
-      expect(result.current.status).toBe('idle');
-    });
+        expect(result.current.message).toBe('Transaction rejected');
+    expect(result.current.status).toBe('idle');
   });
 
   it('should not start game when already playing', async () => {
@@ -973,14 +1011,12 @@ describe('useTicTacToe', () => {
       result.current.switchMode('onchain');
     });
 
-    await waitFor(() => {
-      expect(result.current.stats).toEqual({
+    expect(result.current.stats).toEqual({
         games: 15,
         wins: 8,
         losses: 5,
         draws: 2,
       });
-    });
   });
 
   it('should not use onchain stats in free mode', () => {
@@ -1005,11 +1041,15 @@ describe('useTicTacToe', () => {
       await result.current.startGame();
     });
 
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(0);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
     act(() => {
@@ -1033,32 +1073,39 @@ describe('useTicTacToe', () => {
     });
 
     // Win first game
-    act(() => {
-      result.current.handleMove(0);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+      await result.current.handleMove(0);
+
+      await vi.runAllTimersAsync();
+
     });
 
-    act(() => {
-      result.current.handleMove(1);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(600);
+
+
+      await result.current.handleMove(1);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    act(() => {
-      result.current.handleMove(2);
-    });
     await act(async () => {
-      await vi.advanceTimersByTime(100);
+
+
+      await result.current.handleMove(2);
+
+
+      await vi.runAllTimersAsync();
+
+
     });
 
-    await waitFor(() => {
-      if (result.current.result === 'win') {
-        expect(result.current.stats.wins).toBe(1);
-      }
-    });
+    // Direct assertions - no waitFor
+    expect(result.current.result).toBe('win');
+    expect(result.current.stats.wins).toBe(1);
 
     act(() => {
       result.current.resetGame();
