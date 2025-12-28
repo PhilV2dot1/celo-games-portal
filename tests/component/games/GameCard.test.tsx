@@ -98,7 +98,7 @@ describe('GameCard', () => {
 
     render(<GameCard game={mockGame} />);
 
-    const icon = screen.getByAlt('Blackjack');
+    const icon = screen.getByAltText('Blackjack');
     expect(icon).toBeInTheDocument();
     expect(icon).toHaveAttribute('src', '/icons/blackjack.svg');
   });

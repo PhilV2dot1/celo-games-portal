@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import { AuthProvider, useAuth } from '@/components/auth/AuthProvider';
 import { supabase } from '@/lib/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -227,18 +227,17 @@ describe('AuthProvider', () => {
 
     const signUpButton = screen.getByText('Sign Up');
 
-    let result: { success: boolean; error?: string } = { success: false };
-    await act(async () => {
-      result = await (signUpButton as HTMLButtonElement).onclick?.({} as never) as never;
-    });
+    fireEvent.click(signUpButton);
 
-    // Note: We can't easily get the return value from onClick, so we verify the mock was called
-    expect(supabase.auth.signUp).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      password: 'password123',
-      options: {
-        emailRedirectTo: expect.stringContaining('/auth/callback'),
-      },
+    // Verify the mock was called with correct arguments
+    await waitFor(() => {
+      expect(supabase.auth.signUp).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        password: 'password123',
+        options: {
+          emailRedirectTo: expect.stringContaining('/auth/callback'),
+        },
+      });
     });
   });
 
