@@ -7,6 +7,7 @@ import {
 } from '../setup/test-wallet';
 import { get2048Stats, isContractDeployed } from '../helpers/contract-helpers';
 import { GAME2048_CONTRACT_ADDRESS, GAME_FEE } from '@/lib/contracts/2048-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * 2048 Contract - Read Tests
@@ -15,7 +16,11 @@ import { GAME2048_CONTRACT_ADDRESS, GAME_FEE } from '@/lib/contracts/2048-abi';
  * Note: Le contrat 2048 a un système de high score et requiert 0.01 CELO par partie.
  */
 
-describe('2048 Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('2048 Contract - Read Operations', () => {
   beforeAll(async () => {
     const isAlfajores = await isConnectedToAlfajores();
     if (!isAlfajores) {

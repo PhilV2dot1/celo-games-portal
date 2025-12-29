@@ -8,6 +8,7 @@ import {
 } from '../setup/test-wallet';
 import { getBlackjackStats, isContractDeployed } from '../helpers/contract-helpers';
 import { CONTRACT_ADDRESS } from '@/lib/contracts/blackjack-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Blackjack Contract - Read Tests
@@ -23,7 +24,11 @@ import { CONTRACT_ADDRESS } from '@/lib/contracts/blackjack-abi';
  * - Test wallet must exist (does not need CELO for read operations)
  */
 
-describe('Blackjack Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Blackjack Contract - Read Operations', () => {
   beforeAll(async () => {
     // Verify we're connected to Alfajores
     const isAlfajores = await isConnectedToAlfajores();

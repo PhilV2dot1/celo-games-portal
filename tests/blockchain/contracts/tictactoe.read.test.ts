@@ -7,6 +7,7 @@ import {
 } from '../setup/test-wallet';
 import { getTicTacToeStats, isContractDeployed } from '../helpers/contract-helpers';
 import { TICTACTOE_CONTRACT_ADDRESS } from '@/lib/contracts/tictactoe-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * TicTacToe Contract - Read Tests
@@ -14,7 +15,11 @@ import { TICTACTOE_CONTRACT_ADDRESS } from '@/lib/contracts/tictactoe-abi';
  * Tests de lecture du contrat TicTacToe sur Alfajores testnet.
  */
 
-describe('TicTacToe Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('TicTacToe Contract - Read Operations', () => {
   beforeAll(async () => {
     const isAlfajores = await isConnectedToAlfajores();
     if (!isAlfajores) {

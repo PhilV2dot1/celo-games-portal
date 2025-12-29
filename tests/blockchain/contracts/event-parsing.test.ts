@@ -9,6 +9,7 @@ import {
   parseGamePlayedEvent,
 } from '../helpers/contract-helpers';
 import { CONTRACT_ABI } from '@/lib/contracts/blackjack-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Event Parsing Tests
@@ -29,7 +30,11 @@ import { CONTRACT_ABI } from '@/lib/contracts/blackjack-abi';
  * - Connected to Alfajores testnet
  */
 
-describe('Blockchain Event Parsing', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Blockchain Event Parsing', () => {
   let hasBalance = false;
 
   beforeAll(async () => {

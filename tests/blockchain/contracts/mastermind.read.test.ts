@@ -7,6 +7,7 @@ import {
 } from '../setup/test-wallet';
 import { getMastermindStats, isContractDeployed } from '../helpers/contract-helpers';
 import { MASTERMIND_CONTRACT_ADDRESS, MASTERMIND_GAME_FEE } from '@/lib/contracts/mastermind-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Mastermind Contract - Read Tests
@@ -16,7 +17,11 @@ import { MASTERMIND_CONTRACT_ADDRESS, MASTERMIND_GAME_FEE } from '@/lib/contract
  * le nombre de tentatives et le meilleur score.
  */
 
-describe('Mastermind Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Mastermind Contract - Read Operations', () => {
   beforeAll(async () => {
     const isAlfajores = await isConnectedToAlfajores();
     if (!isAlfajores) {

@@ -9,6 +9,7 @@ import {
   playBlackjackGame,
   isTransactionMined,
 } from '../helpers/contract-helpers';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Blackjack Contract - Write Tests
@@ -29,7 +30,11 @@ import {
  * IMPORTANT: These tests will be SKIPPED if wallet has insufficient balance.
  */
 
-describe('Blackjack Contract - Write Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Blackjack Contract - Write Operations', () => {
   let hasBalance = false;
   let initialBalance = 0;
 

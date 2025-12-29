@@ -12,6 +12,7 @@ import { TICTACTOE_CONTRACT_ADDRESS } from '@/lib/contracts/tictactoe-abi';
 import { JACKPOT_CONTRACT_ADDRESS } from '@/lib/contracts/jackpot-abi';
 import { GAME2048_CONTRACT_ADDRESS } from '@/lib/contracts/2048-abi';
 import { MASTERMIND_CONTRACT_ADDRESS } from '@/lib/contracts/mastermind-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Chain Validation Tests
@@ -25,9 +26,23 @@ import { MASTERMIND_CONTRACT_ADDRESS } from '@/lib/contracts/mastermind-abi';
  *
  * These tests help ensure that write operations will target
  * the correct network and prevent accidental mainnet transactions.
+ *
+ * NOTE: These are INTEGRATION tests that require:
+ * - Active internet connection
+ * - Access to Celo Alfajores testnet RPC
+ * - Deployed contracts on Alfajores
+ *
+ * To run these tests:
+ *   RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ *
+ * These tests are SKIPPED by default in regular test runs.
  */
 
-describe('Chain Validation & Network Tests', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Chain Validation & Network Tests', () => {
   test('should be connected to Alfajores testnet', async () => {
     const isAlfajores = await isConnectedToAlfajores();
     expect(isAlfajores).toBe(true);

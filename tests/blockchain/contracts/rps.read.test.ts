@@ -7,6 +7,7 @@ import {
 } from '../setup/test-wallet';
 import { getRPSStats, isContractDeployed } from '../helpers/contract-helpers';
 import { RPS_CONTRACT_ADDRESS } from '@/lib/contracts/rps-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Rock Paper Scissors Contract - Read Tests
@@ -14,7 +15,11 @@ import { RPS_CONTRACT_ADDRESS } from '@/lib/contracts/rps-abi';
  * Tests de lecture du contrat RPS sur Alfajores testnet.
  */
 
-describe('RPS Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('RPS Contract - Read Operations', () => {
   beforeAll(async () => {
     const isAlfajores = await isConnectedToAlfajores();
     if (!isAlfajores) {

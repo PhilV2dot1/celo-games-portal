@@ -7,6 +7,7 @@ import {
 } from '../setup/test-wallet';
 import { getJackpotLeaderboard, isContractDeployed } from '../helpers/contract-helpers';
 import { JACKPOT_CONTRACT_ADDRESS } from '@/lib/contracts/jackpot-abi';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Jackpot Contract - Read Tests
@@ -16,7 +17,11 @@ import { JACKPOT_CONTRACT_ADDRESS } from '@/lib/contracts/jackpot-abi';
  * individuelles mais un système de leaderboard avec sessions et scores.
  */
 
-describe('Jackpot Contract - Read Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Jackpot Contract - Read Operations', () => {
   beforeAll(async () => {
     const isAlfajores = await isConnectedToAlfajores();
     if (!isAlfajores) {

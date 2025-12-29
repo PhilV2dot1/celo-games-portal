@@ -9,6 +9,7 @@ import {
   playMastermindGame,
   isTransactionMined,
 } from '../helpers/contract-helpers';
+import { describeBlockchain } from '../helpers/test-config';
 
 /**
  * Mastermind Contract - Write Tests
@@ -31,7 +32,11 @@ import {
  * IMPORTANT: Each game costs 0.01 CELO + gas fees.
  */
 
-describe('Mastermind Contract - Write Operations', () => {
+/**
+ * Integration tests that require connection to Celo Alfajores testnet.
+ * Skipped by default. Run with: RUN_BLOCKCHAIN_TESTS=true npm test -- tests/blockchain
+ */
+describeBlockchain('Mastermind Contract - Write Operations', () => {
   let hasBalance = false;
   let initialBalance = 0;
 
