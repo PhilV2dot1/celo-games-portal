@@ -80,15 +80,24 @@ describe('/api/user/profile', () => {
     mockSupabaseData.user = null;
     mockSupabaseData.session = null;
 
+    // Create default chainable mock
+    const createDefaultChain = () => {
+      const chain: any = {
+        select: vi.fn(() => chain),
+        eq: vi.fn(() => chain),
+        or: vi.fn(() => chain),
+        order: vi.fn(() => chain),
+        limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
+        maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        insert: vi.fn(() => chain),
+        update: vi.fn(() => chain),
+      };
+      return chain;
+    };
+
     // Setup default mock chain
-    mockFrom.mockReturnThis();
-    mockSelect.mockReturnThis();
-    mockEq.mockReturnThis();
-    mockOr.mockReturnThis();
-    mockOrder.mockReturnThis();
-    mockLimit.mockReturnThis();
-    mockInsert.mockReturnThis();
-    mockUpdate.mockReturnThis();
+    mockFrom.mockImplementation(() => createDefaultChain());
   });
 
   afterEach(() => {
