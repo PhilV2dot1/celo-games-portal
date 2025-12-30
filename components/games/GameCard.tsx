@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { GameMetadata } from "@/lib/types";
 import { useLocalStats } from "@/hooks/useLocalStats";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface GameCardProps {
   game: GameMetadata;
@@ -13,6 +14,7 @@ interface GameCardProps {
 export function GameCard({ game }: GameCardProps) {
   const { getStats } = useLocalStats();
   const stats = getStats(game.id);
+  const { t } = useLanguage();
 
   return (
     <Link href={game.route}>
@@ -50,7 +52,7 @@ export function GameCard({ game }: GameCardProps) {
 
           {/* Description */}
           <p className="text-gray-600 text-sm text-center mb-4 leading-relaxed min-h-[2.5rem]">
-            {game.description}
+            {t(`games.${game.id}` as any) || game.description}
           </p>
 
           {/* Stats */}

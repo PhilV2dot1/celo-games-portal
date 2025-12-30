@@ -310,6 +310,16 @@ export const translations = {
       usernameRequired: 'Username is required',
     },
 
+    // Games
+    games: {
+      blackjack: 'Beat the dealer to 21!',
+      rps: 'Classic hand game!',
+      tictactoe: 'Get three in a row!',
+      jackpot: 'Spin the crypto wheel!',
+      '2048': 'Merge tiles to 2048!',
+      mastermind: 'Crack the crypto code!',
+    },
+
     // Leaderboard
     leaderboard: {
       title: 'Leaderboard',
@@ -640,6 +650,16 @@ export const translations = {
       discord: 'Discord',
       unsavedChanges: 'Vous avez des modifications non sauvegardées',
       usernameRequired: 'Le nom d\'utilisateur est requis',
+    },
+
+    // Games
+    games: {
+      blackjack: 'Battez le croupier à 21 !',
+      rps: 'Jeu classique à la main !',
+      tictactoe: 'Alignez-en trois !',
+      jackpot: 'Faites tourner la roue crypto !',
+      '2048': 'Fusionnez les tuiles jusqu\'à 2048 !',
+      mastermind: 'Cassez le code crypto !',
     },
 
     // Leaderboard
