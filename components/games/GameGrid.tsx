@@ -31,9 +31,6 @@ const item = {
 };
 
 export function GameGrid({ games }: GameGridProps) {
-  // Mark 2048 and Mastermind as new
-  const newGameIds = ["2048", "mastermind"];
-
   return (
     <motion.div
       variants={container}
@@ -43,7 +40,7 @@ export function GameGrid({ games }: GameGridProps) {
     >
       {games.map((game) => (
         <motion.div key={game.id} variants={item}>
-          <GameCard game={game} isNew={newGameIds.includes(game.id)} />
+          <GameCard game={game} />
         </motion.div>
       ))}
     </motion.div>
