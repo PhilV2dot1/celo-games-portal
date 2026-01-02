@@ -60,7 +60,8 @@
       "Bash(NODE_OPTIONS=\"--max-old-space-size=8192\" npm test:*)",
       "Bash(Get-Content final-coverage-phase2-clean.log)",
       "Bash(Select-Object -Last 100)",
-      "Bash(Select-String -Pattern \"\\(All files|% Stmts|% Branch|% Funcs|% Lines|Test Files|Tests \\)\" -Context 0,0)"
+      "Bash(Select-String -Pattern \"\\(All files|% Stmts|% Branch|% Funcs|% Lines|Test Files|Tests \\)\" -Context 0,0)",
+      "Bash(Select-String -Pattern \"\\(Test Files|Tests |Coverage|% Stmts|% Branch|% Funcs|% Lines|All files\\)\" -Context 0,0)"
     ]
   }
 }
