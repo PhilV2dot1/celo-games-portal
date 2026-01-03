@@ -1,5 +1,5 @@
 export type GameMode = "free" | "onchain";
-export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind";
+export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive";
 
 export interface GameMetadata {
   id: GameId;
@@ -72,5 +72,14 @@ export const GAMES: Record<GameId, GameMetadata> = {
     contractAddress: "0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9",
     color: "from-gray-500 to-gray-700",
     hasFee: true, // 0.01 CELO per game
+  },
+  connectfive: {
+    id: "connectfive",
+    name: "Connect Five",
+    description: "Connect 4 pieces in a row!",
+    icon: "/icons/connectfive.png",
+    route: "/games/connect-five",
+    color: "from-blue-500 to-indigo-600",
+    hasFee: false,
   },
 };
