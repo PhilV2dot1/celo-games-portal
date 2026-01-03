@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { Variants, Transition } from 'framer-motion';
+import type { Variants, Transition, TargetAndTransition } from 'framer-motion';
 import { animations, durations, easings } from '@/lib/constants/design-tokens';
 
 // ========================================
@@ -416,9 +416,9 @@ export const skeletonPulseVariants: Variants = {
  * Create custom variants with reduced motion support
  */
 export function createVariants(
-  initial: object,
-  animate: object,
-  exit?: object
+  initial: TargetAndTransition,
+  animate: TargetAndTransition,
+  exit?: TargetAndTransition
 ): Variants {
   return {
     initial,
