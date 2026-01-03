@@ -41,9 +41,7 @@ export function useReducedMotion(): boolean {
     }
     // Legacy browsers
     else {
-      // @ts-expect-error - legacy API
       mediaQuery.addListener(listener);
-      // @ts-expect-error - legacy API
       return () => mediaQuery.removeListener(listener);
     }
   }, []);
