@@ -9,7 +9,6 @@ import { forwardRef, HTMLAttributes } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { useShouldAnimate } from '@/lib/utils/motion';
 import { cn } from '@/lib/utils';
-import { shadows } from '@/lib/constants/design-tokens';
 
 // ========================================
 // TYPES

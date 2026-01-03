@@ -7,7 +7,6 @@
 
 import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { colors } from '@/lib/constants/design-tokens';
 
 // ========================================
 // TYPES
