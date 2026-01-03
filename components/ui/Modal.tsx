@@ -219,9 +219,9 @@ export function Modal({
           <motion.div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             variants={shouldAnimate ? backdropVariants : undefined}
-            initial={shouldAnimate ? 'initial' : false}
-            animate={shouldAnimate ? 'animate' : false}
-            exit={shouldAnimate ? 'exit' : false}
+            initial={shouldAnimate ? 'initial' : undefined}
+            animate={shouldAnimate ? 'animate' : undefined}
+            exit={shouldAnimate ? 'exit' : undefined}
             onClick={handleBackdropClick}
             aria-hidden="true"
           />
@@ -232,9 +232,9 @@ export function Modal({
             className={modalClasses}
             style={{ boxShadow: celoShadow }}
             variants={shouldAnimate ? modalVariants : undefined}
-            initial={shouldAnimate ? 'initial' : false}
-            animate={shouldAnimate ? 'animate' : false}
-            exit={shouldAnimate ? 'exit' : false}
+            initial={shouldAnimate ? 'initial' : undefined}
+            animate={shouldAnimate ? 'animate' : undefined}
+            exit={shouldAnimate ? 'exit' : undefined}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}
