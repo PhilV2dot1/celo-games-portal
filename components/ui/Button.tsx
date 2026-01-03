@@ -18,7 +18,10 @@ import { colors } from '@/lib/constants/design-tokens';
 export type ButtonVariant = 'primary' | 'secondary' | 'celo' | 'ghost' | 'outline' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'onDrag' | 'onDragStart' | 'onDragEnd'> {
+export interface ButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'className' | 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'
+> {
   /**
    * Visual variant of the button
    * @default 'primary'
