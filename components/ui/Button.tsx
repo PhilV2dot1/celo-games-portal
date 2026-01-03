@@ -18,7 +18,7 @@ import { colors } from '@/lib/constants/design-tokens';
 export type ButtonVariant = 'primary' | 'secondary' | 'celo' | 'ghost' | 'outline' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'onDrag' | 'onDragStart' | 'onDragEnd'> {
   /**
    * Visual variant of the button
    * @default 'primary'
