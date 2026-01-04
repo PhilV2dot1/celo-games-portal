@@ -1,62 +1,128 @@
-/**
- * Connect Five Game Page
- * Play Connect Five (Connect Four) on Celo blockchain
- */
+"use client";
 
-import type { Metadata } from 'next';
-import { ConnectFive } from '@/components/games/ConnectFive';
-
-export const metadata: Metadata = {
-  title: 'Connect Five | Celo Games Portal',
-  description: 'Play Connect Five (Connect Four) - Connect 4 pieces in a row to win! Classic strategy game on the Celo blockchain.',
-  keywords: ['connect five', 'connect four', 'strategy game', 'celo', 'blockchain game', 'web3 game'],
-};
+import Link from "next/link";
+import { useEffect } from "react";
+import { useConnectFive } from "@/hooks/useConnectFive";
+import { useLocalStats } from "@/hooks/useLocalStats";
+import { ConnectFiveBoard } from "@/components/connectfive/ConnectFiveBoard";
+import { GameStatus } from "@/components/connectfive/GameStatus";
+import { ModeToggle } from "@/components/shared/ModeToggle";
+import { WalletConnect } from "@/components/shared/WalletConnect";
+import { PlayerStats } from "@/components/connectfive/PlayerStats";
+import { motion } from "framer-motion";
 
 export default function ConnectFivePage() {
+  const {
+    board,
+    mode,
+    status,
+    result,
+    stats,
+    message,
+    isConnected,
+    startGame,
+    handleMove,
+    resetGame,
+    switchMode,
+  } = useConnectFive();
+
+  const { recordGame } = useLocalStats();
+
+  // Record game to portal stats when finished
+  useEffect(() => {
+    if (status === "finished" && result) {
+      recordGame("connectfive", mode, result);
+    }
+  }, [status, result, mode, recordGame]);
+
+  const canPlay = status === "playing";
+  const isProcessing = status === "processing";
+  const isFinished = status === "finished";
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Page Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 p-4 sm:p-8">
+      <div className="max-w-md mx-auto space-y-4">
+        {/* Back to Portal Link */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
+        >
+          ← Back to Portal
+        </Link>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
+        >
+          <div className="text-5xl mb-2" role="img" aria-label="Connect Five">
+            🔴🟡
+          </div>
+          <h1 className="text-4xl font-black text-gray-900">
             Connect Five
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Connect 4 pieces in a row - horizontally, vertically, or diagonally - to win this classic strategy game!
-          </p>
+          <p className="text-sm text-gray-600">Connect 4 in a row on Celo</p>
+        </motion.div>
+
+        {/* Mode Toggle */}
+        <div className="flex justify-center">
+          <ModeToggle mode={mode} onModeChange={switchMode} />
         </div>
 
-        {/* Game Component */}
-        <ConnectFive />
+        {/* Wallet Connect (On-Chain Mode) */}
+        {mode === "onchain" && <WalletConnect />}
 
-        {/* Game Info */}
-        <div className="mt-12 max-w-2xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Game Rules */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Game Rules</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>• Players take turns dropping pieces into columns</li>
-                <li>• Pieces fall to the lowest available position</li>
-                <li>• First player to connect 4 pieces wins</li>
-                <li>• Can connect horizontally, vertically, or diagonally</li>
-                <li>• Game ends in a draw if board fills completely</li>
-              </ul>
-            </div>
+        {/* Game Status */}
+        <GameStatus message={message} result={result} />
 
-            {/* Strategy Tips */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border-2 border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Strategy Tips</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>• Control the center columns</li>
-                <li>• Create multiple winning opportunities</li>
-                <li>• Block your opponent&apos;s connections</li>
-                <li>• Think several moves ahead</li>
-                <li>• Watch for diagonal opportunities</li>
-              </ul>
-            </div>
-          </div>
+        {/* Game Board */}
+        <ConnectFiveBoard
+          board={board}
+          onColumnClick={handleMove}
+          disabled={!canPlay || isProcessing}
+        />
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 justify-center">
+          {status === "idle" || isFinished ? (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={startGame}
+              disabled={isProcessing || (mode === "onchain" && !isConnected)}
+              className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProcessing ? "Starting..." : "Start Game"}
+            </motion.button>
+          ) : (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={resetGame}
+              disabled={isProcessing}
+              className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Reset
+            </motion.button>
+          )}
         </div>
+
+        {/* Player Stats */}
+        <PlayerStats stats={stats} />
+
+        {/* Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center text-xs text-gray-600 pt-2 space-y-1"
+        >
+          <p className="font-semibold">🎮 Play against intelligent AI with minimax algorithm</p>
+          <p className="text-gray-500">Contract: 0xd00a...63e6</p>
+        </motion.div>
       </div>
     </main>
   );

@@ -27,8 +27,8 @@ export const ROWS = 6;
 export const COLS = 7;
 const WIN_LENGTH = 4;
 
-// Contract configuration (will be set after deployment)
-const CONNECTFIVE_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000" as `0x${string}`;
+// Contract configuration
+const CONNECTFIVE_CONTRACT_ADDRESS = "0xd00a6170d83b446314b2e79f9603bc0a72c463e6" as `0x${string}`;
 const CONNECTFIVE_CONTRACT_ABI = [
   {
     "type": "function",
