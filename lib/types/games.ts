@@ -1,5 +1,5 @@
 export type GameMode = "free" | "onchain";
-export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive";
+export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake";
 
 export interface GameMetadata {
   id: GameId;
@@ -80,6 +80,15 @@ export const GAMES: Record<GameId, GameMetadata> = {
     icon: "/icons/connectfive.png",
     route: "/games/connect-five",
     color: "from-blue-500 to-indigo-600",
+    hasFee: false,
+  },
+  snake: {
+    id: "snake",
+    name: "Snake",
+    description: "Eat food and grow long!",
+    icon: "/icons/snake.png",
+    route: "/games/snake",
+    color: "from-green-500 to-green-700",
     hasFee: false,
   },
 };

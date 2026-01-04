@@ -322,6 +322,7 @@ export const translations = {
       '2048': 'Merge tiles to 2048!',
       mastermind: 'Crack the crypto code!',
       connectfive: 'Connect 4 in a row!',
+      snake: 'Eat food and grow long!',
     },
 
     // Leaderboard
@@ -668,6 +669,7 @@ export const translations = {
       '2048': 'Fusionnez les tuiles jusqu\'à 2048 !',
       mastermind: 'Cassez le code crypto !',
       connectfive: 'Alignez 4 pièces !',
+      snake: 'Mangez et grandissez !',
     },
 
     // Leaderboard

@@ -30,6 +30,7 @@ const DEFAULT_PROFILE: UserProfile = {
     "2048": { ...DEFAULT_GAME_STATS },
     mastermind: { ...DEFAULT_GAME_STATS },
     connectfive: { ...DEFAULT_GAME_STATS },
+    snake: { ...DEFAULT_GAME_STATS },
   },
 };
 
