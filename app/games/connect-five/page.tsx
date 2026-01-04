@@ -56,13 +56,13 @@ export default function ConnectFivePage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Connect Five">
+          <div className="text-5xl mb-2" role="img" aria-label="Connect 4">
             🔴🟡
           </div>
           <h1 className="text-4xl font-black text-gray-900">
-            Connect Five
+            Connect 4
           </h1>
-          <p className="text-sm text-gray-600">Connect 4 in a row on Celo</p>
+          <p className="text-sm text-gray-600">Align 4 pieces in a row on Celo</p>
         </motion.div>
 
         {/* Mode Toggle */}

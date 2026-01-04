@@ -2,8 +2,8 @@
 pragma solidity ^0.8.20;
 
 /**
- * @title ConnectFive
- * @dev Simple game session tracking for Connect Five (Connect Four) on Celo
+ * @title Connect4
+ * @dev Simple game session tracking for Connect 4 (Puissance 4) on Celo
  * @notice This contract tracks game sessions and player statistics
  */
 contract ConnectFive {

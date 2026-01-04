@@ -75,8 +75,8 @@ export const GAMES: Record<GameId, GameMetadata> = {
   },
   connectfive: {
     id: "connectfive",
-    name: "Connect Five",
-    description: "Connect 4 pieces in a row!",
+    name: "Connect 4",
+    description: "Align 4 pieces in a row!",
     icon: "/icons/connectfive.png",
     route: "/games/connect-five",
     color: "from-blue-500 to-indigo-600",
