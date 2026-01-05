@@ -88,6 +88,7 @@ export const GAMES: Record<GameId, GameMetadata> = {
     description: "Eat food and grow long!",
     icon: "/icons/snake.png",
     route: "/games/snake",
+    contractAddress: "0x5646fda34aaf8a95b9b0607db5ca02bdee267598",
     color: "from-green-500 to-green-700",
     hasFee: false,
   },

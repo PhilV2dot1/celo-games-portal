@@ -170,7 +170,17 @@ export default function SnakePage() {
           <p className="font-semibold">
             🐍 Classic Snake game with blockchain integration
           </p>
-          <p className="text-gray-500">Contract: Deploying soon...</p>
+          <p className="text-gray-500">
+            Contract:{" "}
+            <a
+              href="https://celoscan.io/address/0x5646fda34aaf8a95b9b0607db5ca02bdee267598"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-celo underline transition-colors"
+            >
+              0x5646...7598
+            </a>
+          </p>
         </motion.div>
       </div>
     </main>

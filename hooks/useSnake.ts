@@ -27,8 +27,8 @@ export const INITIAL_SPEED = 150; // milliseconds
 export const SPEED_INCREMENT = 5; // Speed increases every 5 food eaten
 export const SPEED_DECREASE = 10; // Decrease delay by 10ms
 
-// Contract configuration (will be set after deployment)
-const SNAKE_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000" as `0x${string}`;
+// Contract configuration
+const SNAKE_CONTRACT_ADDRESS = "0x5646fda34aaf8a95b9b0607db5ca02bdee267598" as `0x${string}`;
 const SNAKE_CONTRACT_ABI = [
   {
     type: "function",
