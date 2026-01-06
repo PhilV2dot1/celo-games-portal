@@ -107,7 +107,7 @@ export default function SolitairePage() {
           <div className="text-5xl mb-2" role="img" aria-label="Solitaire">
             🃏
           </div>
-          <h1 className="text-4xl font-black text-gray-900">Klondike Solitaire</h1>
+          <h1 className="text-4xl font-black text-gray-900">Solitaire</h1>
           <p className="text-sm text-gray-600">
             Classic card patience game - Stack cards to win!
           </p>
@@ -200,7 +200,7 @@ export default function SolitairePage() {
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
           <p className="font-semibold">
-            🃏 Classic Klondike Solitaire with blockchain integration
+            🃏 Classic Solitaire with blockchain integration
           </p>
           <p className="text-gray-500">
             Contract:{" "}

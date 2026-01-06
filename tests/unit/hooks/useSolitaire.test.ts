@@ -1,6 +1,6 @@
 /**
  * Tests for useSolitaire Hook
- * Comprehensive test suite for Klondike Solitaire game logic
+ * Comprehensive test suite for Solitaire game logic
  */
 
 import { renderHook, act } from '@testing-library/react';

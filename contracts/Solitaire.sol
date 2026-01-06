@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Solitaire
- * @dev Klondike Solitaire game contract for Celo blockchain
+ * @dev Solitaire game contract for Celo blockchain
  * @notice Tracks player statistics for Solitaire games on-chain
  */
 contract Solitaire {

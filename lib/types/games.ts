@@ -95,7 +95,7 @@ export const GAMES: Record<GameId, GameMetadata> = {
   },
   solitaire: {
     id: "solitaire",
-    name: "Klondike Solitaire",
+    name: "Solitaire",
     description: "Classic card patience game!",
     icon: "/icons/Solitaire.png",
     route: "/games/solitaire",
