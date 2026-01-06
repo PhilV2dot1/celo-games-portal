@@ -18,7 +18,7 @@ interface TableauPileProps {
 }
 
 export function TableauPile({ column, columnIndex, onCardClick, onDrop }: TableauPileProps) {
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<DragItem, unknown, { isOver: boolean; canDrop: boolean }>({
     accept: "CARD",
     drop: (item: DragItem) => {
       onDrop(item, columnIndex);
@@ -40,7 +40,7 @@ export function TableauPile({ column, columnIndex, onCardClick, onDrop }: Tablea
 
   return (
     <div
-      ref={drop as any}
+      ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={cn(
         "relative w-24 min-h-48 rounded-lg",
         "transition-all duration-150",

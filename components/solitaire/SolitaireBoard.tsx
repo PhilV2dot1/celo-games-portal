@@ -6,7 +6,7 @@ import { TableauPile } from "./TableauPile";
 import { FoundationPile } from "./FoundationPile";
 import { StockPile } from "./StockPile";
 import { WastePile } from "./WastePile";
-import { SolitaireGameState, Suit } from "@/hooks/useSolitaire";
+import { SolitaireGameState, Suit, Card } from "@/hooks/useSolitaire";
 
 // Detect touch device
 const isTouchDevice = () => {
@@ -15,7 +15,7 @@ const isTouchDevice = () => {
 };
 
 interface DragItem {
-  card: any;
+  card: Card;
   fromTableau?: number;
   fromTableauIndex?: number;
   fromWaste?: boolean;

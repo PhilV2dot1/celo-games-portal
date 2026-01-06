@@ -1,7 +1,14 @@
 import React from "react";
 import { useDrag } from "react-dnd";
-import { Card as CardType, Suit, getRankValue, isRed, getSuitSymbol } from "@/hooks/useSolitaire";
+import { Card as CardType, isRed, getSuitSymbol } from "@/hooks/useSolitaire";
 import { cn } from "@/lib/utils";
+
+interface DragData {
+  card: CardType;
+  fromWaste?: boolean;
+  fromTableau?: number;
+  fromTableauIndex?: number;
+}
 
 interface CardProps {
   card: CardType;
@@ -9,11 +16,11 @@ interface CardProps {
   isTopCard?: boolean;
   onClick?: () => void;
   style?: React.CSSProperties;
-  dragData?: any;
+  dragData?: DragData;
 }
 
 export function Card({ card, isDraggable = false, isTopCard = true, onClick, style, dragData }: CardProps) {
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag<DragData, unknown, { isDragging: boolean }>({
     type: "CARD",
     item: () => dragData || { card },
     canDrag: isDraggable && card.faceUp && isTopCard,
@@ -46,7 +53,7 @@ export function Card({ card, isDraggable = false, isTopCard = true, onClick, sty
 
   return (
     <div
-      ref={drag as any}
+      ref={drag as unknown as React.Ref<HTMLDivElement>}
       className={cn(
         "w-24 h-36 rounded-lg border-2 border-gray-300 shadow-md",
         bgColor,

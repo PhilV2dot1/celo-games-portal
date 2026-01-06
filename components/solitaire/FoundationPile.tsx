@@ -15,7 +15,7 @@ interface FoundationPileProps {
 }
 
 export function FoundationPile({ suit, cards, onDrop }: FoundationPileProps) {
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<DragItem, unknown, { isOver: boolean; canDrop: boolean }>({
     accept: "CARD",
     drop: (item: DragItem) => {
       onDrop(item, suit);
@@ -38,7 +38,7 @@ export function FoundationPile({ suit, cards, onDrop }: FoundationPileProps) {
 
   return (
     <div
-      ref={drop as any}
+      ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={cn(
         "w-24 h-36 rounded-lg border-2 transition-all duration-150",
         isOver && canDrop && "bg-green-200 ring-2 ring-green-500",

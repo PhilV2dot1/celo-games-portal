@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { useSolitaire } from "@/hooks/useSolitaire";
+import { useSolitaire, Suit } from "@/hooks/useSolitaire";
 import { useLocalStats } from "@/hooks/useLocalStats";
 import { SolitaireBoard } from "@/components/solitaire/SolitaireBoard";
 import { GameStatus } from "@/components/solitaire/GameStatus";
@@ -12,6 +12,12 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
 
+interface DragItem {
+  fromWaste?: boolean;
+  fromTableau?: number;
+  fromTableauIndex?: number;
+}
+
 export default function SolitairePage() {
   const {
     gameState,
@@ -19,7 +25,6 @@ export default function SolitairePage() {
     status,
     message,
     stats,
-    isConnected,
     canUndo,
     canAutoComplete,
     startGame,
@@ -30,7 +35,6 @@ export default function SolitairePage() {
     moveWasteToFoundation,
     moveTableauToTableau,
     moveTableauToFoundation,
-    moveFoundationToTableau,
     undoMove,
     autoComplete,
   } = useSolitaire();
@@ -45,7 +49,6 @@ export default function SolitairePage() {
   }, [status, mode, recordGame]);
 
   const isPlaying = status === "playing";
-  const isProcessing = status === "processing";
   const isWon = status === "won";
 
   // Handle tableau click (for quick move to foundation)
@@ -62,7 +65,7 @@ export default function SolitairePage() {
   };
 
   // Handle tableau drop
-  const handleTableauDrop = (item: any, targetColumnIndex: number) => {
+  const handleTableauDrop = (item: DragItem, targetColumnIndex: number) => {
     if (!isPlaying) return;
 
     if (item.fromWaste) {
@@ -74,7 +77,7 @@ export default function SolitairePage() {
   };
 
   // Handle foundation drop
-  const handleFoundationDrop = (item: any, suit: any) => {
+  const handleFoundationDrop = (item: DragItem, suit: Suit) => {
     if (!isPlaying) return;
 
     if (item.fromWaste) {
