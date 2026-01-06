@@ -97,7 +97,7 @@ export const GAMES: Record<GameId, GameMetadata> = {
     id: "solitaire",
     name: "Klondike Solitaire",
     description: "Classic card patience game!",
-    icon: "/icons/solitaire.svg",
+    icon: "/icons/Solitaire.png",
     route: "/games/solitaire",
     contractAddress: "0x552c22fe8e0dbff856d45bcf32ddf6fe1ccb1525",
     color: "from-purple-500 to-indigo-600",
