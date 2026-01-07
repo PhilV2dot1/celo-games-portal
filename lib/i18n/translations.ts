@@ -349,8 +349,8 @@ export const translations = {
       usernameRequired: 'Username is required',
     },
 
-    // Games
-    games: {
+    // Game Descriptions
+    gameDescriptions: {
       blackjack: 'Beat the dealer to 21!',
       rps: 'Classic hand game!',
       tictactoe: 'Get three in a row!',
@@ -732,8 +732,8 @@ export const translations = {
       usernameRequired: 'Le nom d\'utilisateur est requis',
     },
 
-    // Games
-    games: {
+    // Game Descriptions
+    gameDescriptions: {
       blackjack: 'Battez le croupier à 21 !',
       rps: 'Jeu classique à la main !',
       tictactoe: 'Alignez-en trois !',

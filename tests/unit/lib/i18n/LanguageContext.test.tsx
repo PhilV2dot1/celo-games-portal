@@ -303,7 +303,7 @@ describe('LanguageContext', () => {
       });
 
       // Game '2048' has special characters in key
-      expect(result.current.t('games.2048')).toBe('Merge tiles to 2048!');
+      expect(result.current.t('gameDescriptions.2048')).toBe('Merge tiles to 2048!');
     });
   });
 });
