@@ -18,6 +18,10 @@ export const translations = {
     delete: 'Delete',
     confirm: 'Confirm',
     or: 'or',
+    email: 'Email',
+    password: 'Password',
+    points: 'Points',
+    games: 'Games',
 
     // Navigation
     nav: {
@@ -92,6 +96,38 @@ export const translations = {
       performancePerGame: 'Performance in each game',
       game: 'game',
       games: 'games',
+    },
+
+    // Authentication
+    auth: {
+      login: 'Login',
+      loginButton: 'Sign In',
+      createAccount: 'Create Account',
+      emailPasswordRequired: 'Email and password required',
+      passwordMinLength: 'Password must be at least 8 characters',
+      passwordsDoNotMatch: 'Passwords do not match',
+      accountCreationFailed: 'Failed to create account',
+      errorOccurred: 'An error occurred',
+      socialLoginFailed: 'Social login failed',
+      saveProgressDesc: 'Save your progress and play on all your devices',
+      yourCurrentStats: 'Your current stats',
+      statsWillBePreserved: 'These stats will be preserved!',
+      accountCreatedSuccess: 'Account created successfully!',
+      checkEmailToConfirm: 'Check your email to confirm',
+      continueWithGoogle: 'Continue with Google',
+      continueWithTwitter: 'Continue with Twitter',
+      continueWithDiscord: 'Continue with Discord',
+      orWithEmail: 'or with email',
+      emailPlaceholder: 'your@email.com',
+      confirmPassword: 'Confirm password',
+      passwordHint: 'Minimum 8 characters',
+      createMyAccount: 'Create my account',
+      continueAsGuest: 'Continue as guest',
+      termsAcceptance: 'By creating an account, you accept our terms of use',
+      welcomeSignIn: 'Welcome! Sign in to continue',
+      forgotPassword: 'Forgot password?',
+      noAccountYet: 'Don\'t have an account yet?',
+      loginFailed: 'Login failed',
     },
 
     // Profile
@@ -365,6 +401,10 @@ export const translations = {
     delete: 'Supprimer',
     confirm: 'Confirmer',
     or: 'ou',
+    email: 'Email',
+    password: 'Mot de passe',
+    points: 'Points',
+    games: 'Parties',
 
     // Navigation
     nav: {
@@ -439,6 +479,38 @@ export const translations = {
       performancePerGame: 'Performance dans chaque jeu',
       game: 'partie',
       games: 'parties',
+    },
+
+    // Authentication
+    auth: {
+      login: 'Connexion',
+      loginButton: 'Se connecter',
+      createAccount: 'Créer un compte',
+      emailPasswordRequired: 'Email et mot de passe requis',
+      passwordMinLength: 'Le mot de passe doit contenir au moins 8 caractères',
+      passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
+      accountCreationFailed: 'Échec de la création du compte',
+      errorOccurred: 'Une erreur est survenue',
+      socialLoginFailed: 'Échec de la connexion sociale',
+      saveProgressDesc: 'Sauvegardez vos progrès et jouez sur tous vos appareils',
+      yourCurrentStats: 'Vos stats actuelles',
+      statsWillBePreserved: 'Ces stats seront préservées !',
+      accountCreatedSuccess: 'Compte créé avec succès !',
+      checkEmailToConfirm: 'Vérifiez votre email pour confirmer',
+      continueWithGoogle: 'Continuer avec Google',
+      continueWithTwitter: 'Continuer avec Twitter',
+      continueWithDiscord: 'Continuer avec Discord',
+      orWithEmail: 'ou avec email',
+      emailPlaceholder: 'votre@email.com',
+      confirmPassword: 'Confirmer le mot de passe',
+      passwordHint: 'Minimum 8 caractères',
+      createMyAccount: 'Créer mon compte',
+      continueAsGuest: 'Continuer en tant qu\'invité',
+      termsAcceptance: 'En créant un compte, vous acceptez nos conditions d\'utilisation',
+      welcomeSignIn: 'Bienvenue ! Connectez-vous pour continuer',
+      forgotPassword: 'Mot de passe oublié ?',
+      noAccountYet: 'Pas encore de compte ?',
+      loginFailed: 'Échec de la connexion',
     },
 
     // Profile

@@ -75,14 +75,14 @@ export function Header() {
                   onClick={() => setShowLoginModal(true)}
                   className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-lg transition-colors"
                 >
-                  Connexion
+                  {t('auth.login')}
                 </button>
                 <button
                   onClick={() => setShowSignupModal(true)}
                   className="px-4 py-2 text-gray-900 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
                   style={{ backgroundColor: '#FCFF52' }}
                 >
-                  Créer un compte
+                  {t('auth.createAccount')}
                 </button>
                 <div className="hidden sm:block">
                   <ConnectButton
