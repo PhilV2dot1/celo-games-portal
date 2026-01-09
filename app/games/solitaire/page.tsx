@@ -11,6 +11,7 @@ import { GameControls } from "@/components/solitaire/GameControls";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface DragItem {
   fromWaste?: boolean;
@@ -40,6 +41,7 @@ export default function SolitairePage() {
   } = useSolitaire();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function SolitairePage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-purple-700 transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -104,12 +106,12 @@ export default function SolitairePage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-purple-500 text-center space-y-1"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Solitaire">
+          <div className="text-5xl mb-2" role="img" aria-label={t('games.solitaire.title')}>
             🃏
           </div>
-          <h1 className="text-4xl font-black text-gray-900">Solitaire</h1>
+          <h1 className="text-4xl font-black text-gray-900">{t('games.solitaire.title')}</h1>
           <p className="text-sm text-gray-600">
-            Classic card patience game - Stack cards to win!
+            {t('games.solitaire.subtitle')}
           </p>
         </motion.div>
 
@@ -163,27 +165,27 @@ export default function SolitairePage() {
             animate={{ opacity: 1 }}
             className="bg-white/90 backdrop-blur-lg rounded-xl p-6 shadow-lg border-2 border-gray-300"
           >
-            <h3 className="text-lg font-bold text-gray-900 mb-3">How to Play</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">{t('games.solitaire.howToPlay')}</h3>
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>Build foundations from Ace to King by suit</span>
+                <span>{t('games.solitaire.rule1')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>Stack tableau cards in descending order, alternating colors</span>
+                <span>{t('games.solitaire.rule2')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>Only Kings can be placed in empty tableau columns</span>
+                <span>{t('games.solitaire.rule3')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>Click stock to draw cards, drag and drop to move</span>
+                <span>{t('games.solitaire.rule4')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>Use Undo to reverse moves, Auto-Complete when possible</span>
+                <span>{t('games.solitaire.rule5')}</span>
               </li>
             </ul>
           </motion.div>
@@ -200,10 +202,10 @@ export default function SolitairePage() {
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
           <p className="font-semibold">
-            🃏 Classic Solitaire with blockchain integration
+            {t('games.solitaire.footer')}
           </p>
           <p className="text-gray-500">
-            Contract:{" "}
+            {t('games.contract')}{" "}
             <a
               href="https://celoscan.io/address/0x0000000000000000000000000000000000000000"
               target="_blank"
@@ -212,7 +214,7 @@ export default function SolitairePage() {
             >
               0x0000...0000
             </a>
-            {" "}(Awaiting deployment)
+            {" "}{t('games.solitaire.awaitingDeployment')}
           </p>
         </motion.div>
       </div>

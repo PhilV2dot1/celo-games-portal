@@ -8,6 +8,7 @@ import { GameGrid } from "@/components/2048/GameGrid";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function Game2048Page() {
   const {
@@ -24,6 +25,7 @@ export default function Game2048Page() {
   } = use2048();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game when finished
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function Game2048Page() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -51,8 +53,8 @@ export default function Game2048Page() {
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
         >
           <div className="text-5xl mb-2">🔢</div>
-          <h1 className="text-4xl font-black text-gray-900">2048</h1>
-          <p className="text-sm text-gray-600">Merge tiles to reach 2048!</p>
+          <h1 className="text-4xl font-black text-gray-900">{t('games.2048.title')}</h1>
+          <p className="text-sm text-gray-600">{t('games.2048.subtitle')}</p>
         </motion.div>
 
         {/* Mode Toggle */}
@@ -72,7 +74,9 @@ export default function Game2048Page() {
             className="rounded-lg p-3 text-center bg-celo/10 border-2 border-celo"
           >
             <p className="text-gray-900 text-sm font-bold">
-              ⚠️ On-chain games require <span className="font-black">0.01 CELO</span> to start
+              {t('games.2048.onChainFeeWarning').split('0.01 CELO')[0]}
+              <span className="font-black">0.01 CELO</span>
+              {t('games.2048.onChainFeeWarning').split('0.01 CELO')[1]}
             </p>
           </motion.div>
         )}
@@ -85,15 +89,15 @@ export default function Game2048Page() {
           className="bg-white/90 backdrop-blur-lg rounded-xl p-4 flex justify-between items-center shadow-lg border-2 border-gray-300"
         >
           <div>
-            <div className="text-sm text-gray-600 font-medium">Score</div>
+            <div className="text-sm text-gray-600 font-medium">{t('games.2048.score')}</div>
             <div className="text-3xl font-black text-gray-900">{score}</div>
           </div>
           <div>
-            <div className="text-sm text-gray-600 font-medium">Status</div>
+            <div className="text-sm text-gray-600 font-medium">{t('games.2048.status')}</div>
             <div className="text-xl font-bold text-gray-900">
-              {status === "playing" && "🎮 Playing"}
-              {status === "won" && "🎉 Won!"}
-              {status === "lost" && "😞 Lost"}
+              {status === "playing" && t('games.2048.playing')}
+              {status === "won" && t('games.2048.won')}
+              {status === "lost" && t('games.2048.lost')}
             </div>
           </div>
         </motion.div>
@@ -106,7 +110,7 @@ export default function Game2048Page() {
         {/* Controls */}
         <div className="text-center space-y-3">
           <p className="text-gray-700 text-sm font-medium">
-            Use arrow keys to move tiles
+            {t('games.2048.instructions')}
           </p>
 
           <div className="flex gap-3 justify-center">
@@ -118,7 +122,7 @@ export default function Game2048Page() {
               disabled={isPending || (mode === "onchain" && !isConnected)}
               className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {isPending ? "Starting..." : "New Game"}
+              {isPending ? t('games.starting') : t('games.2048.newGame')}
             </motion.button>
 
             {mode === "onchain" && gameStartedOnChain && (status === "won" || status === "lost") && (
@@ -130,7 +134,7 @@ export default function Game2048Page() {
                 disabled={isPending}
                 className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isPending ? "Submitting..." : "Submit Score"}
+                {isPending ? t('games.2048.submitting') : t('games.2048.submitScore')}
               </motion.button>
             )}
           </div>
@@ -143,7 +147,7 @@ export default function Game2048Page() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>Contract: 0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1</p>
+          <p>{t('games.contract')} 0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1</p>
           <p>
             <a
               href="https://celoscan.io/address/0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1"
@@ -151,7 +155,7 @@ export default function Game2048Page() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              View on Celoscan →
+              {t('games.2048.viewOnCeloscan')}
             </a>
           </p>
         </motion.div>

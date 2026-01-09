@@ -8,6 +8,7 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { JackpotMachine } from "@/components/jackpot/JackpotMachine";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function JackpotPage() {
   const {
@@ -24,6 +25,7 @@ export default function JackpotPage() {
   } = useJackpot();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   const [localSpinning, setLocalSpinning] = useState(false);
   const [showResult, setShowResult] = useState(false);
@@ -86,7 +88,7 @@ export default function JackpotPage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -98,8 +100,8 @@ export default function JackpotPage() {
           style={{ border: '4px solid #FCFF52' }}
         >
           <div className="text-6xl mb-2">🎰</div>
-          <h1 className="text-4xl font-black text-gray-900">Crypto Jackpot</h1>
-          <p className="text-sm text-gray-700 mt-2 font-medium">Spin the crypto wheel!</p>
+          <h1 className="text-4xl font-black text-gray-900">{t('games.jackpot.title')}</h1>
+          <p className="text-sm text-gray-700 mt-2 font-medium">{t('games.jackpot.subtitle')}</p>
         </motion.div>
 
         {/* Mode Toggle */}
@@ -118,7 +120,7 @@ export default function JackpotPage() {
           className="bg-white/90 backdrop-blur-lg rounded-xl p-4 text-center shadow-lg"
           style={{ border: '4px solid #FCFF52' }}
         >
-          <div className="text-sm text-gray-600 mb-1 font-medium">Total Score</div>
+          <div className="text-sm text-gray-600 mb-1 font-medium">{t('games.jackpot.totalScore')}</div>
           <div className="text-4xl font-black text-gray-900">{totalScore}</div>
         </motion.div>
 
@@ -144,7 +146,7 @@ export default function JackpotPage() {
                   transition={{ duration: 0.5, repeat: 3 }}
                   className="text-4xl mb-3 font-black text-celo"
                 >
-                  🎉 JACKPOT! 🎉
+                  {t('games.jackpot.jackpotWin')}
                 </motion.div>
               )}
               <div className="text-5xl mb-2">
@@ -156,11 +158,11 @@ export default function JackpotPage() {
                 {lastResult.score}
               </div>
               <div className="text-gray-700 font-semibold">
-                {lastResult.score > 0 ? "Points!" : "Try again!"}
+                {lastResult.score > 0 ? t('games.jackpot.points') : t('games.jackpot.tryAgain')}
               </div>
               {lastResult.badge && (
                 <div className="mt-2 text-sm text-gray-900 font-bold">
-                  {lastResult.badge} Badge
+                  {lastResult.badge} {t('games.jackpot.badge')}
                 </div>
               )}
             </motion.div>
@@ -178,7 +180,7 @@ export default function JackpotPage() {
               disabled={localSpinning || isSpinning || (mode === "onchain" && !isConnected)}
               className="px-10 py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black text-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {localSpinning || isSpinning ? "SPINNING..." : "SPIN"}
+              {localSpinning || isSpinning ? t('games.jackpot.spinning') : t('games.jackpot.spin')}
             </motion.button>
           )}
 
@@ -192,7 +194,7 @@ export default function JackpotPage() {
               disabled={isSpinning}
               className="px-8 py-3 bg-white bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {isSpinning ? "Submitting..." : "Submit Score"}
+              {isSpinning ? t('games.jackpot.submitting') : t('games.jackpot.submitScore')}
             </motion.button>
           )}
         </div>
@@ -204,7 +206,7 @@ export default function JackpotPage() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>Contract: 0x07Bc49E8A2BaF7c68519F9a61FCD733490061644</p>
+          <p>{t('games.contract')} 0x07Bc49E8A2BaF7c68519F9a61FCD733490061644</p>
           <p>
             <a
               href="https://celoscan.io/address/0x07Bc49E8A2BaF7c68519F9a61FCD733490061644"
@@ -212,7 +214,7 @@ export default function JackpotPage() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              View on Celoscan →
+              {t('games.jackpot.viewOnCeloscan')}
             </a>
           </p>
         </motion.div>

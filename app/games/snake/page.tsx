@@ -10,6 +10,7 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { PlayerStats } from "@/components/snake/PlayerStats";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function SnakePage() {
   const {
@@ -29,6 +30,7 @@ export default function SnakePage() {
   } = useSnake();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function SnakePage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -60,12 +62,12 @@ export default function SnakePage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Snake">
+          <div className="text-5xl mb-2" role="img" aria-label={t('games.snake.title')}>
             🐍
           </div>
-          <h1 className="text-4xl font-black text-gray-900">Snake</h1>
+          <h1 className="text-4xl font-black text-gray-900">{t('games.snake.title')}</h1>
           <p className="text-sm text-gray-600">
-            Eat food, grow long, and avoid crashing!
+            {t('games.snake.subtitle')}
           </p>
         </motion.div>
 
@@ -91,7 +93,7 @@ export default function SnakePage() {
             className="bg-white/90 backdrop-blur-lg rounded-xl p-4 shadow-lg border-2 border-gray-300 text-center"
           >
             <p className="text-sm font-semibold text-gray-700">
-              🎮 Use Arrow Keys or WASD to move
+              {t('games.snake.instructions')}
             </p>
           </motion.div>
         )}
@@ -141,7 +143,7 @@ export default function SnakePage() {
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
               className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isProcessing ? "Starting..." : "Start Game"}
+              {isProcessing ? t('games.starting') : t('games.startGame')}
             </motion.button>
           ) : (
             <motion.button
@@ -152,7 +154,7 @@ export default function SnakePage() {
               disabled={isProcessing}
               className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset
+              {t('games.reset')}
             </motion.button>
           )}
         </div>
@@ -168,10 +170,10 @@ export default function SnakePage() {
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
           <p className="font-semibold">
-            🐍 Classic Snake game with blockchain integration
+            {t('games.snake.footer')}
           </p>
           <p className="text-gray-500">
-            Contract:{" "}
+            {t('games.contract')}{" "}
             <a
               href="https://celoscan.io/address/0x5646fda34aaf8a95b9b0607db5ca02bdee267598"
               target="_blank"

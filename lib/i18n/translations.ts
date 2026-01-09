@@ -69,6 +69,95 @@ export const translations = {
         subtitle: 'Align 4 pieces in a row on Celo',
         aiInfo: '🎮 Play against intelligent AI with minimax algorithm',
       },
+
+      // TicTacToe specific
+      tictactoe: {
+        title: 'Tic Tac Toe',
+        subtitle: 'Three in a row on Celo',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // 2048 specific
+      2048: {
+        title: '2048',
+        subtitle: 'Merge tiles to reach 2048!',
+        onChainFeeWarning: '⚠️ On-chain games require 0.01 CELO to start',
+        score: 'Score',
+        status: 'Status',
+        playing: '🎮 Playing',
+        won: '🎉 Won!',
+        lost: '😞 Lost',
+        instructions: 'Use arrow keys to move tiles',
+        newGame: 'New Game',
+        submitting: 'Submitting...',
+        submitScore: 'Submit Score',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // Snake specific
+      snake: {
+        title: 'Snake',
+        subtitle: 'Eat food, grow long, and avoid crashing!',
+        instructions: '🎮 Use Arrow Keys or WASD to move',
+        footer: '🐍 Classic Snake game with blockchain integration',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // Rock Paper Scissors specific
+      rps: {
+        title: 'Rock Paper Scissors',
+        subtitle: 'Classic hand game on Celo',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // Mastermind specific
+      mastermind: {
+        title: 'Crypto Mastermind',
+        subtitle: 'Crack the crypto code!',
+        onChainFeeWarning: '⚠️ On-chain games require 0.01 CELO to start',
+        attempts: 'Attempts',
+        wins: 'Wins',
+        bestScore: 'Best Score',
+        submitGuess: 'Submit Guess',
+        newGame: 'New Game',
+        starting: 'Starting...',
+        startOnChainGame: 'Start On-Chain Game',
+        submitting: 'Submitting...',
+        submitScoreOnChain: 'Submit Score On-Chain',
+        abandoning: 'Abandoning...',
+        abandonGame: 'Abandon Game',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // Jackpot specific
+      jackpot: {
+        title: 'Crypto Jackpot',
+        subtitle: 'Spin the crypto wheel!',
+        totalScore: 'Total Score',
+        jackpotWin: '🎉 JACKPOT! 🎉',
+        points: 'Points!',
+        tryAgain: 'Try again!',
+        badge: 'Badge',
+        spinning: 'SPINNING...',
+        spin: 'SPIN',
+        submitting: 'Submitting...',
+        submitScore: 'Submit Score',
+        viewOnCeloscan: 'View on Celoscan →',
+      },
+
+      // Solitaire specific
+      solitaire: {
+        title: 'Solitaire',
+        subtitle: 'Classic card patience game - Stack cards to win!',
+        howToPlay: 'How to Play',
+        rule1: 'Build foundations from Ace to King by suit',
+        rule2: 'Stack tableau cards in descending order, alternating colors',
+        rule3: 'Only Kings can be placed in empty tableau columns',
+        rule4: 'Click stock to draw cards, drag and drop to move',
+        rule5: 'Use Undo to reverse moves, Auto-Complete when possible',
+        footer: '🃏 Classic Solitaire with blockchain integration',
+        awaitingDeployment: '(Awaiting deployment)',
+      },
     },
 
     // Wallet Connection
@@ -522,6 +611,95 @@ export const translations = {
         title: 'Puissance 4',
         subtitle: 'Alignez 4 pièces d\'affilée sur Celo',
         aiInfo: '🎮 Jouez contre une IA intelligente avec algorithme minimax',
+      },
+
+      // TicTacToe specific
+      tictactoe: {
+        title: 'Morpion',
+        subtitle: 'Trois d\'affilée sur Celo',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // 2048 specific
+      2048: {
+        title: '2048',
+        subtitle: 'Fusionnez les tuiles pour atteindre 2048 !',
+        onChainFeeWarning: '⚠️ Les jeux on-chain nécessitent 0,01 CELO pour démarrer',
+        score: 'Score',
+        status: 'Statut',
+        playing: '🎮 En cours',
+        won: '🎉 Gagné !',
+        lost: '😞 Perdu',
+        instructions: 'Utilisez les flèches pour déplacer les tuiles',
+        newGame: 'Nouvelle Partie',
+        submitting: 'Envoi...',
+        submitScore: 'Envoyer le Score',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // Snake specific
+      snake: {
+        title: 'Snake',
+        subtitle: 'Mangez, grandissez et évitez de vous écraser !',
+        instructions: '🎮 Utilisez les flèches ou WASD pour vous déplacer',
+        footer: '🐍 Jeu Snake classique avec intégration blockchain',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // Rock Paper Scissors specific
+      rps: {
+        title: 'Pierre Papier Ciseaux',
+        subtitle: 'Jeu de main classique sur Celo',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // Mastermind specific
+      mastermind: {
+        title: 'Crypto Mastermind',
+        subtitle: 'Déchiffrez le code crypto !',
+        onChainFeeWarning: '⚠️ Les jeux on-chain nécessitent 0,01 CELO pour démarrer',
+        attempts: 'Tentatives',
+        wins: 'Victoires',
+        bestScore: 'Meilleur Score',
+        submitGuess: 'Envoyer la Proposition',
+        newGame: 'Nouvelle Partie',
+        starting: 'Démarrage...',
+        startOnChainGame: 'Démarrer Partie On-Chain',
+        submitting: 'Envoi...',
+        submitScoreOnChain: 'Envoyer Score On-Chain',
+        abandoning: 'Abandon...',
+        abandonGame: 'Abandonner',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // Jackpot specific
+      jackpot: {
+        title: 'Crypto Jackpot',
+        subtitle: 'Tournez la roue crypto !',
+        totalScore: 'Score Total',
+        jackpotWin: '🎉 JACKPOT ! 🎉',
+        points: 'Points !',
+        tryAgain: 'Réessayez !',
+        badge: 'Badge',
+        spinning: 'TOURNE...',
+        spin: 'TOURNER',
+        submitting: 'Envoi...',
+        submitScore: 'Envoyer le Score',
+        viewOnCeloscan: 'Voir sur Celoscan →',
+      },
+
+      // Solitaire specific
+      solitaire: {
+        title: 'Solitaire',
+        subtitle: 'Jeu de cartes patience classique - Empilez pour gagner !',
+        howToPlay: 'Comment Jouer',
+        rule1: 'Construisez les fondations de l\'As au Roi par couleur',
+        rule2: 'Empilez les cartes du tableau par ordre décroissant, en alternant les couleurs',
+        rule3: 'Seuls les Rois peuvent être placés dans les colonnes vides',
+        rule4: 'Cliquez sur le stock pour tirer des cartes, glissez-déposez pour déplacer',
+        rule5: 'Utilisez Annuler pour inverser les mouvements, Auto-Compléter si possible',
+        footer: '🃏 Solitaire classique avec intégration blockchain',
+        awaitingDeployment: '(En attente de déploiement)',
       },
     },
 

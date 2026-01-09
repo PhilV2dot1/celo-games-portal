@@ -10,6 +10,7 @@ import { PlayerStats } from "@/components/rps/PlayerStats";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function RockPaperScissorsPage() {
   const {
@@ -24,6 +25,7 @@ export default function RockPaperScissorsPage() {
   } = useRockPaperScissors();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function RockPaperScissorsPage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -61,14 +63,14 @@ export default function RockPaperScissorsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-2"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Hand fist">
+          <div className="text-5xl mb-2" role="img" aria-label={t('games.rps.title')}>
             ✊
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
-            Rock Paper Scissors
+            {t('games.rps.title')}
           </h1>
           <p className="text-sm sm:text-base text-gray-600 font-semibold">
-            Classic hand game on Celo
+            {t('games.rps.subtitle')}
           </p>
         </motion.div>
 
@@ -103,7 +105,7 @@ export default function RockPaperScissorsPage() {
           transition={{ delay: 0.5 }}
           className="text-center text-xs sm:text-sm text-gray-600 pt-2 space-y-1"
         >
-          <p>Contract: 0xc4f5f0201bf609535ec7a6d88a05b05013ae0c49</p>
+          <p>{t('games.contract')} 0xc4f5f0201bf609535ec7a6d88a05b05013ae0c49</p>
           <p>
             <a
               href="https://celoscan.io/address/0xc4f5f0201bf609535ec7a6d88a05b05013ae0c49"
@@ -111,7 +113,7 @@ export default function RockPaperScissorsPage() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              View on Celoscan →
+              {t('games.rps.viewOnCeloscan')}
             </a>
           </p>
         </motion.div>

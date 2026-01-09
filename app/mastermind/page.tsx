@@ -12,6 +12,7 @@ import { FeedbackLegend } from "@/components/mastermind/FeedbackLegend";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function MastermindPage() {
   const {
@@ -36,6 +37,7 @@ export default function MastermindPage() {
   } = useMastermind();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game when finished
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function MastermindPage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -68,8 +70,8 @@ export default function MastermindPage() {
           style={{ border: '4px solid #FCFF52' }}
         >
           <div className="text-6xl mb-2">🎯</div>
-          <h1 className="text-4xl font-black text-gray-900">Crypto Mastermind</h1>
-          <p className="text-sm text-gray-700 mt-2 font-medium">Crack the crypto code!</p>
+          <h1 className="text-4xl font-black text-gray-900">{t('games.mastermind.title')}</h1>
+          <p className="text-sm text-gray-700 mt-2 font-medium">{t('games.mastermind.subtitle')}</p>
         </motion.div>
 
         {/* Mode Toggle */}
@@ -90,7 +92,9 @@ export default function MastermindPage() {
             style={{ backgroundColor: 'rgba(252, 255, 82, 0.4)', border: '4px solid #FCFF52' }}
           >
             <p className="text-gray-900 text-sm font-bold">
-              ⚠️ On-chain games require <span className="font-black">0.01 CELO</span> to start
+              {t('games.mastermind.onChainFeeWarning').split('0.01 CELO')[0]}
+              <span className="font-black">0.01 CELO</span>
+              {t('games.mastermind.onChainFeeWarning').split('0.01 CELO')[1]}
             </p>
           </motion.div>
         )}
@@ -104,17 +108,17 @@ export default function MastermindPage() {
           style={{ border: '4px solid #FCFF52' }}
         >
           <div className="text-center">
-            <div className="text-sm text-gray-600 font-medium">Attempts</div>
+            <div className="text-sm text-gray-600 font-medium">{t('games.mastermind.attempts')}</div>
             <div className="text-3xl font-black text-gray-900">
               {attempts}/{MAX_ATTEMPTS}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-600 font-medium">Wins</div>
+            <div className="text-sm text-gray-600 font-medium">{t('games.mastermind.wins')}</div>
             <div className="text-2xl font-bold text-gray-900">{stats.wins}</div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-600 font-medium">Best Score</div>
+            <div className="text-sm text-gray-600 font-medium">{t('games.mastermind.bestScore')}</div>
             <div className="text-2xl font-bold text-gray-900">{stats.bestScore}</div>
           </div>
         </motion.div>
@@ -185,7 +189,7 @@ export default function MastermindPage() {
               disabled={currentGuess.some(c => c === null) || isPending}
               className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              Submit Guess
+              {t('games.mastermind.submitGuess')}
             </motion.button>
           )}
 
@@ -198,7 +202,7 @@ export default function MastermindPage() {
               onClick={newGame}
               className="px-8 py-3 bg-white bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg transition-all"
             >
-              New Game
+              {t('games.mastermind.newGame')}
             </motion.button>
           )}
 
@@ -215,7 +219,7 @@ export default function MastermindPage() {
                   disabled={isPending || !isConnected}
                   className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {isPending ? "Starting..." : "Start On-Chain Game"}
+                  {isPending ? t('games.mastermind.starting') : t('games.mastermind.startOnChainGame')}
                 </motion.button>
               )}
 
@@ -229,7 +233,7 @@ export default function MastermindPage() {
                   disabled={isPending}
                   className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:brightness-110 text-white rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {isPending ? "Submitting..." : "Submit Score On-Chain"}
+                  {isPending ? t('games.mastermind.submitting') : t('games.mastermind.submitScoreOnChain')}
                 </motion.button>
               )}
 
@@ -243,7 +247,7 @@ export default function MastermindPage() {
                   disabled={isPending}
                   className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  {isPending ? "Abandoning..." : "Abandon Game"}
+                  {isPending ? t('games.mastermind.abandoning') : t('games.mastermind.abandonGame')}
                 </motion.button>
               )}
             </>
@@ -257,7 +261,7 @@ export default function MastermindPage() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>Contract: 0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9</p>
+          <p>{t('games.contract')} 0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9</p>
           <p>
             <a
               href="https://celoscan.io/address/0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9"
@@ -265,7 +269,7 @@ export default function MastermindPage() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              View on Celoscan →
+              {t('games.mastermind.viewOnCeloscan')}
             </a>
           </p>
         </motion.div>

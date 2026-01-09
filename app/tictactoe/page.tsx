@@ -10,6 +10,7 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { PlayerStats } from "@/components/tictactoe/PlayerStats";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function TicTacToePage() {
   const {
@@ -27,6 +28,7 @@ export default function TicTacToePage() {
   } = useTicTacToe();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function TicTacToePage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -56,13 +58,13 @@ export default function TicTacToePage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Circle and X">
+          <div className="text-5xl mb-2" role="img" aria-label={t('games.tictactoe.title')}>
             ⭕
           </div>
           <h1 className="text-4xl font-black text-gray-900">
-            Tic Tac Toe
+            {t('games.tictactoe.title')}
           </h1>
-          <p className="text-sm text-gray-600">Three in a row on Celo</p>
+          <p className="text-sm text-gray-600">{t('games.tictactoe.subtitle')}</p>
         </motion.div>
 
         {/* Mode Toggle */}
@@ -94,7 +96,7 @@ export default function TicTacToePage() {
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
               className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isProcessing ? "Starting..." : "Start Game"}
+              {isProcessing ? t('games.starting') : t('games.startGame')}
             </motion.button>
           ) : (
             <motion.button
@@ -105,7 +107,7 @@ export default function TicTacToePage() {
               disabled={isProcessing}
               className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset
+              {t('games.reset')}
             </motion.button>
           )}
         </div>
@@ -120,7 +122,7 @@ export default function TicTacToePage() {
           transition={{ delay: 0.5 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>Contract: 0xa9596b4a5A7F0E10A5666a3a5106c4F2C3838881</p>
+          <p>{t('games.contract')} 0xa9596b4a5A7F0E10A5666a3a5106c4F2C3838881</p>
           <p>
             <a
               href="https://celoscan.io/address/0xa9596b4a5A7F0E10A5666a3a5106c4F2C3838881"
@@ -128,7 +130,7 @@ export default function TicTacToePage() {
               rel="noopener noreferrer"
               className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
             >
-              View on Celoscan →
+              {t('games.tictactoe.viewOnCeloscan')}
             </a>
           </p>
         </motion.div>
