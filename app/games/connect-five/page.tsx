@@ -11,6 +11,7 @@ import { WalletConnect } from "@/components/shared/WalletConnect";
 import { PlayerStats } from "@/components/connectfive/PlayerStats";
 import { DifficultySelector } from "@/components/connectfive/DifficultySelector";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ConnectFivePage() {
   const {
@@ -30,6 +31,7 @@ export default function ConnectFivePage() {
   } = useConnectFive();
 
   const { recordGame } = useLocalStats();
+  const { t } = useLanguage();
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function ConnectFivePage() {
           href="/"
           className="inline-flex items-center gap-2 text-gray-900 hover:text-celo transition-colors font-bold"
         >
-          ← Back to Portal
+          {t('games.backToPortal')}
         </Link>
 
         {/* Header */}
@@ -59,13 +61,13 @@ export default function ConnectFivePage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
         >
-          <div className="text-5xl mb-2" role="img" aria-label="Connect 4">
+          <div className="text-5xl mb-2" role="img" aria-label={t('games.connectfive.title')}>
             🔴🟡
           </div>
           <h1 className="text-4xl font-black text-gray-900">
-            Connect 4
+            {t('games.connectfive.title')}
           </h1>
-          <p className="text-sm text-gray-600">Align 4 pieces in a row on Celo</p>
+          <p className="text-sm text-gray-600">{t('games.connectfive.subtitle')}</p>
         </motion.div>
 
         {/* Mode Toggle */}
@@ -104,7 +106,7 @@ export default function ConnectFivePage() {
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
               className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isProcessing ? "Starting..." : "Start Game"}
+              {isProcessing ? t('games.starting') : t('games.startGame')}
             </motion.button>
           ) : (
             <motion.button
@@ -115,7 +117,7 @@ export default function ConnectFivePage() {
               disabled={isProcessing}
               className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset
+              {t('games.reset')}
             </motion.button>
           )}
         </div>
@@ -130,9 +132,9 @@ export default function ConnectFivePage() {
           transition={{ delay: 0.5 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p className="font-semibold">🎮 Play against intelligent AI with minimax algorithm</p>
+          <p className="font-semibold">{t('games.connectfive.aiInfo')}</p>
           <p className="text-gray-500">
-            Contract:{" "}
+            {t('games.contract')}{" "}
             <a
               href="https://celoscan.io/address/0xd00a6170d83b446314b2e79f9603bc0a72c463e6"
               target="_blank"

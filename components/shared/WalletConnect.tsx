@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useFarcaster } from "../providers";
 import { useSwitchToCelo } from "@/hooks/useSwitchToCelo";
 import { Button } from "@/components/ui/Button";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 const CONNECTOR_ICONS: Record<string, string> = {
   "Farcaster Wallet": "🔵",
@@ -13,18 +14,28 @@ const CONNECTOR_ICONS: Record<string, string> = {
   "Browser Wallet": "💼",
 };
 
-const CONNECTOR_DESCRIPTIONS: Record<string, string> = {
-  "Farcaster Wallet": "Connect with your Farcaster wallet",
-  "WalletConnect": "Connect with any mobile wallet",
-  "MetaMask": "Connect with MetaMask",
-  "Browser Wallet": "Connect with your browser wallet",
-};
-
 export function WalletConnect() {
   const { address, isConnected, connector: activeConnector } = useAccount();
   const { connect, connectors, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
   const { isInFarcaster, isSDKReady } = useFarcaster();
+  const { t } = useLanguage();
+
+  // Connector descriptions with i18n
+  const getConnectorDescription = (connectorName: string): string => {
+    switch (connectorName) {
+      case "Farcaster Wallet":
+        return t('wallet.connectFarcaster');
+      case "WalletConnect":
+        return t('wallet.connectWalletConnect');
+      case "MetaMask":
+        return t('wallet.connectMetaMask');
+      case "Browser Wallet":
+        return t('wallet.connectBrowser');
+      default:
+        return `${t('wallet.connectWith')} ${connectorName}`;
+    }
+  };
 
   // Automatically switch to Celo network when connected
   const { isOnCelo, isSwitching } = useSwitchToCelo();
@@ -50,7 +61,7 @@ export function WalletConnect() {
           >
             <div className="w-4 h-4 border-2 border-celo border-t-transparent rounded-full animate-spin" />
             <span className="text-sm font-semibold text-gray-900">
-              Switching to Celo network...
+              {t('wallet.switchingNetwork')}
             </span>
           </motion.div>
         )}
@@ -69,7 +80,7 @@ export function WalletConnect() {
               </span>
               {activeConnector && (
                 <span className="text-xs text-gray-600">
-                  via {activeConnector.name}
+                  {t('wallet.via')} {activeConnector.name}
                 </span>
               )}
             </div>
@@ -78,9 +89,9 @@ export function WalletConnect() {
             onClick={() => disconnect()}
             variant="primary"
             size="sm"
-            ariaLabel="Disconnect wallet"
+            ariaLabel={t('wallet.disconnectLabel')}
           >
-            Disconnect
+            {t('wallet.disconnect')}
           </Button>
         </motion.div>
       </div>
@@ -90,7 +101,7 @@ export function WalletConnect() {
   return (
     <div className="bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-celo rounded-xl p-4">
       <p className="text-sm sm:text-base mb-3 text-center text-white font-semibold">
-        Connect your wallet to play on-chain
+        {t('wallet.connectPrompt')}
       </p>
 
       {error && (
@@ -101,14 +112,14 @@ export function WalletConnect() {
 
       {isInFarcaster && !isSDKReady && (
         <div className="mb-3 p-2 bg-celo/10 border border-celo/30 rounded-lg text-xs text-gray-900">
-          Farcaster SDK not ready. Some features may not work.
+          {t('wallet.farcasterNotReady')}
         </div>
       )}
 
       <div className="flex flex-col gap-3">
         {availableConnectors.map((connector) => {
           const icon = CONNECTOR_ICONS[connector.name] || "🔗";
-          const description = CONNECTOR_DESCRIPTIONS[connector.name] || `Connect with ${connector.name}`;
+          const description = getConnectorDescription(connector.name);
 
           return (
             <Button
@@ -136,7 +147,7 @@ export function WalletConnect() {
 
       {availableConnectors.length === 0 && (
         <div className="text-center text-sm text-gray-300 py-4">
-          No wallet connectors available
+          {t('wallet.noConnectors')}
         </div>
       )}
     </div>

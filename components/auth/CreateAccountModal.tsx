@@ -145,7 +145,7 @@ export function CreateAccountModal({
                       <div className="text-2xl font-bold text-celo">
                         {currentStats.gamesPlayed}
                       </div>
-                      <div className="text-xs text-yellow-700">{t('games')}</div>
+                      <div className="text-xs text-yellow-700">{t('gamesLabel')}</div>
                     </div>
                   </div>
                   <p className="text-yellow-800 text-xs text-center mt-2">

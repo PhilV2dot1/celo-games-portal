@@ -2,6 +2,7 @@
 
 import { AIDifficulty } from "@/hooks/useConnectFive";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface DifficultySelectorProps {
   difficulty: AIDifficulty;
@@ -14,16 +15,22 @@ export function DifficultySelector({
   onDifficultyChange,
   disabled = false,
 }: DifficultySelectorProps) {
-  const difficulties: { value: AIDifficulty; label: string; emoji: string }[] = [
-    { value: "easy", label: "Easy", emoji: "😊" },
-    { value: "medium", label: "Medium", emoji: "🤔" },
-    { value: "hard", label: "Hard", emoji: "😤" },
+  const { t } = useLanguage();
+
+  const difficulties: { value: AIDifficulty; emoji: string }[] = [
+    { value: "easy", emoji: "😊" },
+    { value: "medium", emoji: "🤔" },
+    { value: "hard", emoji: "😤" },
   ];
+
+  const getLabel = (value: AIDifficulty): string => {
+    return t(`games.difficulty.${value}`);
+  };
 
   return (
     <div className="bg-white/90 backdrop-blur-lg rounded-xl p-4 shadow-lg border-2 border-gray-300">
       <h3 className="text-sm font-bold text-gray-700 mb-3 text-center">
-        AI Difficulty
+        {t('games.difficulty.title')}
       </h3>
       <div className="flex gap-2">
         {difficulties.map((diff) => (
@@ -40,7 +47,7 @@ export function DifficultySelector({
             )}
           >
             <div className="text-lg mb-1">{diff.emoji}</div>
-            <div>{diff.label}</div>
+            <div>{getLabel(diff.value)}</div>
           </button>
         ))}
       </div>

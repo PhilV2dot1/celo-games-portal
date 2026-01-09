@@ -21,7 +21,78 @@ export const translations = {
     email: 'Email',
     password: 'Password',
     points: 'Points',
-    games: 'Games',
+    gamesLabel: 'Games',
+
+    // Toast Notifications
+    toast: {
+      badgeUnlocked: 'Badge Unlocked!',
+      closeNotification: 'Close notification',
+    },
+
+    // Game Common
+    games: {
+      // Game modes
+      mode: {
+        freePlay: 'Free Play',
+        onChain: 'On-Chain',
+        switchToFree: 'Switch to free play mode',
+        switchToOnChain: 'Switch to on-chain mode',
+      },
+
+      // Difficulty levels
+      difficulty: {
+        title: 'AI Difficulty',
+        easy: 'Easy',
+        medium: 'Medium',
+        hard: 'Hard',
+      },
+
+      // Common game actions
+      startGame: 'Start Game',
+      starting: 'Starting...',
+      reset: 'Reset',
+      backToPortal: '← Back to Portal',
+      contract: 'Contract:',
+
+      // Blackjack specific
+      blackjack: {
+        hit: 'HIT',
+        stand: 'STAND',
+        newGame: 'NEW GAME',
+        playOnChain: 'PLAY ON-CHAIN',
+        playAgain: 'PLAY AGAIN',
+      },
+
+      // Connect Five specific
+      connectfive: {
+        title: 'Connect 4',
+        subtitle: 'Align 4 pieces in a row on Celo',
+        aiInfo: '🎮 Play against intelligent AI with minimax algorithm',
+      },
+    },
+
+    // Wallet Connection
+    wallet: {
+      // Connection
+      connectPrompt: 'Connect your wallet to play on-chain',
+      connectFarcaster: 'Connect with your Farcaster wallet',
+      connectWalletConnect: 'Connect with any mobile wallet',
+      connectMetaMask: 'Connect with MetaMask',
+      connectBrowser: 'Connect with your browser wallet',
+      connectWith: 'Connect with',
+
+      // Status
+      switchingNetwork: 'Switching to Celo network...',
+      via: 'via',
+
+      // Actions
+      disconnect: 'Disconnect',
+      disconnectLabel: 'Disconnect wallet',
+
+      // Errors & Warnings
+      farcasterNotReady: 'Farcaster SDK not ready. Some features may not work.',
+      noConnectors: 'No wallet connectors available',
+    },
 
     // Navigation
     nav: {
@@ -404,7 +475,78 @@ export const translations = {
     email: 'Email',
     password: 'Mot de passe',
     points: 'Points',
-    games: 'Parties',
+    gamesLabel: 'Parties',
+
+    // Toast Notifications
+    toast: {
+      badgeUnlocked: 'Badge Débloqué !',
+      closeNotification: 'Fermer la notification',
+    },
+
+    // Game Common
+    games: {
+      // Game modes
+      mode: {
+        freePlay: 'Mode Gratuit',
+        onChain: 'Mode On-Chain',
+        switchToFree: 'Passer au mode gratuit',
+        switchToOnChain: 'Passer au mode on-chain',
+      },
+
+      // Difficulty levels
+      difficulty: {
+        title: 'Difficulté IA',
+        easy: 'Facile',
+        medium: 'Moyen',
+        hard: 'Difficile',
+      },
+
+      // Common game actions
+      startGame: 'Démarrer',
+      starting: 'Démarrage...',
+      reset: 'Réinitialiser',
+      backToPortal: '← Retour au Portail',
+      contract: 'Contrat :',
+
+      // Blackjack specific
+      blackjack: {
+        hit: 'CARTE',
+        stand: 'RESTER',
+        newGame: 'NOUVELLE PARTIE',
+        playOnChain: 'JOUER ON-CHAIN',
+        playAgain: 'REJOUER',
+      },
+
+      // Connect Five specific
+      connectfive: {
+        title: 'Puissance 4',
+        subtitle: 'Alignez 4 pièces d\'affilée sur Celo',
+        aiInfo: '🎮 Jouez contre une IA intelligente avec algorithme minimax',
+      },
+    },
+
+    // Wallet Connection
+    wallet: {
+      // Connection
+      connectPrompt: 'Connectez votre wallet pour jouer on-chain',
+      connectFarcaster: 'Connectez-vous avec votre wallet Farcaster',
+      connectWalletConnect: 'Connectez-vous avec n\'importe quel wallet mobile',
+      connectMetaMask: 'Connectez-vous avec MetaMask',
+      connectBrowser: 'Connectez-vous avec votre wallet navigateur',
+      connectWith: 'Connecter avec',
+
+      // Status
+      switchingNetwork: 'Changement vers le réseau Celo...',
+      via: 'via',
+
+      // Actions
+      disconnect: 'Déconnecter',
+      disconnectLabel: 'Déconnecter le wallet',
+
+      // Errors & Warnings
+      farcasterNotReady: 'SDK Farcaster pas prêt. Certaines fonctionnalités peuvent ne pas fonctionner.',
+      noConnectors: 'Aucun connecteur de wallet disponible',
+    },
 
     // Navigation
     nav: {

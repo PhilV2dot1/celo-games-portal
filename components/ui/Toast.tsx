@@ -8,6 +8,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 // ========================================
 // TYPES
@@ -55,6 +56,7 @@ export function useToast() {
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const { t } = useLanguage();
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
@@ -81,12 +83,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const showBadgeToast = useCallback((badgeName: string, badgeIcon: string, points: number) => {
     addToast({
       type: 'badge',
-      title: 'Badge Unlocked!',
-      description: `${badgeIcon} ${badgeName} (+${points} points)`,
+      title: t('toast.badgeUnlocked'),
+      description: `${badgeIcon} ${badgeName} (+${points} ${t('points')})`,
       icon: '🎉',
       duration: 6000,
     });
-  }, [addToast]);
+  }, [addToast, t]);
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast, showBadgeToast }}>
@@ -124,6 +126,7 @@ function ToastContainer({
 
 function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
   const [progress, setProgress] = useState(100);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!toast.duration || toast.duration <= 0) return;
@@ -251,7 +254,7 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
         <button
           onClick={onClose}
           className="flex-shrink-0 p-1 rounded-lg hover:bg-black/10 transition-colors focus:outline-none focus:ring-2 focus:ring-black/20"
-          aria-label="Close notification"
+          aria-label={t('toast.closeNotification')}
         >
           <svg
             className="w-4 h-4"

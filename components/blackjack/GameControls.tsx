@@ -1,4 +1,5 @@
 import type { GamePhase } from "@/hooks/useBlackjack";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface GameControlsProps {
   onHit: () => void;
@@ -19,6 +20,8 @@ export function GameControls({
   mode,
   disabled
 }: GameControlsProps) {
+  const { t } = useLanguage();
+
   // Show play buttons when in playing phase (free mode only)
   const showPlayButtons = gamePhase === 'playing' && mode === 'free';
 
@@ -40,14 +43,14 @@ export function GameControls({
             disabled={disabled}
             className="px-6 sm:px-8 py-3 sm:py-4 bg-white/90 hover:bg-white text-gray-900 rounded-xl font-bold text-base sm:text-lg shadow-lg border-2 border-gray-300 hover:border-celo disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 min-w-[100px] sm:min-w-[120px]"
           >
-            HIT
+            {t('games.blackjack.hit')}
           </button>
           <button
             onClick={onStand}
             disabled={disabled}
             className="px-6 sm:px-8 py-3 sm:py-4 bg-white/90 hover:bg-white text-gray-900 rounded-xl font-bold text-base sm:text-lg shadow-lg border-2 border-gray-300 hover:border-celo disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 min-w-[100px] sm:min-w-[120px]"
           >
-            STAND
+            {t('games.blackjack.stand')}
           </button>
         </>
       )}
@@ -57,7 +60,7 @@ export function GameControls({
           onClick={onNewGame}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-bold text-base sm:text-lg shadow-lg transition-all transform hover:scale-105 active:scale-95 min-w-[120px] sm:min-w-[140px]"
         >
-          NEW GAME
+          {t('games.blackjack.newGame')}
         </button>
       )}
 
@@ -67,7 +70,7 @@ export function GameControls({
           disabled={disabled}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-bold text-base sm:text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 min-w-[140px] sm:min-w-[160px]"
         >
-          PLAY ON-CHAIN
+          {t('games.blackjack.playOnChain')}
         </button>
       )}
 
@@ -77,7 +80,7 @@ export function GameControls({
           disabled={disabled}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-bold text-base sm:text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 min-w-[120px] sm:min-w-[140px]"
         >
-          PLAY AGAIN
+          {t('games.blackjack.playAgain')}
         </button>
       )}
     </div>
