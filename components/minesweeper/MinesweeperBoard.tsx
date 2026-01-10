@@ -5,7 +5,7 @@ import type { Board, Difficulty } from "@/hooks/useMinesweeper";
 interface MinesweeperBoardProps {
   board: Board;
   onCellClick: (row: number, col: number) => void;
-  onCellRightClick: (row: number, col: number, event: React.MouseEvent) => void;
+  onCellRightClick: (row: number, col: number, event: React.MouseEvent | React.TouchEvent) => void;
   disabled: boolean;
   difficulty: Difficulty;
   focusedCell?: [number, number];

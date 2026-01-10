@@ -488,7 +488,7 @@ export function useMinesweeper() {
 
   // Handle cell right-click (flag)
   const handleCellRightClick = useCallback(
-    (row: number, col: number, event: React.MouseEvent | KeyboardEvent) => {
+    (row: number, col: number, event: React.MouseEvent | React.TouchEvent | KeyboardEvent) => {
       if ("preventDefault" in event) {
         event.preventDefault();
       }
