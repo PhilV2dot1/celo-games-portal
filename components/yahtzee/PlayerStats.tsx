@@ -82,7 +82,7 @@ export function PlayerStats({ stats, averageScore, mode }: PlayerStatsProps) {
         ))}
       </div>
 
-      {mode === "onchain" && YAHTZEE_CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000" && (
+      {mode === "onchain" && (
         <motion.a
           href={`https://celoscan.io/address/${YAHTZEE_CONTRACT_ADDRESS}`}
           target="_blank"
