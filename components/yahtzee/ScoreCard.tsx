@@ -43,8 +43,8 @@ function CategoryRow({
 
     // Upper section: good if >= half of maximum
     if (["ones", "twos", "threes", "fours", "fives", "sixes"].includes(category)) {
-      const maxPossible = parseInt(category.replace(/[^0-9]/g, "")) ||
-                         ({ ones: 5, twos: 10, threes: 15, fours: 20, fives: 25, sixes: 30 }[category] || 0);
+      const maxScores: Record<string, number> = { ones: 5, twos: 10, threes: 15, fours: 20, fives: 25, sixes: 30 };
+      const maxPossible = parseInt(category.replace(/[^0-9]/g, "")) || (maxScores[category] || 0);
       if (potentialScore >= maxPossible * 0.6) return "good";
       if (potentialScore >= maxPossible * 0.3) return "okay";
       return "poor";
