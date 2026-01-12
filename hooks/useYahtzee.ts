@@ -365,7 +365,12 @@ function getAICategoryEasy(
   scoreCard: ScoreCard
 ): CategoryName {
   const available = getAvailableCategories(scoreCard);
-  return available[Math.floor(Math.random() * available.length)];
+  if (available.length === 0) {
+    // Fallback: return first category (shouldn't happen in normal gameplay)
+    return "ones";
+  }
+  const randomIndex = Math.floor(Math.random() * available.length);
+  return available[randomIndex];
 }
 
 /**
@@ -571,6 +576,16 @@ export function useYahtzee() {
     async (category: CategoryName) => {
       if (status !== "playing") return;
 
+      // Validate category
+      if (!category) {
+        console.error("Invalid category selected:", category);
+        if (currentPlayer === "ai") {
+          setMessage("AI error - skipping turn");
+          setCurrentPlayer("human");
+        }
+        return;
+      }
+
       // In AI mode, use separate scorecards
       const currentScoreCard = vsAI
         ? currentPlayer === "human"
@@ -579,7 +594,12 @@ export function useYahtzee() {
         : scoreCard;
 
       if (currentScoreCard[category] !== null) {
+        console.error("Category already used:", category, "Player:", currentPlayer);
         setMessage("Category already used! Choose another.");
+        if (currentPlayer === "ai") {
+          // AI should never select a used category - this is a bug
+          setCurrentPlayer("human");
+        }
         return;
       }
 
@@ -776,6 +796,15 @@ export function useYahtzee() {
       // Select category
       await delay(500);
       const category = getAICategory(roll3, aiScoreCard, aiDifficulty);
+
+      if (!category) {
+        console.error("AI failed to select a category. Difficulty:", aiDifficulty, "Available:", getAvailableCategories(aiScoreCard));
+        setMessage("AI error - switching to player");
+        setCurrentPlayer("human");
+        return;
+      }
+
+      console.log("AI selecting category:", category, "Difficulty:", aiDifficulty);
       await selectCategory(category);
     } catch (error) {
       console.error("AI turn error:", error);
