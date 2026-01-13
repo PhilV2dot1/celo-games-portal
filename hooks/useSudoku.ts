@@ -57,16 +57,16 @@ export interface PuzzleResponse {
 
 export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
   easy: {
-    clues: 40,
-    label: "Easy (40 clues)",
+    clues: 50,
+    label: "Easy (Beginner)",
   },
   medium: {
-    clues: 30,
-    label: "Medium (30 clues)",
+    clues: 35,
+    label: "Medium",
   },
   hard: {
     clues: 25,
-    label: "Hard (25 clues)",
+    label: "Hard",
   },
 };
 
@@ -338,6 +338,46 @@ export function useSudoku() {
     }
   }, []);
 
+  // Add extra clues for easier difficulties (makes puzzle more beginner-friendly)
+  const adjustDifficulty = useCallback((puzzle: number[][], solution: number[][], targetDifficulty: Difficulty): number[][] => {
+    // Count current clues
+    let currentClues = 0;
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (puzzle[row][col] !== 0) currentClues++;
+      }
+    }
+
+    const targetClues = DIFFICULTY_CONFIG[targetDifficulty].clues;
+    const cluesNeeded = targetClues - currentClues;
+
+    if (cluesNeeded <= 0) return puzzle; // Puzzle already has enough clues
+
+    // Create a copy of the puzzle
+    const adjustedPuzzle = puzzle.map(row => [...row]);
+
+    // Get all empty cells
+    const emptyCells: [number, number][] = [];
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (adjustedPuzzle[row][col] === 0) {
+          emptyCells.push([row, col]);
+        }
+      }
+    }
+
+    // Randomly select cells to reveal
+    const cellsToReveal = Math.min(cluesNeeded, emptyCells.length);
+    const shuffled = emptyCells.sort(() => Math.random() - 0.5);
+
+    for (let i = 0; i < cellsToReveal; i++) {
+      const [row, col] = shuffled[i];
+      adjustedPuzzle[row][col] = solution[row][col];
+    }
+
+    return adjustedPuzzle;
+  }, []);
+
   // Start game
   const startGame = useCallback(async () => {
     try {
@@ -366,7 +406,10 @@ export function useSudoku() {
       }
 
       // Fetch puzzle from API
-      const { puzzle, solution } = await fetchPuzzle();
+      let { puzzle, solution } = await fetchPuzzle();
+
+      // Adjust difficulty to match target (adds more clues for easier modes)
+      puzzle = adjustDifficulty(puzzle, solution, difficulty);
 
       // Parse puzzle
       const newBoard = parsePuzzle(puzzle, solution);
@@ -386,7 +429,7 @@ export function useSudoku() {
       setMessage("Failed to load puzzle. Please try again.");
       setStatus("idle");
     }
-  }, [mode, difficulty, isConnected, address, writeContractAsync, fetchPuzzle]);
+  }, [mode, difficulty, isConnected, address, writeContractAsync, fetchPuzzle, adjustDifficulty]);
 
   // Handle cell selection
   const handleCellSelect = useCallback((row: number, col: number) => {

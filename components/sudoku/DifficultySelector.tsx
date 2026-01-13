@@ -14,7 +14,7 @@ const DIFFICULTY_EMOJIS: Record<Difficulty, string> = {
 };
 
 const DIFFICULTY_HINTS: Record<Difficulty, string> = {
-  easy: "Great for learning!",
+  easy: "Perfect for beginners!",
   medium: "Balanced challenge",
   hard: "Expert mode!",
 };
