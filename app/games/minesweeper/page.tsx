@@ -49,9 +49,6 @@ export default function MinesweeperPage() {
   const canPlay = status === "playing";
   const isFinished = status === "finished";
 
-  // Detect if on mobile for instructions
-  const isMobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-200 p-4 sm:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
