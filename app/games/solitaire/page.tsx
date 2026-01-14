@@ -133,9 +133,6 @@ export default function SolitairePage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• {t('games.solitaire.rule1')}</li>
             <li>• {t('games.solitaire.rule2')}</li>
-            <li>• {t('games.solitaire.rule3')}</li>
-            <li>• {t('games.solitaire.rule4')}</li>
-            <li>• {t('games.solitaire.rule5')}</li>
           </ul>
         </motion.div>
 

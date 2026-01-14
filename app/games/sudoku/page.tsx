@@ -106,9 +106,6 @@ export default function SudokuPage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• {t("games.sudoku.rule1")}</li>
             <li>• {t("games.sudoku.rule2")}</li>
-            <li>• {t("games.sudoku.rule3")}</li>
-            <li>• {t("games.sudoku.rule4")}</li>
-            <li>• {t("games.sudoku.rule5")}</li>
           </ul>
         </motion.div>
 

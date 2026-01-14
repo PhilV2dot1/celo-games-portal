@@ -99,9 +99,6 @@ export default function MinesweeperPage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• {t("games.minesweeper.rule1")}</li>
             <li>• {t("games.minesweeper.rule2")}</li>
-            <li>• {t("games.minesweeper.rule3")}</li>
-            <li>• {t("games.minesweeper.rule4")}</li>
-            <li>• {t("games.minesweeper.rule5")}</li>
           </ul>
         </motion.div>
 

@@ -89,9 +89,6 @@ export default function SnakePage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• {t('games.snake.rule1')}</li>
             <li>• {t('games.snake.rule2')}</li>
-            <li>• {t('games.snake.rule3')}</li>
-            <li>• {t('games.snake.rule4')}</li>
-            <li>• {t('games.snake.rule5')}</li>
           </ul>
         </motion.div>
 

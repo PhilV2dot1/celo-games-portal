@@ -195,9 +195,6 @@ export default function YahtzeePage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• {t("games.yahtzee.rule1")}</li>
             <li>• {t("games.yahtzee.rule2")}</li>
-            <li>• {t("games.yahtzee.rule3")}</li>
-            <li>• {t("games.yahtzee.rule4")}</li>
-            <li>• {t("games.yahtzee.rule5")}</li>
           </ul>
         </motion.div>
 
