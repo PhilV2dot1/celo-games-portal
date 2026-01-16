@@ -112,6 +112,7 @@ export function CountUp({
 }) {
   const shouldAnimate = useShouldAnimate();
   const [displayValue, setDisplayValue] = useState(0);
+  const startValueRef = useRef(0);
 
   useEffect(() => {
     if (!shouldAnimate) {
@@ -119,7 +120,8 @@ export function CountUp({
       return;
     }
 
-    const startValue = displayValue;
+    // Capture start value at beginning of animation
+    startValueRef.current = displayValue;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -128,7 +130,7 @@ export function CountUp({
 
       // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(startValue + (value - startValue) * eased);
+      const current = Math.round(startValueRef.current + (value - startValueRef.current) * eased);
 
       setDisplayValue(current);
 
@@ -138,6 +140,7 @@ export function CountUp({
     };
 
     requestAnimationFrame(animate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration, shouldAnimate]);
 
   return <span className={className}>{displayValue.toLocaleString()}</span>;

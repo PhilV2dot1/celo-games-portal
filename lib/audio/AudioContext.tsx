@@ -58,6 +58,21 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   // Audio cache: preloaded HTMLAudioElement instances
   const audioCache = useRef<Map<string, HTMLAudioElement>>(new Map());
 
+  // Preload a single sound
+  const preloadSound = useCallback((path: string) => {
+    if (typeof window === 'undefined') return;
+    if (audioCache.current.has(path)) return;
+
+    try {
+      const audio = new Audio(path);
+      audio.preload = 'auto';
+      audioCache.current.set(path, audio);
+    } catch {
+      // Silently fail - audio file might not exist yet
+      console.debug(`Audio not available: ${path}`);
+    }
+  }, []);
+
   // Load settings from localStorage on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -68,8 +83,8 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         const settings = JSON.parse(saved);
         setIsMuted(settings.isMuted ?? false);
         setVolumeState(settings.volume ?? DEFAULT_VOLUME);
-      } catch (error) {
-        console.warn('Failed to load audio settings:', error);
+      } catch (e) {
+        console.warn('Failed to load audio settings:', e);
       }
     }
 
@@ -81,22 +96,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     });
 
     setIsLoaded(true);
-  }, []);
-
-  // Preload a single sound
-  const preloadSound = useCallback((path: string) => {
-    if (typeof window === 'undefined') return;
-    if (audioCache.current.has(path)) return;
-
-    try {
-      const audio = new Audio(path);
-      audio.preload = 'auto';
-      audioCache.current.set(path, audio);
-    } catch (error) {
-      // Silently fail - audio file might not exist yet
-      console.debug(`Audio not available: ${path}`);
-    }
-  }, []);
+  }, [preloadSound]);
 
   // Save settings to localStorage
   const saveSettings = useCallback((muted: boolean, vol: number) => {
@@ -154,7 +154,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         try {
           audio = new Audio(path);
           audioCache.current.set(path, audio);
-        } catch (error) {
+        } catch {
           console.debug(`Failed to create audio: ${path}`);
           return;
         }
