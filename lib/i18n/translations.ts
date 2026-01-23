@@ -710,6 +710,67 @@ export const translations = {
       fileTooLarge: 'File too large. Max size: 2MB',
       invalidFileType: 'Unsupported file type. Use JPEG, PNG, WebP or GIF',
     },
+
+    // Multiplayer
+    multiplayer: {
+      // General
+      play: 'Play Multiplayer',
+      signInRequired: 'Sign in to play multiplayer',
+      selectMode: 'Select game mode',
+
+      // Match types
+      ranked: 'Ranked Match',
+      casual: 'Casual Match',
+      rankedMatch: 'Ranked Match',
+      casualMatch: 'Casual Match',
+
+      // Room
+      createPrivate: 'Create Private Room',
+      joinPrivate: 'Join Private Room',
+      roomCode: 'Room Code',
+      shareCode: 'Share this code with your friend',
+      enterCode: 'Enter the 6-character room code',
+      join: 'Join Room',
+
+      // Waiting room
+      waitingRoom: 'Waiting Room',
+      players: 'Players',
+      waitingForPlayer: 'Waiting for player...',
+      waitingForOpponent: 'Waiting for opponent...',
+      waitingForReady: 'Waiting for all players to be ready',
+      startingSoon: 'Starting soon...',
+      you: 'You',
+
+      // Actions
+      ready: 'Ready!',
+      notReady: 'Not Ready',
+      leave: 'Leave',
+      surrender: 'Surrender',
+      playAgain: 'Play Again',
+
+      // Search
+      searching: 'Searching for opponent...',
+
+      // Results
+      youWin: 'You Win!',
+      youLose: 'You Lose',
+      draw: "It's a Draw!",
+      rating: 'Rating',
+      tier: 'Tier',
+      winStreak: 'Win Streak',
+
+      // ELO Tiers
+      tiers: {
+        grandmaster: 'Grandmaster',
+        master: 'Master',
+        expert: 'Expert',
+        advanced: 'Advanced',
+        intermediate: 'Intermediate',
+        amateur: 'Amateur',
+        beginner: 'Beginner',
+        novice: 'Novice',
+      },
+    },
   },
 
   fr: {
@@ -1414,6 +1475,67 @@ export const translations = {
       invalidUrl: 'URL invalide',
       fileTooLarge: 'Fichier trop volumineux. Taille maximale: 2MB',
       invalidFileType: 'Type de fichier non supporté. Utilisez JPEG, PNG, WebP ou GIF',
+    },
+
+    // Multiplayer
+    multiplayer: {
+      // General
+      play: 'Jouer Multijoueur',
+      signInRequired: 'Connectez-vous pour jouer en multijoueur',
+      selectMode: 'Choisissez le mode de jeu',
+
+      // Match types
+      ranked: 'Match Classé',
+      casual: 'Match Casual',
+      rankedMatch: 'Match Classé',
+      casualMatch: 'Match Casual',
+
+      // Room
+      createPrivate: 'Créer une Partie Privée',
+      joinPrivate: 'Rejoindre une Partie Privée',
+      roomCode: 'Code de Salle',
+      shareCode: 'Partagez ce code avec votre ami',
+      enterCode: 'Entrez le code à 6 caractères',
+      join: 'Rejoindre',
+
+      // Waiting room
+      waitingRoom: 'Salle d\'Attente',
+      players: 'Joueurs',
+      waitingForPlayer: 'En attente d\'un joueur...',
+      waitingForOpponent: 'En attente d\'un adversaire...',
+      waitingForReady: 'En attente que tous les joueurs soient prêts',
+      startingSoon: 'Démarrage imminent...',
+      you: 'Vous',
+
+      // Actions
+      ready: 'Prêt !',
+      notReady: 'Pas Prêt',
+      leave: 'Quitter',
+      surrender: 'Abandonner',
+      playAgain: 'Rejouer',
+
+      // Search
+      searching: 'Recherche d\'un adversaire...',
+
+      // Results
+      youWin: 'Victoire !',
+      youLose: 'Défaite',
+      draw: 'Match Nul !',
+      rating: 'Classement',
+      tier: 'Rang',
+      winStreak: 'Série de Victoires',
+
+      // ELO Tiers
+      tiers: {
+        grandmaster: 'Grand Maître',
+        master: 'Maître',
+        expert: 'Expert',
+        advanced: 'Avancé',
+        intermediate: 'Intermédiaire',
+        amateur: 'Amateur',
+        beginner: 'Débutant',
+        novice: 'Novice',
+      },
     },
   },
 } as const;
