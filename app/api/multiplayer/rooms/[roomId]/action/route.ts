@@ -59,6 +59,21 @@ export async function POST(
       );
     }
 
+    // Get internal user ID from auth ID
+    const { data: userRecord } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth_user_id', userId)
+      .single();
+
+    if (!userRecord) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    const internalUserId = userRecord.id;
+
     // Get room
     const { data: room, error: roomError } = await supabase
       .from('multiplayer_rooms')
@@ -78,7 +93,7 @@ export async function POST(
       .from('multiplayer_room_players')
       .select('*')
       .eq('room_id', roomId)
-      .eq('user_id', userId)
+      .eq('user_id', internalUserId)
       .eq('disconnected', false)
       .single();
 
@@ -112,7 +127,7 @@ export async function POST(
         .from('multiplayer_room_players')
         .update({ ready: actionData?.ready ?? true })
         .eq('room_id', roomId)
-        .eq('user_id', userId);
+        .eq('user_id', internalUserId);
 
       if (readyError) {
         return NextResponse.json(
@@ -127,7 +142,7 @@ export async function POST(
       .from('multiplayer_actions')
       .insert({
         room_id: roomId,
-        user_id: userId,
+        user_id: internalUserId,
         action_type: actionType,
         action_data: actionData || {},
       })

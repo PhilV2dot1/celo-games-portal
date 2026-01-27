@@ -42,22 +42,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify user exists
-    const { data: user } = await supabase
-      .from('users')
-      .select('id')
-      .eq('id', userId)
-      .single();
+    // Get or create user from auth ID
+    let user = await (supabase
+      .from('users') as any)
+      .select('id, auth_user_id')
+      .eq('auth_user_id', userId)
+      .single()
+      .then((res: any) => res.data);
+
+    // If user doesn't exist, create them
+    if (!user) {
+      const { data: newUser } = await (supabase
+        .from('users') as any)
+        .insert({
+          auth_user_id: userId,
+          username: `Player_${userId.substring(0, 8)}`,
+          auth_provider: 'oauth',
+          is_anonymous: false,
+          claimed_at: new Date().toISOString(),
+          total_points: 0,
+          avatar_type: 'default',
+        })
+        .select('id, auth_user_id')
+        .single();
+
+      user = newUser;
+    }
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
+        { error: 'Failed to create user profile.' },
+        { status: 500 }
       );
     }
 
+    // Use the users table ID for multiplayer operations
+    const internalUserId = (user as any).id;
+
     // Create room using matchmaker
-    const matchmaker = createMatchmaker(userId);
+    const matchmaker = createMatchmaker(internalUserId);
     const room = await matchmaker.createRoom(gameId, mode, isPrivate);
 
     console.log('[Multiplayer API] Room created:', {

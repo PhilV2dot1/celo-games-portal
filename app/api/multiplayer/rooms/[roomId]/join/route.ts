@@ -36,19 +36,22 @@ export async function POST(
       );
     }
 
-    // Verify user exists
+    // Verify user exists (userId is the Supabase Auth ID)
     const { data: user } = await supabase
       .from('users')
-      .select('id')
-      .eq('id', userId)
+      .select('id, auth_user_id')
+      .eq('auth_user_id', userId)
       .single();
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'User not found. Please make sure you have a profile created.' },
         { status: 404 }
       );
     }
+
+    // Use the users table ID for multiplayer operations
+    const internalUserId = user.id;
 
     // Get room
     const { data: room, error: roomError } = await supabase
@@ -85,7 +88,7 @@ export async function POST(
       .from('multiplayer_room_players')
       .select('*')
       .eq('room_id', roomId)
-      .eq('user_id', userId)
+      .eq('user_id', internalUserId)
       .single();
 
     if (existingPlayer) {
@@ -96,7 +99,7 @@ export async function POST(
           .from('multiplayer_room_players')
           .update({ disconnected: false, disconnected_at: null })
           .eq('room_id', roomId)
-          .eq('user_id', userId)
+          .eq('user_id', internalUserId)
           .select()
           .single();
 
@@ -115,12 +118,12 @@ export async function POST(
     }
 
     // Join room
-    const matchmaker = createMatchmaker(userId);
+    const matchmaker = createMatchmaker(internalUserId);
     const player = await matchmaker.joinRoom(roomId);
 
     console.log('[Multiplayer API] Player joined room:', {
       roomId,
-      userId,
+      userId: internalUserId,
       playerNumber: player.player_number,
     });
 

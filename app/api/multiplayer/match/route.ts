@@ -36,19 +36,59 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify user exists
-    const { data: user } = await supabase
-      .from('users')
-      .select('id')
-      .eq('id', userId)
-      .single();
+    // Get or create user from auth ID
+    let user = await (supabase
+      .from('users') as any)
+      .select('id, auth_user_id')
+      .eq('auth_user_id', userId)
+      .single()
+      .then((res: any) => res.data);
+
+    // If user doesn't exist, create them
+    if (!user) {
+      console.log('[Multiplayer API] User not found, creating profile for:', userId);
+
+      // Create user profile
+      const { data: newUser, error: createError } = await (supabase
+        .from('users') as any)
+        .insert({
+          auth_user_id: userId,
+          username: `Player_${userId.substring(0, 8)}`,
+          auth_provider: 'oauth',
+          is_anonymous: false,
+          claimed_at: new Date().toISOString(),
+          total_points: 0,
+          avatar_type: 'default',
+        })
+        .select('id, auth_user_id')
+        .single();
+
+      if (createError) {
+        console.error('[Multiplayer API] Error creating user:', createError);
+
+        // Try to fetch again in case of race condition
+        const { data: retryUser } = await (supabase
+          .from('users') as any)
+          .select('id, auth_user_id')
+          .eq('auth_user_id', userId)
+          .single();
+
+        user = retryUser;
+      } else {
+        user = newUser;
+        console.log('[Multiplayer API] Created user profile:', user);
+      }
+    }
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
+        { error: 'Failed to create user profile. Please try again.' },
+        { status: 500 }
       );
     }
+
+    // Use the users table ID for multiplayer operations
+    const internalUserId = (user as any).id;
 
     // Check if user is already in an active room for this game
     const { data: existingRooms } = await (supabase
@@ -61,7 +101,7 @@ export async function POST(request: NextRequest) {
           status
         )
       `)
-      .eq('user_id', userId)
+      .eq('user_id', internalUserId)
       .eq('disconnected', false);
 
     // Filter for active rooms in this game
@@ -87,8 +127,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Find or create match
-    const matchmaker = createMatchmaker(userId);
+    // Find or create match (use internal user ID)
+    const matchmaker = createMatchmaker(internalUserId);
     const result = await matchmaker.findMatch(gameId, mode);
 
     // If joined existing room, we need to add the player

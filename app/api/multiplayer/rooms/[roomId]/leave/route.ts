@@ -36,6 +36,21 @@ export async function POST(
       );
     }
 
+    // Get internal user ID from auth ID
+    const { data: userRecord } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth_user_id', userId)
+      .single();
+
+    if (!userRecord) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    const internalUserId = userRecord.id;
+
     // Get room
     const { data: room, error: roomError } = await supabase
       .from('multiplayer_rooms')
@@ -55,7 +70,7 @@ export async function POST(
       .from('multiplayer_room_players')
       .select('*')
       .eq('room_id', roomId)
-      .eq('user_id', userId)
+      .eq('user_id', internalUserId)
       .single();
 
     if (!player) {
@@ -73,7 +88,7 @@ export async function POST(
         disconnected_at: new Date().toISOString(),
       })
       .eq('room_id', roomId)
-      .eq('user_id', userId);
+      .eq('user_id', internalUserId);
 
     // Handle based on room status
     if (room.status === 'waiting') {
