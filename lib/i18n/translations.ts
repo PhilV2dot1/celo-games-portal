@@ -750,6 +750,28 @@ export const translations = {
 
       // Search
       searching: 'Searching for opponent...',
+      cancel: 'Cancel',
+
+      // In-game
+      yourTurn: 'Your Turn!',
+      opponentTurn: "Opponent's Turn...",
+      youAre: 'You are',
+      vs: 'vs',
+      opponent: 'Opponent',
+      haveCode: 'Have a room code?',
+      invalidCode: 'Invalid room code',
+
+      // RPS specific
+      rps: {
+        round: 'Round',
+        makeChoice: 'Make your choice!',
+        waitingOpponent: 'Waiting for opponent...',
+        revealing: 'Revealing...',
+        yourChoice: 'Your choice',
+        youWinRound: 'You win this round!',
+        youLoseRound: 'You lose this round!',
+        draw: "It's a tie!",
+      },
 
       // Results
       youWin: 'You Win!',
@@ -1516,6 +1538,28 @@ export const translations = {
 
       // Search
       searching: 'Recherche d\'un adversaire...',
+      cancel: 'Annuler',
+
+      // In-game
+      yourTurn: 'À votre tour !',
+      opponentTurn: 'Tour de l\'adversaire...',
+      youAre: 'Vous êtes',
+      vs: 'vs',
+      opponent: 'Adversaire',
+      haveCode: 'Vous avez un code de salle ?',
+      invalidCode: 'Code de salle invalide',
+
+      // RPS specific
+      rps: {
+        round: 'Manche',
+        makeChoice: 'Faites votre choix !',
+        waitingOpponent: 'En attente de l\'adversaire...',
+        revealing: 'Révélation...',
+        yourChoice: 'Votre choix',
+        youWinRound: 'Vous remportez cette manche !',
+        youLoseRound: 'Vous perdez cette manche !',
+        draw: 'Égalité !',
+      },
 
       // Results
       youWin: 'Victoire !',
