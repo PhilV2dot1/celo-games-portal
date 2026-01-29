@@ -156,8 +156,38 @@ export interface ConnectFiveState {
   winningCells?: { row: number; col: number }[];
 }
 
+export interface YahtzeeScoreCard {
+  ones: number | null;
+  twos: number | null;
+  threes: number | null;
+  fours: number | null;
+  fives: number | null;
+  sixes: number | null;
+  threeOfKind: number | null;
+  fourOfKind: number | null;
+  fullHouse: number | null;
+  smallStraight: number | null;
+  largeStraight: number | null;
+  yahtzee: number | null;
+  chance: number | null;
+}
+
+export interface YahtzeeState {
+  currentTurn: 1 | 2; // Which player is currently playing
+  turnNumber: number; // 1-13 for each player
+  dice: number[]; // 5 dice values
+  heldDice: boolean[]; // Which dice are held
+  rollsRemaining: number; // 0-3
+  player1ScoreCard: YahtzeeScoreCard;
+  player2ScoreCard: YahtzeeScoreCard;
+  player1FinalScore: number | null;
+  player2FinalScore: number | null;
+  winner: 1 | 2 | 'draw' | null;
+  phase: 'rolling' | 'scoring' | 'finished'; // Current phase of the turn
+}
+
 // Union type for all game states
-export type GameState = TicTacToeState | RPSState | ConnectFiveState | Record<string, unknown>;
+export type GameState = TicTacToeState | RPSState | ConnectFiveState | YahtzeeState | Record<string, unknown>;
 
 // ============================================
 // HOOK TYPES
