@@ -9,7 +9,6 @@ import { forwardRef, ButtonHTMLAttributes } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { useShouldAnimate } from '@/lib/utils/motion';
 import { cn } from '@/lib/utils';
-import { colors } from '@/lib/constants/design-tokens';
 
 // ========================================
 // TYPES
