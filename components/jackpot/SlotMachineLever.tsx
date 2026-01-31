@@ -32,7 +32,7 @@ export function SlotMachineLever({ isSpinning, onPull, disabled }: SlotMachineLe
           <div
             className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 border-2 border-gray-800 group-hover:scale-105 group-disabled:group-hover:scale-100 transition-transform relative shadow-md"
             style={{
-              boxShadow: '0 0 0 2px #FCFF52, 0 2px 8px rgba(0,0,0,0.3)'
+              boxShadow: '0 0 0 2px var(--chain-primary), 0 2px 8px rgba(0,0,0,0.3)'
             }}
           >
             {/* Subtle shine */}

@@ -17,7 +17,14 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
 
-  /* Celo brand */
+  /* Chain brand (dynamic - overridden by ChainThemeProvider) */
+  --chain-primary: #FCFF52;
+  --chain-hover: #E5E600;
+  --chain-light: #feff7a;
+  --chain-dark: #d4d600;
+  --chain-contrast: #111827;
+
+  /* Celo brand (static alias) */
   --celo: #FCFF52;
   --celo-hover: #E5E600;
 
@@ -47,6 +54,13 @@
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
+
+  /* Chain brand (dynamic - overridden by ChainThemeProvider) */
+  --chain-primary: #FCFF52;
+  --chain-hover: #E5E600;
+  --chain-light: #feff7a;
+  --chain-dark: #d4d600;
+  --chain-contrast: #111827;
 
   /* Celo brand - slightly adjusted for dark mode contrast */
   --celo: #FCFF52;

@@ -133,7 +133,7 @@ export function AvatarUploadDialog({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-gray-700 max-w-md w-full"
-              style={{ boxShadow: '0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+              style={{ boxShadow: '0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -175,7 +175,7 @@ export function AvatarUploadDialog({
                 {/* Preview */}
                 {previewUrl && (
                   <div className="flex justify-center">
-                    <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-celo shadow-lg">
+                    <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-chain shadow-lg">
                       <Image
                         src={previewUrl}
                         alt="Preview"
@@ -219,7 +219,7 @@ export function AvatarUploadDialog({
                   <button
                     onClick={handleUpload}
                     disabled={!selectedFile || uploading}
-                    className="flex-1 bg-gradient-to-r from-celo to-celo hover:brightness-110 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-chain to-chain hover:brightness-110 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
                   >
                     {uploading ? t('avatar.uploading') : `📤 ${t('avatar.upload')}`}
                   </button>

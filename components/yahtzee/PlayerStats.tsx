@@ -88,8 +88,8 @@ export function PlayerStats({ stats, averageScore, mode }: PlayerStatsProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="
-            block text-center text-sm text-gray-900 hover:text-celo
-            transition-colors duration-200 font-semibold underline decoration-celo
+            block text-center text-sm text-gray-900 hover:text-chain
+            transition-colors duration-200 font-semibold underline decoration-chain
           "
           whileHover={{ scale: 1.02 }}
         >

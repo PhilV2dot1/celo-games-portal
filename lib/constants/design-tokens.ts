@@ -8,11 +8,17 @@
 // ========================================
 
 export const colors = {
-  // Brand Colors
+  // Brand Colors - Celo
   celo: '#FCFF52',
   celoHover: '#e5e600',
   celoLight: '#feff7a',
   celoDark: '#d4d600',
+
+  // Brand Colors - Base
+  base: '#0052FF',
+  baseHover: '#0040CC',
+  baseLight: '#3378FF',
+  baseDark: '#003DB8',
 
   // Semantic Colors
   success: '#10b981',
@@ -356,4 +362,54 @@ export function getCeloShadow(size: 'sm' | 'md' | 'lg' | 'xl' = 'md'): string {
   const borderWidth = size === 'sm' ? 2 : size === 'xl' ? 6 : 3;
   const shadowSize = size === 'sm' ? '0 4px 6px' : size === 'xl' ? '0 20px 25px' : '0 10px 25px';
   return `0 0 0 ${borderWidth}px ${colors.celo}, ${shadowSize} -5px rgba(0, 0, 0, 0.1)`;
+}
+
+// ========================================
+// CHAIN THEMES
+// ========================================
+
+export type ChainThemeName = 'celo' | 'base';
+
+export interface ChainTheme {
+  primary: string;
+  hover: string;
+  light: string;
+  dark: string;
+  /** Text color that contrasts with the primary color */
+  contrastText: string;
+}
+
+export const chainThemes: Record<ChainThemeName, ChainTheme> = {
+  celo: {
+    primary: colors.celo,
+    hover: colors.celoHover,
+    light: colors.celoLight,
+    dark: colors.celoDark,
+    contrastText: '#111827', // dark text on yellow
+  },
+  base: {
+    primary: colors.base,
+    hover: colors.baseHover,
+    light: colors.baseLight,
+    dark: colors.baseDark,
+    contrastText: '#ffffff', // white text on blue
+  },
+} as const;
+
+/**
+ * Get chain-aware shadow with brand glow
+ */
+export function getChainShadow(chain: ChainThemeName, size: 'sm' | 'md' | 'lg' | 'xl' = 'md'): string {
+  const color = chainThemes[chain].primary;
+  const borderWidth = size === 'sm' ? 2 : size === 'xl' ? 6 : 3;
+  const shadowSize = size === 'sm' ? '0 4px 6px' : size === 'xl' ? '0 20px 25px' : '0 10px 25px';
+  return `0 0 0 ${borderWidth}px ${color}, ${shadowSize} -5px rgba(0, 0, 0, 0.1)`;
+}
+
+/**
+ * Get chain-aware gradient string
+ */
+export function getChainGradient(chain: ChainThemeName): string {
+  const theme = chainThemes[chain];
+  return `linear-gradient(135deg, ${theme.light} 0%, ${theme.primary} 50%, ${theme.dark} 100%)`;
 }

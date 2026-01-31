@@ -17,13 +17,13 @@ export function GameStats({ stats, mode, credits, onResetCredits }: GameStatsPro
 
       {/* Free mode credits */}
       {mode === 'free' && credits !== undefined && (
-        <div className="mb-4 p-3 bg-gradient-to-r from-celo/10 to-celo/5 rounded-lg border-2 border-celo/50">
+        <div className="mb-4 p-3 bg-gradient-to-r from-chain/10 to-chain/5 rounded-lg border-2 border-chain/50">
           <div className="text-sm text-gray-700 font-medium text-center">Credits</div>
           <div className="text-3xl font-bold text-center text-gray-900">{credits}</div>
           {credits < 100 && (
             <button
               onClick={onResetCredits}
-              className="mt-2 w-full px-3 py-1 text-xs bg-celo hover:bg-celo/50 text-gray-900 rounded-lg font-semibold transition-all shadow-sm"
+              className="mt-2 w-full px-3 py-1 text-xs bg-chain hover:bg-chain/50 text-gray-900 rounded-lg font-semibold transition-all shadow-sm"
             >
               Reset to 1000
             </button>
@@ -40,7 +40,7 @@ export function GameStats({ stats, mode, credits, onResetCredits }: GameStatsPro
 
       {/* Blackjacks */}
       {stats.blackjacks > 0 && (
-        <div className="mb-4 text-center p-2 bg-gradient-to-r from-celo/5 to-celo/5 rounded-lg">
+        <div className="mb-4 text-center p-2 bg-gradient-to-r from-chain/5 to-chain/5 rounded-lg">
           <div className="text-sm text-gray-600">Blackjacks</div>
           <div className="text-2xl font-bold text-orange-600">🃏 {stats.blackjacks}</div>
         </div>

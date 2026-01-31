@@ -30,7 +30,7 @@ export function GameControls({
           transition-all duration-200
           ${
             canRoll && !isProcessing
-              ? "bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 font-black"
+              ? "bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 font-black"
               : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
           }
         `}
@@ -79,7 +79,7 @@ export function GameControls({
                 w-3 h-3 rounded-full
                 ${
                   index < rollsRemaining
-                    ? "bg-celo"
+                    ? "bg-chain"
                     : "bg-gray-300 dark:bg-gray-700"
                 }
               `}
@@ -112,7 +112,7 @@ export function GameControls({
         {/* Progress bar */}
         <div className="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-celo"
+            className="h-full bg-chain"
             initial={{ width: 0 }}
             animate={{ width: `${(currentTurn / 13) * 100}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}

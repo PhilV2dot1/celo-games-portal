@@ -41,7 +41,7 @@ export function DifficultySelector({
             className={cn(
               "flex-1 py-2 px-3 rounded-lg font-semibold text-sm transition-all duration-200",
               difficulty === diff.value
-                ? "bg-celo text-gray-900 shadow-md scale-105"
+                ? "bg-chain text-gray-900 shadow-md scale-105"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200",
               disabled && "opacity-50 cursor-not-allowed"
             )}

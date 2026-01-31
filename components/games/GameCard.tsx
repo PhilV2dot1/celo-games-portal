@@ -48,18 +48,18 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
           variant="default"
           padding="lg"
           hover
-          className="relative cursor-pointer group border-2 border-gray-200 dark:border-gray-700 hover:border-celo dark:hover:border-celo overflow-hidden h-full transition-shadow duration-200 hover:shadow-xl dark:bg-gray-800"
+          className="relative cursor-pointer group border-2 border-gray-200 dark:border-gray-700 hover:border-chain dark:hover:border-chain overflow-hidden h-full transition-shadow duration-200 hover:shadow-xl dark:bg-gray-800"
         >
           {/* Glow effect overlay on hover */}
           <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
             style={{
-              boxShadow: 'inset 0 0 0 2px #FCFF52, 0 0 20px 5px rgba(252, 255, 82, 0.15)',
+              boxShadow: 'inset 0 0 0 2px var(--chain-primary), 0 0 20px 5px color-mix(in srgb, var(--chain-primary) 15%, transparent)',
             }}
           />
 
           {/* Subtle accent bar */}
-          <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(to right, #FCFF52, #e5e600)' }} />
+          <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(to right, var(--chain-primary), var(--chain-dark))' }} />
 
           {/* Content */}
           <div className="relative z-10">
@@ -113,7 +113,7 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
               <Button
                 variant="primary"
                 size="md"
-                className="group-hover:bg-celo group-hover:text-gray-900 transition-colors duration-200"
+                className="group-hover:bg-chain group-hover:text-chain-contrast transition-colors duration-200"
                 rightIcon={
                   <motion.svg
                     className="w-4 h-4"

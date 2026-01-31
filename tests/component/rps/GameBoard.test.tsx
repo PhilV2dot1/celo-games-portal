@@ -215,8 +215,8 @@ describe('GameBoard (RPS)', () => {
     const rockButton = screen.getByLabelText('Choose Rock');
     const style = rockButton.getAttribute('style');
 
-    // Should not have the yellow border shadow
-    expect(style).not.toContain('#FCFF52');
+    // Should not have the chain-colored border shadow
+    expect(style).not.toContain('var(--chain-primary)');
   });
 
   test('should have yellow border when not disabled', () => {
@@ -225,8 +225,8 @@ describe('GameBoard (RPS)', () => {
     const rockButton = screen.getByLabelText('Choose Rock');
     const style = rockButton.getAttribute('style');
 
-    // Should have the yellow border shadow
-    expect(style).toContain('#FCFF52');
+    // Should have the chain-colored border shadow
+    expect(style).toContain('var(--chain-primary)');
   });
 
   test('should toggle disabled state correctly', () => {

@@ -17,12 +17,59 @@ import { useAuth } from '@/components/auth/AuthProvider';
 
 // Mock dependencies
 vi.mock('@/components/auth/AuthProvider');
+vi.mock('@/lib/utils/motion', () => ({
+  useShouldAnimate: () => false,
+  backdropVariants: {},
+  modalVariants: {},
+}));
+vi.mock('@/lib/i18n/LanguageContext', () => {
+  const translations: Record<string, string> = {
+    'auth.createAccount': 'Créer un compte',
+    'auth.saveProgressDesc': 'Sauvegardez vos progrès et jouez sur tous vos appareils',
+    'auth.yourCurrentStats': 'Vos stats actuelles',
+    'auth.statsWillBePreserved': 'Ces stats seront préservées !',
+    'auth.accountCreatedSuccess': 'Compte créé avec succès !',
+    'auth.checkEmailToConfirm': 'Vérifiez votre email pour confirmer',
+    'auth.continueWithGoogle': 'Continuer avec Google',
+    'auth.continueWithTwitter': 'Continuer avec Twitter',
+    'auth.continueWithDiscord': 'Continuer avec Discord',
+    'auth.orWithEmail': 'ou avec email',
+    'auth.emailPlaceholder': 'votre@email.com',
+    'auth.confirmPassword': 'Confirmer le mot de passe',
+    'auth.passwordHint': 'Minimum 8 caractères',
+    'auth.createMyAccount': 'Créer mon compte',
+    'auth.continueAsGuest': 'Continuer en tant qu\'invité',
+    'auth.termsAcceptance': 'En créant un compte, vous acceptez nos conditions d\'utilisation',
+    'auth.emailPasswordRequired': 'Email et mot de passe requis',
+    'auth.passwordMinLength': 'Le mot de passe doit contenir au moins 8 caractères',
+    'auth.passwordsDoNotMatch': 'Les mots de passe ne correspondent pas',
+    'auth.accountCreationFailed': 'Échec de la création du compte',
+    'auth.errorOccurred': 'Une erreur est survenue',
+    'auth.socialLoginFailed': 'Échec de la connexion sociale',
+    'email': 'Email',
+    'password': 'Mot de passe',
+    'points': 'Points',
+    'gamesLabel': 'Parties',
+  };
+  return {
+    useLanguage: () => ({
+      t: (key: string) => translations[key] || key,
+      language: 'fr',
+      setLanguage: vi.fn(),
+    }),
+  };
+});
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, onClick, className, style, initial, animate, exit }: any) => (
+    div: ({ children, onClick, className, style, initial, animate, exit, ...rest }: any) => (
       <div onClick={onClick} className={className} style={style}>
         {children}
       </div>
+    ),
+    button: ({ children, onClick, className, style, disabled, type, initial, animate, exit, whileHover, whileTap, transition, ...rest }: any) => (
+      <button onClick={onClick} className={className} style={style} disabled={disabled} type={type} {...rest}>
+        {children}
+      </button>
     ),
   },
   AnimatePresence: ({ children }: any) => children,
@@ -50,9 +97,6 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
 
-// Mock setTimeout
-vi.useFakeTimers();
-
 describe('CreateAccountModal', () => {
   const mockOnClose = vi.fn();
   const mockOnSuccess = vi.fn();
@@ -63,6 +107,7 @@ describe('CreateAccountModal', () => {
   const mockClaimProfile = vi.fn();
 
   beforeEach(() => {
+    vi.useFakeTimers();
     vi.clearAllMocks();
     localStorageMock.clear();
 
@@ -86,6 +131,7 @@ describe('CreateAccountModal', () => {
 
   afterEach(() => {
     vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   // ============================================================================
@@ -110,8 +156,11 @@ describe('CreateAccountModal', () => {
   test('should close when clicking backdrop', () => {
     render(<CreateAccountModal isOpen={true} onClose={mockOnClose} />);
 
-    const backdrop = document.querySelector('.fixed.inset-0.bg-black\\/60');
-    fireEvent.click(backdrop!);
+    // Modal renders via portal in document.body
+    const backdrop = document.body.querySelector('.bg-black\\/60') || document.body.querySelector('[aria-hidden="true"]');
+    if (backdrop) {
+      fireEvent.click(backdrop);
+    }
 
     expect(mockOnClose).toHaveBeenCalled();
   });
@@ -254,39 +303,30 @@ describe('CreateAccountModal', () => {
   // ============================================================================
 
   test('should show error when email is empty', async () => {
-    const user = userEvent.setup({ delay: null });
-
     render(<CreateAccountModal isOpen={true} onClose={mockOnClose} />);
 
-    const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-    await user.type(passwordInputs[0], 'password123');
-    await user.type(passwordInputs[1], 'password123');
-
-    const submitButton = screen.getByText('Créer mon compte');
-    fireEvent.click(submitButton);
-
+    // Submit form without filling email
+    const form = document.body.querySelector('form');
     await act(async () => {
-      await Promise.resolve();
-      await vi.runAllTimersAsync();
+      fireEvent.submit(form!);
     });
 
     expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
   });
 
   test('should show error when password is empty', async () => {
-    const user = userEvent.setup({ delay: null });
-
     render(<CreateAccountModal isOpen={true} onClose={mockOnClose} />);
 
+    // Fill only email
     const emailInput = screen.getByPlaceholderText('votre@email.com');
-    await user.type(emailInput, 'test@example.com');
-
-    const submitButton = screen.getByText('Créer mon compte');
-    fireEvent.click(submitButton);
-
     await act(async () => {
-      await Promise.resolve();
-      await vi.runAllTimersAsync();
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    });
+
+    // Submit form without password
+    const form = document.body.querySelector('form');
+    await act(async () => {
+      fireEvent.submit(form!);
     });
 
     expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
@@ -592,28 +632,31 @@ describe('CreateAccountModal', () => {
   // Loading State Tests
   // ============================================================================
 
-  test('should show loading text when submitting', async () => {
-    const user = userEvent.setup({ delay: null });
-
+  test('should show loading state when submitting', async () => {
     mockSignUp.mockImplementation(() => new Promise(() => {})); // Never resolves
 
     render(<CreateAccountModal isOpen={true} onClose={mockOnClose} />);
 
+    // Fill form fields
     const emailInput = screen.getByPlaceholderText('votre@email.com');
     const passwordInputs = screen.getAllByPlaceholderText('••••••••');
 
-    await user.type(emailInput, 'test@example.com');
-    await user.type(passwordInputs[0], 'password123');
-    await user.type(passwordInputs[1], 'password123');
-
-    const submitButton = screen.getByText('Créer mon compte');
-    fireEvent.click(submitButton);
-
     await act(async () => {
-      await Promise.resolve();
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.change(passwordInputs[0], { target: { value: 'password123' } });
+      fireEvent.change(passwordInputs[1], { target: { value: 'password123' } });
     });
 
-    expect(screen.getByText('Création en cours...')).toBeInTheDocument();
+    // Submit form
+    const form = document.body.querySelector('form');
+    await act(async () => {
+      fireEvent.submit(form!);
+      await Promise.resolve(); // Let the async handler start
+    });
+
+    // Button should be in loading state (aria-busy)
+    const submitButton = document.body.querySelector('[aria-busy="true"]');
+    expect(submitButton).toBeInTheDocument();
   });
 
   test('should disable inputs when loading', async () => {

@@ -83,9 +83,9 @@ export function AudioControls({
           focus:outline-none focus:ring-2 focus:ring-offset-2
         `}
         style={{
-          // Focus ring with Celo color
+          // Focus ring with chain color
           // @ts-expect-error CSS custom property
-          '--tw-ring-color': '#FCFF52',
+          '--tw-ring-color': 'var(--chain-primary)',
         }}
         aria-label={muteLabel}
         title={titleText}
@@ -117,7 +117,7 @@ export function AudioControls({
                 disabled={isMuted}
                 className="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer disabled:opacity-50"
                 style={{
-                  accentColor: '#FCFF52',
+                  accentColor: 'var(--chain-primary)',
                 }}
                 aria-label={t('audio.volume')}
               />

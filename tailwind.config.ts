@@ -13,7 +13,12 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         celo: "#FCFF52",
-        "celo-dark": "#E5E600", // Slightly darker for dark mode contrast
+        "celo-dark": "#E5E600",
+        chain: "var(--chain-primary)",
+        "chain-hover": "var(--chain-hover)",
+        "chain-light": "var(--chain-light)",
+        "chain-dark": "var(--chain-dark)",
+        "chain-contrast": "var(--chain-contrast)",
       },
     },
   },

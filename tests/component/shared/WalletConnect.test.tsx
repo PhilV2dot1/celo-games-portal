@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { WalletConnect } from '@/components/shared/WalletConnect';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { useFarcaster } from '@/components/providers';
-import { useSwitchToCelo } from '@/hooks/useSwitchToCelo';
+import { useChainSelector } from '@/hooks/useChainSelector';
 
 /**
  * WalletConnect Component Tests
@@ -19,7 +19,33 @@ import { useSwitchToCelo } from '@/hooks/useSwitchToCelo';
 // Mock dependencies
 vi.mock('wagmi');
 vi.mock('@/components/providers');
-vi.mock('@/hooks/useSwitchToCelo');
+vi.mock('@/hooks/useChainSelector');
+vi.mock('@/lib/utils/motion', () => ({
+  useShouldAnimate: () => false,
+}));
+vi.mock('@/lib/i18n/LanguageContext', () => {
+  const translations: Record<string, string> = {
+    'wallet.connectFarcaster': 'Connect with Farcaster',
+    'wallet.connectWalletConnect': 'Connect with WalletConnect',
+    'wallet.connectMetaMask': 'Connect with MetaMask',
+    'wallet.connectBrowser': 'Connect with Browser Wallet',
+    'wallet.connectWith': 'Connect with',
+    'wallet.switchingNetwork': 'Switching to Celo network...',
+    'wallet.via': 'via',
+    'wallet.disconnectLabel': 'Disconnect wallet',
+    'wallet.disconnect': 'Disconnect',
+    'wallet.connectPrompt': 'Connect your wallet to play on-chain',
+    'wallet.farcasterNotReady': 'Farcaster SDK not ready. Some features may not work.',
+    'wallet.noConnectors': 'No wallet connectors available',
+  };
+  return {
+    useLanguage: () => ({
+      t: (key: string) => translations[key] || key,
+      language: 'en',
+      setLanguage: vi.fn(),
+    }),
+  };
+});
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, className, initial, animate }: any) => (
@@ -72,11 +98,14 @@ describe('WalletConnect', () => {
       sdk: null,
     });
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isSwitching: false,
+      isOnBase: false,
+      isSupportedChain: true,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
   });
 
   // ============================================================================
@@ -104,8 +133,9 @@ describe('WalletConnect', () => {
 
     render(<WalletConnect />);
 
-    expect(screen.getByText('MetaMask')).toBeInTheDocument();
-    expect(screen.getByText('WalletConnect')).toBeInTheDocument();
+    // Each connector renders name + description, so use getAllByText
+    expect(screen.getAllByText('MetaMask').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('WalletConnect').length).toBeGreaterThanOrEqual(1);
   });
 
   test('should show connector icons', () => {
@@ -141,7 +171,9 @@ describe('WalletConnect', () => {
 
     render(<WalletConnect />);
 
+    // Description is rendered as separate span inside the button
     expect(screen.getByText('Connect with MetaMask')).toBeInTheDocument();
+    expect(screen.getByLabelText('Connect with MetaMask')).toBeInTheDocument();
   });
 
   test('should call connect when clicking connector button', () => {
@@ -273,7 +305,9 @@ describe('WalletConnect', () => {
 
     render(<WalletConnect />);
 
-    expect(screen.getByText('Connecting...')).toBeInTheDocument();
+    // When pending, Button gets loading=true which shows spinner and hides text
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('aria-busy', 'true');
   });
 
   test('should disable buttons when pending', () => {
@@ -422,11 +456,14 @@ describe('WalletConnect', () => {
       connector: { name: 'MetaMask' } as any,
     } as any);
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isSwitching: false,
+      isOnBase: false,
+      isSupportedChain: true,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
 
     const { container } = render(<WalletConnect />);
 
@@ -441,11 +478,14 @@ describe('WalletConnect', () => {
       connector: { name: 'MetaMask' } as any,
     } as any);
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isSwitching: false,
+      isOnBase: false,
+      isSupportedChain: false,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
 
     const { container } = render(<WalletConnect />);
 
@@ -460,11 +500,14 @@ describe('WalletConnect', () => {
       connector: { name: 'MetaMask' } as any,
     } as any);
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isSwitching: true,
+      isOnBase: false,
+      isSupportedChain: false,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
 
     render(<WalletConnect />);
 
@@ -478,11 +521,14 @@ describe('WalletConnect', () => {
       connector: { name: 'MetaMask' } as any,
     } as any);
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isSwitching: true,
+      isOnBase: false,
+      isSupportedChain: false,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
 
     const { container } = render(<WalletConnect />);
 
@@ -498,11 +544,14 @@ describe('WalletConnect', () => {
       connector: { name: 'MetaMask' } as any,
     } as any);
 
-    vi.mocked(useSwitchToCelo).mockReturnValue({
+    vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isSwitching: false,
+      isOnBase: false,
+      isSupportedChain: true,
+      activeChain: 'celo',
       switchToCelo: vi.fn(),
-    });
+      switchToBase: vi.fn(),
+    } as any);
 
     render(<WalletConnect />);
 

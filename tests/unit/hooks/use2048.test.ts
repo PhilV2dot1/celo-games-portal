@@ -23,11 +23,26 @@ vi.mock('wagmi', () => ({
   useAccount: vi.fn(() => ({
     address: '0x1234567890ABCDEF1234567890ABCDEF12345678' as `0x${string}`,
     isConnected: true,
+    chain: { id: 42220 },
   })),
   useWriteContract: vi.fn(() => ({
     writeContractAsync: vi.fn(),
     isPending: false,
   })),
+}));
+
+vi.mock('wagmi/chains', () => ({
+  celo: { id: 42220, name: 'Celo' },
+  base: { id: 8453, name: 'Base' },
+}));
+
+vi.mock('@/lib/contracts/addresses', () => ({
+  getContractAddress: () => '0x2048' as `0x${string}`,
+  isGameAvailableOnChain: () => true,
+  isSupportedChain: () => true,
+  getChainName: () => 'celo',
+  CHAIN_CONFIG: {},
+  CONTRACT_ADDRESSES: {},
 }));
 
 vi.mock('@/lib/contracts/2048-abi', () => ({

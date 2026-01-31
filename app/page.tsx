@@ -68,7 +68,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-700 rounded-xl p-6 mb-8 shadow-md"
-          style={{ borderLeft: '4px solid #FCFF52' }}
+          style={{ borderLeft: '4px solid var(--chain-primary)' }}
         >
           <div className="flex items-center justify-between gap-6">
             <div className="flex-1">
@@ -82,7 +82,7 @@ export default function Home() {
             <Link
               href="/about"
               className="text-gray-900 font-semibold py-3 px-6 rounded-lg transition-all shadow hover:shadow-md whitespace-nowrap hover:opacity-90"
-              style={{ backgroundColor: '#FCFF52' }}
+              style={{ backgroundColor: 'var(--chain-primary)' }}
             >
               {t('home.howToPlay')}
             </Link>
@@ -123,7 +123,7 @@ export default function Home() {
               <Link
                 href="/profile/edit"
                 className="font-medium text-sm transition-colors"
-                style={{ color: '#b8b900' }}
+                style={{ color: 'var(--chain-dark)' }}
               >
                 {t('home.edit')}
               </Link>
@@ -156,7 +156,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-700 rounded-xl p-6 mb-8 shadow-md"
-            style={{ borderLeft: '4px solid #FCFF52' }}
+            style={{ borderLeft: '4px solid var(--chain-primary)' }}
           >
             <div className="flex items-center justify-between gap-6">
               <div>
@@ -168,7 +168,7 @@ export default function Home() {
               <button
                 onClick={() => setShowProfileSetup(true)}
                 className="text-gray-900 font-semibold py-3 px-6 rounded-lg transition-all shadow hover:shadow-md whitespace-nowrap hover:opacity-90"
-                style={{ backgroundColor: '#FCFF52' }}
+                style={{ backgroundColor: 'var(--chain-primary)' }}
               >
                 {t('home.setupNow')}
               </button>
@@ -188,7 +188,7 @@ export default function Home() {
             <Link
               href="/about"
               className="font-medium text-sm transition-colors"
-              style={{ color: '#b8b900' }}
+              style={{ color: 'var(--chain-dark)' }}
             >
               {t('home.viewAllBadges')} →
             </Link>

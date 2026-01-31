@@ -31,7 +31,7 @@ vi.mock('wagmi', () => ({
   useSwitchChain: vi.fn(() => ({ switchChain: vi.fn() })),
 }));
 
-vi.mock('wagmi/chains', () => ({ celo: { id: 42220, name: 'Celo' } }));
+vi.mock('wagmi/chains', () => ({ celo: { id: 42220, name: 'Celo' }, base: { id: 8453, name: 'Base' } }));
 vi.mock('viem', () => ({ parseEventLogs: vi.fn(() => []) }));
 vi.mock('@/lib/contracts/blackjack-abi', () => ({
   CONTRACT_ADDRESS: '0xBLACKJACK' as `0x${string}`,

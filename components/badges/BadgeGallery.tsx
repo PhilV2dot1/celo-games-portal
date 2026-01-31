@@ -262,7 +262,7 @@ export function BadgeGallery({
           </div>
           <Link
             href="/about"
-            className="text-celo hover:text-yellow-700 font-semibold text-sm underline"
+            className="text-chain hover:text-yellow-700 font-semibold text-sm underline"
           >
             {t('badges.howToEarn')}
           </Link>
@@ -296,7 +296,7 @@ export function BadgeGallery({
               hover
               className={`relative ${
                 badge.earned
-                  ? 'border-2 border-celo shadow-lg'
+                  ? 'border-2 border-chain shadow-lg'
                   : 'border-2 border-gray-300 opacity-70'
               }`}
             >
@@ -332,7 +332,7 @@ export function BadgeGallery({
 
               {/* Earned Indicator */}
               {badge.earned && (
-                <div className="absolute top-2 right-2 bg-celo text-gray-900 rounded-full w-6 h-6 flex items-center justify-center">
+                <div className="absolute top-2 right-2 bg-chain text-gray-900 rounded-full w-6 h-6 flex items-center justify-center">
                   <span className="text-xs font-bold">✓</span>
                 </div>
               )}
@@ -346,7 +346,7 @@ export function BadgeGallery({
         <div className="text-center pt-2">
           <Link
             href="/profile"
-            className="text-celo hover:text-yellow-700 font-semibold text-sm underline"
+            className="text-chain hover:text-yellow-700 font-semibold text-sm underline"
           >
             {t('badges.viewAll')} ({totalCount})
           </Link>

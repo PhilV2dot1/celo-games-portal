@@ -101,7 +101,7 @@ export default function JackpotPage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>
@@ -112,7 +112,7 @@ export default function JackpotPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl text-center"
-          style={{ border: '4px solid #FCFF52' }}
+          style={{ border: '4px solid var(--chain-primary)' }}
         >
           <div className="text-6xl mb-2">🎰</div>
           <h1 className="text-4xl font-black text-gray-900 dark:text-white">{t('games.jackpot.title')}</h1>
@@ -133,14 +133,14 @@ export default function JackpotPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
           className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-4 text-center shadow-lg"
-          style={{ border: '4px solid #FCFF52' }}
+          style={{ border: '4px solid var(--chain-primary)' }}
         >
           <div className="text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">{t('games.jackpot.totalScore')}</div>
           <div className="text-4xl font-black text-gray-900 dark:text-white">{totalScore}</div>
         </motion.div>
 
         {/* Jackpot Machine */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl" style={{ border: '4px solid #FCFF52' }}>
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl" style={{ border: '4px solid var(--chain-primary)' }}>
           <JackpotMachine
             isSpinning={localSpinning}
             finalValue={lastResult?.score}
@@ -159,7 +159,7 @@ export default function JackpotPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.5, repeat: 3 }}
-                  className="text-4xl mb-3 font-black text-celo"
+                  className="text-4xl mb-3 font-black text-chain"
                 >
                   {t('games.jackpot.jackpotWin')}
                 </motion.div>
@@ -168,7 +168,7 @@ export default function JackpotPage() {
                 {lastResult.score > 0 ? "✨" : "😞"}
               </div>
               <div className={`text-4xl font-black mb-1 ${
-                lastResult.score > 0 ? "text-celo" : "text-gray-500"
+                lastResult.score > 0 ? "text-chain" : "text-gray-500"
               }`}>
                 {lastResult.score}
               </div>
@@ -193,7 +193,7 @@ export default function JackpotPage() {
               transition={{ duration: 0.15 }}
               onClick={handleSpin}
               disabled={localSpinning || isSpinning || (mode === "onchain" && !isConnected)}
-              className="px-10 py-4 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black text-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="px-10 py-4 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black text-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {localSpinning || isSpinning ? t('games.jackpot.spinning') : t('games.jackpot.spin')}
             </motion.button>
@@ -229,7 +229,7 @@ export default function JackpotPage() {
                   href={getExplorerAddressUrl(chain?.id, contractAddress)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  className="text-gray-900 hover:text-chain font-semibold transition-colors underline decoration-chain"
                 >
                   View on Explorer
                 </a>

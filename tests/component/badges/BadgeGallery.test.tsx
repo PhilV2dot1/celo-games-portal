@@ -456,7 +456,7 @@ describe('BadgeGallery', () => {
     const { container } = render(<BadgeGallery localStats={localStats} />);
 
     await waitFor(() => {
-      const checkmark = container.querySelector('.bg-celo.text-gray-900');
+      const checkmark = container.querySelector('.bg-chain.text-gray-900');
       expect(checkmark).toBeInTheDocument();
     });
   });

@@ -42,7 +42,7 @@ export const GameBoard = memo(function GameBoard({ onChoice, disabled }: GameBoa
             className="flex flex-col items-center justify-center gap-1 sm:gap-2 p-4 sm:p-6 min-h-[100px] sm:min-h-[120px] bg-white/80 backdrop-blur-lg rounded-2xl border-2 border-gray-700 shadow-lg active:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation active:bg-white/90"
             style={{
               boxShadow: !disabled
-                ? "0 0 0 3px #FCFF52, 0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+                ? "0 0 0 3px var(--chain-primary), 0 10px 25px -5px rgba(0, 0, 0, 0.1)"
                 : "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
             }}
             aria-label={`Choose ${choice.name}`}

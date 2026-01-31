@@ -75,7 +75,7 @@ export default function LeaderboardPage() {
 
         {/* Page Title */}
         <div
-          className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 mb-6 shadow-xl border-2 border-celo text-center"
+          className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 mb-6 shadow-xl border-2 border-chain text-center"
         >
           <div className="text-5xl mb-2">🏆</div>
           <h1 className="text-4xl font-black text-gray-900 mb-2">
@@ -175,13 +175,13 @@ export default function LeaderboardPage() {
                 </div>
 
                 {/* 1st Place */}
-                <div className="bg-gradient-to-br from-celo/20 to-celo/30 rounded-xl p-6 shadow-2xl border-4 border-celo transform scale-105">
+                <div className="bg-gradient-to-br from-chain/20 to-chain/30 rounded-xl p-6 shadow-2xl border-4 border-chain transform scale-105">
                   <div className="text-center">
                     <div className="text-7xl mb-2">🥇</div>
                     <div className="text-3xl font-black text-gray-900 mb-3">#{leaderboard[0].rank}</div>
                     {/* Avatar */}
                     <div className="flex justify-center mb-3">
-                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-celo shadow-lg">
+                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-chain shadow-lg">
                         <Image
                           src={leaderboard[0].avatar_url || '/avatars/predefined/default-player.svg'}
                           alt={leaderboard[0].username}
@@ -209,13 +209,13 @@ export default function LeaderboardPage() {
                 </div>
 
                 {/* 3rd Place */}
-                <div className="bg-gradient-to-br from-celo/10 to-celo/20 rounded-xl p-6 shadow-lg border-2 border-celo transform md:translate-y-8">
+                <div className="bg-gradient-to-br from-chain/10 to-chain/20 rounded-xl p-6 shadow-lg border-2 border-chain transform md:translate-y-8">
                   <div className="text-center">
                     <div className="text-5xl mb-2">🥉</div>
                     <div className="text-xl font-black text-gray-900 mb-3">#{leaderboard[2].rank}</div>
                     {/* Avatar */}
                     <div className="flex justify-center mb-3">
-                      <div className="relative w-16 h-16 rounded-full overflow-hidden border-4 border-celo shadow-md">
+                      <div className="relative w-16 h-16 rounded-full overflow-hidden border-4 border-chain shadow-md">
                         <Image
                           src={leaderboard[2].avatar_url || '/avatars/predefined/default-player.svg'}
                           alt={leaderboard[2].username}
@@ -282,7 +282,7 @@ export default function LeaderboardPage() {
                       <tr
                         key={entry.userId}
                         className={`hover:bg-gray-50 transition-colors ${
-                          index < 3 ? 'bg-celo/5/50' : ''
+                          index < 3 ? 'bg-chain/5/50' : ''
                         }`}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -299,7 +299,7 @@ export default function LeaderboardPage() {
                           <div className="flex items-center gap-3">
                             {/* Avatar */}
                             <div className="relative w-10 h-10 flex-shrink-0">
-                              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-celo shadow-sm">
+                              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-chain shadow-sm">
                                 <Image
                                   src={entry.avatar_url || '/avatars/predefined/default-player.svg'}
                                   alt={entry.username}

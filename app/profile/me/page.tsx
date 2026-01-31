@@ -200,12 +200,12 @@ export default function MyProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-celo"
+          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-chain"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               {/* Avatar */}
-              <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-celo shadow-lg">
+              <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-chain shadow-lg">
                 <Image
                   src={avatarUrl}
                   alt="Avatar"
@@ -237,7 +237,7 @@ export default function MyProfilePage() {
             {/* Edit Button */}
             <Link
               href="/profile/edit"
-              className="px-6 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 font-bold rounded-xl transition-all shadow-lg"
+              className="px-6 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 font-bold rounded-xl transition-all shadow-lg"
             >
               ✏️ {t('home.edit') || 'Modifier'}
             </Link>
@@ -398,7 +398,7 @@ export default function MyProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="mt-6 bg-gradient-to-br from-celo/5 to-celo/10 border-2 border-celo rounded-xl p-6 text-center shadow-lg"
+            className="mt-6 bg-gradient-to-br from-chain/5 to-chain/10 border-2 border-chain rounded-xl p-6 text-center shadow-lg"
           >
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               🎉 {t('profile.saveYourProgress') || 'Sauvegardez votre Progression!'}
@@ -408,7 +408,7 @@ export default function MyProfilePage() {
             </p>
             <Link
               href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 font-bold rounded-xl transition-all shadow-lg"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 font-bold rounded-xl transition-all shadow-lg"
             >
               ⛓️ {t('profile.createAccount') || 'Créer un Compte'}
             </Link>

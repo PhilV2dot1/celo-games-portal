@@ -19,12 +19,51 @@ import { useRouter } from 'next/navigation';
 // Mock dependencies
 vi.mock('@/components/auth/AuthProvider');
 vi.mock('next/navigation');
+vi.mock('@/lib/utils/motion', () => ({
+  useShouldAnimate: () => false,
+  backdropVariants: {},
+  modalVariants: {},
+}));
+vi.mock('@/lib/i18n/LanguageContext', () => {
+  const translations: Record<string, string> = {
+    'auth.login': 'Connexion',
+    'auth.welcomeSignIn': 'Bienvenue ! Connectez-vous pour continuer',
+    'auth.continueWithGoogle': 'Continuer avec Google',
+    'auth.continueWithTwitter': 'Continuer avec Twitter',
+    'auth.continueWithDiscord': 'Continuer avec Discord',
+    'auth.orWithEmail': 'ou avec email',
+    'auth.emailPlaceholder': 'votre@email.com',
+    'auth.loginButton': 'Se connecter',
+    'auth.forgotPassword': 'Mot de passe oublié ?',
+    'auth.noAccountYet': 'Pas encore de compte ?',
+    'auth.createAccount': 'Créer un compte',
+    'auth.continueAsGuest': 'Continuer en tant qu\'invité',
+    'auth.emailPasswordRequired': 'Email et mot de passe requis',
+    'auth.loginFailed': 'Échec de la connexion',
+    'auth.errorOccurred': 'Une erreur est survenue',
+    'auth.socialLoginFailed': 'Échec de la connexion sociale',
+    'email': 'Email',
+    'password': 'Mot de passe',
+  };
+  return {
+    useLanguage: () => ({
+      t: (key: string) => translations[key] || key,
+      language: 'fr',
+      setLanguage: vi.fn(),
+    }),
+  };
+});
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, onClick, className, style, ...props }: any) => (
-      <div onClick={onClick} className={className} style={style} {...props}>
+    div: ({ children, onClick, className, style, initial, animate, exit, ...rest }: any) => (
+      <div onClick={onClick} className={className} style={style} {...rest}>
         {children}
       </div>
+    ),
+    button: ({ children, onClick, className, style, disabled, type, initial, animate, exit, whileHover, whileTap, transition, ...rest }: any) => (
+      <button onClick={onClick} className={className} style={style} disabled={disabled} type={type} {...rest}>
+        {children}
+      </button>
     ),
   },
   AnimatePresence: ({ children }: any) => children,
@@ -92,7 +131,7 @@ describe('LoginModal', () => {
   test('should close when clicking backdrop', () => {
     render(<LoginModal isOpen={true} onClose={mockOnClose} />);
 
-    const backdrop = document.querySelector('.fixed.inset-0.bg-black\\/60');
+    const backdrop = document.body.querySelector('.bg-black\\/60');
     expect(backdrop).toBeInTheDocument();
 
     fireEvent.click(backdrop!);
@@ -257,8 +296,8 @@ describe('LoginModal', () => {
     const passwordInput = screen.getByPlaceholderText('••••••••');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
@@ -275,8 +314,8 @@ describe('LoginModal', () => {
     const emailInput = screen.getByPlaceholderText('votre@email.com');
     await user.type(emailInput, 'test@example.com');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(screen.getByText('⚠️ Email et mot de passe requis')).toBeInTheDocument();
@@ -298,8 +337,8 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith('test@example.com', 'password123');
@@ -319,8 +358,8 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(mockOnSuccess).toHaveBeenCalled();
@@ -341,8 +380,8 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'wrongpassword');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(screen.getByText('⚠️ Invalid credentials')).toBeInTheDocument();
@@ -364,8 +403,8 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(screen.getByText('⚠️ Échec de la connexion')).toBeInTheDocument();
@@ -386,8 +425,8 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(screen.getByText('⚠️ Une erreur est survenue')).toBeInTheDocument();
@@ -409,11 +448,13 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
-      expect(screen.getByText('Connexion...')).toBeInTheDocument();
+      // Button uses aria-busy when in loading state
+      const busyButton = document.body.querySelector('[aria-busy="true"]');
+      expect(busyButton).toBeInTheDocument();
     });
   });
 
@@ -430,13 +471,14 @@ describe('LoginModal', () => {
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
 
-    const submitButton = screen.getByText('Se connecter');
-    fireEvent.click(submitButton);
+    const form = document.body.querySelector('form');
+    fireEvent.submit(form!);
 
     await waitFor(() => {
       expect(emailInput).toBeDisabled();
       expect(passwordInput).toBeDisabled();
-      expect(submitButton).toBeDisabled();
+      const submitBtn = screen.getByText('Se connecter').closest('button');
+      expect(submitBtn).toBeDisabled();
     });
   });
 

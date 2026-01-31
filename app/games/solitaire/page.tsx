@@ -110,7 +110,7 @@ export default function SolitairePage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-purple-700 dark:hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-purple-700 dark:hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>

@@ -279,7 +279,7 @@ export function DiceBoard({
         <p className="font-medium">Click dice to hold them between rolls</p>
         {heldDice.some((held) => held) && (
           <motion.p
-            className="text-celo font-bold text-base mt-1"
+            className="text-chain font-bold text-base mt-1"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >

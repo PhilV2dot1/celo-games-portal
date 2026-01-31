@@ -51,11 +51,11 @@ export function Header() {
       className="mb-8"
     >
       {/* Top Bar */}
-      <div className="bg-white/90 dark:bg-gray-900/95 rounded-xl shadow-md mb-6 dark:shadow-gray-900/50" style={{ borderBottom: '3px solid #FCFF52' }}>
+      <div className="bg-white/90 dark:bg-gray-900/95 rounded-xl shadow-md mb-6 dark:shadow-gray-900/50" style={{ borderBottom: '3px solid var(--chain-primary)' }}>
         <div className="flex items-center justify-between p-4">
           {/* Logo/Brand */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, #FCFF52, #e5e600)' }}>
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
               <span className="text-2xl">🎮</span>
             </div>
             <div>
@@ -85,8 +85,8 @@ export function Header() {
                 </button>
                 <button
                   onClick={() => setShowSignupModal(true)}
-                  className="px-4 py-2 text-gray-900 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
-                  style={{ backgroundColor: '#FCFF52' }}
+                  className="px-4 py-2 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
+                  style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}
                 >
                   {t('auth.createAccount')}
                 </button>
@@ -174,8 +174,8 @@ export function Header() {
               <Link
                 href="/about"
                 className="px-4 py-2 text-sm font-semibold rounded-lg transition-colors"
-                style={{ color: '#b8b900' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FCFF5220'}
+                style={{ color: 'var(--chain-dark)' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--chain-primary) 12%, transparent)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {t('nav.guide')}

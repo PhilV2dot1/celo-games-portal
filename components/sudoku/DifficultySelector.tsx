@@ -43,8 +43,8 @@ export function DifficultySelector({
               disabled={disabled}
               className={`p-4 rounded-xl font-semibold transition-all border-2 ${
                 isActive
-                  ? "bg-gradient-to-r from-celo to-celo text-gray-900 border-celo ring-2 ring-celo ring-offset-2"
-                  : "bg-white text-gray-700 border-gray-300 hover:border-celo hover:bg-yellow-50"
+                  ? "bg-gradient-to-r from-chain to-chain text-gray-900 border-chain ring-2 ring-chain ring-offset-2"
+                  : "bg-white text-gray-700 border-gray-300 hover:border-chain hover:bg-yellow-50"
               } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
               whileHover={!disabled ? { scale: 1.05 } : {}}
               whileTap={!disabled ? { scale: 0.95 } : {}}

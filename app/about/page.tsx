@@ -25,7 +25,7 @@ export default function AboutPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 backdrop-blur-lg rounded-2xl p-8 mb-6 shadow-xl border-2 border-celo"
+          className="bg-white/90 backdrop-blur-lg rounded-2xl p-8 mb-6 shadow-xl border-2 border-chain"
         >
           <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
             🎮 How to Play
@@ -99,7 +99,7 @@ export default function AboutPage() {
                 <p className="text-sm text-purple-700">Bonus points for consecutive wins</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-celo/5 rounded-lg">
+            <div className="flex items-center gap-3 p-3 bg-chain/5 rounded-lg">
               <span className="text-2xl">🏅</span>
               <div>
                 <p className="font-semibold text-gray-900">Badges</p>
@@ -163,7 +163,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="bg-celo/5 border-2 border-celo rounded-xl p-4">
+          <div className="bg-chain/5 border-2 border-chain rounded-xl p-4">
             <p className="text-sm text-gray-900">
               💡 <strong>Tip:</strong> The <strong>Veteran</strong> badge (100 games) unlocks the ability
               to upload a custom avatar!
@@ -186,7 +186,7 @@ export default function AboutPage() {
           </p>
 
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-celo/5 rounded-lg border-2 border-celo">
+            <div className="flex items-center gap-3 p-3 bg-chain/5 rounded-lg border-2 border-chain">
               <span className="text-3xl">🥇</span>
               <div>
                 <p className="font-bold text-gray-900">1st Place</p>
@@ -200,7 +200,7 @@ export default function AboutPage() {
                 <p className="text-sm text-gray-600">Silver medal</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-celo/5 rounded-lg border-2 border-celo">
+            <div className="flex items-center gap-3 p-3 bg-chain/5 rounded-lg border-2 border-chain">
               <span className="text-3xl">🥉</span>
               <div>
                 <p className="font-bold text-gray-900">3rd Place</p>
@@ -212,7 +212,7 @@ export default function AboutPage() {
           <div className="mt-4 text-center">
             <Link
               href="/leaderboard"
-              className="inline-block bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
+              className="inline-block bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
             >
               View Leaderboard →
             </Link>
@@ -252,7 +252,7 @@ export default function AboutPage() {
         >
           <Link
             href="/"
-            className="inline-block bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 font-bold py-4 px-8 rounded-xl transition-all shadow-xl text-lg"
+            className="inline-block bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 font-bold py-4 px-8 rounded-xl transition-all shadow-xl text-lg"
           >
             Start Playing! 🎮
           </Link>

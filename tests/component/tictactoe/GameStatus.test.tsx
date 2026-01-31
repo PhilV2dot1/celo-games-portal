@@ -32,7 +32,7 @@ describe('GameStatus', () => {
     const { container } = render(<GameStatus message="You won!" result="win" />);
 
     expect(screen.getByText('You won!')).toBeInTheDocument();
-    const statusDiv = container.querySelector('.border-\\[\\#FCFF52\\]');
+    const statusDiv = container.querySelector('.border-\\[var\\(--chain-primary\\)\\]');
     expect(statusDiv).toBeInTheDocument();
   });
 
@@ -48,7 +48,7 @@ describe('GameStatus', () => {
     const { container } = render(<GameStatus message="It's a draw!" result="draw" />);
 
     expect(screen.getByText("It's a draw!")).toBeInTheDocument();
-    const statusDiv = container.querySelector('.border-\\[\\#FCFF52\\]');
+    const statusDiv = container.querySelector('.border-\\[var\\(--chain-primary\\)\\]');
     expect(statusDiv).toBeInTheDocument();
   });
 
@@ -145,7 +145,7 @@ describe('GameStatus', () => {
     expect(statusDiv).toBeInTheDocument();
 
     rerender(<GameStatus message="You won!" result="win" />);
-    statusDiv = container.querySelector('.border-\\[\\#FCFF52\\]');
+    statusDiv = container.querySelector('.border-\\[var\\(--chain-primary\\)\\]');
     expect(statusDiv).toBeInTheDocument();
   });
 });

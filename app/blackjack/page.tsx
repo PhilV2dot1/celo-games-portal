@@ -124,11 +124,11 @@ export default function BlackjackPage() {
         <header className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold mb-4"
+            className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold mb-4"
           >
             {t('games.backToPortal')}
           </Link>
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center mb-4">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center mb-4">
             <div className="text-6xl mb-2">🃏</div>
             <h1 className="text-4xl sm:text-6xl font-black text-gray-900 dark:text-white mb-2">
               Blackjack
@@ -202,7 +202,7 @@ export default function BlackjackPage() {
                 <div className="flex justify-center">
                   <button
                     onClick={() => setShowJoinCode(true)}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-celo dark:hover:text-celo underline"
+                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-chain dark:hover:text-chain underline"
                   >
                     {t('multiplayer.haveCode') || 'Have a room code?'}
                   </button>
@@ -334,7 +334,7 @@ export default function BlackjackPage() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => { play('hit'); mp.hit(); }}
-                      className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all"
+                      className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all"
                     >
                       HIT
                     </motion.button>
@@ -370,7 +370,7 @@ export default function BlackjackPage() {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-white/95 dark:bg-gray-800/95 rounded-2xl p-6 shadow-xl border-2 border-celo"
+                    className="bg-white/95 dark:bg-gray-800/95 rounded-2xl p-6 shadow-xl border-2 border-chain"
                   >
                     <h3 className="text-center text-xl font-black text-gray-900 dark:text-white mb-4">Results</h3>
                     <div className="grid grid-cols-2 gap-4 text-center mb-4">
@@ -432,7 +432,7 @@ export default function BlackjackPage() {
                     href={getExplorerAddressUrl(chain?.id, contractAddress)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                    className="text-gray-900 hover:text-chain font-semibold transition-colors underline decoration-chain"
                   >
                     View on Explorer →
                   </a>

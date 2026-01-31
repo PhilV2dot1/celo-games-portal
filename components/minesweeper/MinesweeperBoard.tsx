@@ -105,7 +105,7 @@ const Cell = memo(function Cell({
 
   // Add focus ring for keyboard navigation
   if (isFocused) {
-    cellClass += " ring-2 ring-celo ring-offset-1";
+    cellClass += " ring-2 ring-chain ring-offset-1";
   }
 
   const handleClick = (e: React.MouseEvent) => {

@@ -72,7 +72,7 @@ export function PointsProgressChart({ data }: PointsProgressChartProps) {
           <Tooltip
             contentStyle={{
               backgroundColor: '#fff',
-              border: '2px solid #FCFF52',
+              border: '2px solid var(--chain-primary)',
               borderRadius: '8px',
             }}
           />

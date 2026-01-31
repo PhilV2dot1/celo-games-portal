@@ -103,7 +103,7 @@ export function ProfileCard({
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';
             if (target.parentElement) {
-              target.parentElement.style.background = 'linear-gradient(135deg, #FCFF52 0%, #f59e0b 100%)';
+              target.parentElement.style.background = `linear-gradient(135deg, var(--chain-primary) 0%, #f59e0b 100%)`;
             }
           }}
         />

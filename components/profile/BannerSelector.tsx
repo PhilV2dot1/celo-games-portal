@@ -46,7 +46,7 @@ export function BannerSelector({
               ${
                 currentBanner === banner.url
                   ? 'ring-2 ring-offset-2 ring-yellow-500 border-yellow-500'
-                  : 'border-gray-300 hover:border-celo'
+                  : 'border-gray-300 hover:border-chain'
               }
             `}
             title={banner.description}
@@ -64,7 +64,7 @@ export function BannerSelector({
                   target.style.display = 'none';
                   if (target.parentElement) {
                     target.parentElement.style.background =
-                      'linear-gradient(135deg, #FCFF52 0%, #f59e0b 100%)';
+                      'linear-gradient(135deg, var(--chain-primary) 0%, var(--chain-dark) 100%)';
                   }
                 }}
               />
@@ -79,7 +79,7 @@ export function BannerSelector({
 
             {/* Selected indicator */}
             {currentBanner === banner.url && (
-              <div className="absolute top-2 right-2 bg-celo/50 rounded-full p-1 shadow-lg">
+              <div className="absolute top-2 right-2 bg-chain/50 rounded-full p-1 shadow-lg">
                 <svg
                   className="w-4 h-4 text-gray-900"
                   fill="currentColor"
@@ -106,7 +106,7 @@ export function BannerSelector({
           w-full py-3 px-4 rounded-xl border-2 font-semibold text-sm transition-all
           ${
             canUploadCustom
-              ? 'border-celo bg-celo/5 text-gray-900 hover:bg-celo/10'
+              ? 'border-chain bg-chain/5 text-gray-900 hover:bg-chain/10'
               : 'border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed'
           }
         `}

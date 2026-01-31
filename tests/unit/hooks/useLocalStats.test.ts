@@ -34,6 +34,14 @@ vi.mock('@/components/auth/AuthProvider', () => ({
   })),
 }));
 
+// Mock Toast
+vi.mock('@/components/ui/Toast', () => ({
+  useToast: () => ({
+    showBadgeToast: vi.fn(),
+    showToast: vi.fn(),
+  }),
+}));
+
 // Mock fetch
 global.fetch = vi.fn();
 
@@ -75,6 +83,12 @@ describe('useLocalStats', () => {
           jackpot: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           '2048': { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           mastermind: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          connectfive: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          snake: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          solitaire: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          minesweeper: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          yahtzee: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          sudoku: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
         },
       });
       expect(result.current.isLoaded).toBe(true);
@@ -92,6 +106,12 @@ describe('useLocalStats', () => {
           jackpot: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           '2048': { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           mastermind: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          connectfive: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          snake: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          solitaire: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          minesweeper: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          yahtzee: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          sudoku: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
         },
       };
 
@@ -420,8 +440,8 @@ describe('useLocalStats', () => {
           })
         );
 
-        // Should log the new badge
-        expect(consoleLogSpy).toHaveBeenCalledWith('🎉 Badge Unlocked: 🏆 First Win');
+        // Should log the new badges
+        expect(consoleLogSpy).toHaveBeenCalledWith('New badges earned:', [{ name: 'First Win', icon: '🏆' }]);
       });
 
       consoleLogSpy.mockRestore();
@@ -520,6 +540,12 @@ describe('useLocalStats', () => {
           jackpot: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           '2048': { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           mastermind: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          connectfive: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          snake: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          solitaire: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          minesweeper: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          yahtzee: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          sudoku: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
         },
       };
       localStorage.setItem('celo_games_portal_stats', JSON.stringify(savedStats));
@@ -608,6 +634,12 @@ describe('useLocalStats', () => {
           jackpot: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           '2048': { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           mastermind: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          connectfive: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          snake: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          solitaire: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          minesweeper: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          yahtzee: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          sudoku: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
         },
       };
       localStorage.setItem('celo_games_portal_stats', JSON.stringify(savedStats));
@@ -661,6 +693,12 @@ describe('useLocalStats', () => {
           jackpot: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           '2048': { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
           mastermind: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          connectfive: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          snake: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          solitaire: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          minesweeper: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          yahtzee: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
+          sudoku: { played: 0, wins: 0, losses: 0, totalPoints: 0, lastPlayed: 0 },
         },
       }));
 

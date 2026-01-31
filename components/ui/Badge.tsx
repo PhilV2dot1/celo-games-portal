@@ -93,7 +93,7 @@ export function Badge({
       'bg-blue-100 text-blue-800 border-blue-300',
     ],
     celo: [
-      'bg-yellow-100 text-gray-900 border-celo',
+      'bg-yellow-100 text-gray-900 border-chain',
     ],
   };
 
@@ -117,7 +117,7 @@ export function Badge({
     error: 'bg-red-500',
     warning: 'bg-orange-500',
     info: 'bg-blue-500',
-    celo: 'bg-celo',
+    celo: 'bg-chain',
   };
 
   // Combine styles

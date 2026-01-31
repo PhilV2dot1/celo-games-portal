@@ -23,7 +23,7 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
       animate={{ opacity: 1, y: 0 }}
       className="bg-white/95 backdrop-blur-lg rounded-2xl p-4 border-2 border-gray-700 shadow-xl"
       style={{
-        boxShadow: "0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
       }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -51,8 +51,8 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
           </div>
           <div className="text-xs font-semibold text-red-700">Losses</div>
         </div>
-        <div className="text-center bg-celo/5 border-2 border-yellow-200 rounded-xl p-3">
-          <div className="text-2xl font-black text-celo">
+        <div className="text-center bg-chain/5 border-2 border-yellow-200 rounded-xl p-3">
+          <div className="text-2xl font-black text-chain">
             {stats.ties}
           </div>
           <div className="text-xs font-semibold text-yellow-700">Ties</div>

@@ -116,7 +116,7 @@ export default function ProfilePage() {
         </Link>
 
         {/* Page Title */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-xl border-2 border-celo">
+        <div className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-xl border-2 border-chain">
           <h1 className="text-3xl font-black text-gray-900 text-center mb-2">
             👤 Player Profile
           </h1>
@@ -268,7 +268,7 @@ export default function ProfilePage() {
                   {profile.badges.map((badge) => (
                     <div
                       key={badge.id}
-                      className="bg-gradient-to-br from-celo/5 to-celo/10 border-2 border-celo/30 rounded-lg p-4 text-center hover:scale-105 transition-transform"
+                      className="bg-gradient-to-br from-chain/5 to-chain/10 border-2 border-chain/30 rounded-lg p-4 text-center hover:scale-105 transition-transform"
                     >
                       <div className="text-4xl mb-2">{badge.icon}</div>
                       <div className="font-black text-gray-900 text-sm mb-1">{badge.name}</div>

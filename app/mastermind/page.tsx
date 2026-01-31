@@ -140,7 +140,7 @@ export default function MastermindPage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>
@@ -151,7 +151,7 @@ export default function MastermindPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl text-center"
-          style={{ border: '4px solid #FCFF52' }}
+          style={{ border: '4px solid var(--chain-primary)' }}
         >
           <div className="text-6xl mb-2">🎯</div>
           <h1 className="text-4xl font-black text-gray-900 dark:text-white">{t('games.mastermind.title')}</h1>
@@ -176,7 +176,7 @@ export default function MastermindPage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className="rounded-lg p-3 text-center"
-                style={{ backgroundColor: 'rgba(252, 255, 82, 0.4)', border: '4px solid #FCFF52' }}
+                style={{ backgroundColor: 'color-mix(in srgb, var(--chain-primary) 40%, transparent)', border: '4px solid var(--chain-primary)' }}
               >
                 <p className="text-gray-900 text-sm font-bold">
                   {t('games.mastermind.onChainFeeWarning').split('0.01 CELO')[0]}
@@ -192,7 +192,7 @@ export default function MastermindPage() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
               className="bg-white/90 backdrop-blur-lg rounded-xl p-4 grid grid-cols-3 gap-4 shadow-lg"
-              style={{ border: '4px solid #FCFF52' }}
+              style={{ border: '4px solid var(--chain-primary)' }}
             >
               <div className="text-center">
                 <div className="text-sm text-gray-600 font-medium">{t('games.mastermind.attempts')}</div>
@@ -258,7 +258,7 @@ export default function MastermindPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white/90 backdrop-blur-lg rounded-lg p-3 text-center text-gray-900 font-semibold shadow-lg"
-                style={{ border: '3px solid #FCFF52' }}
+                style={{ border: '3px solid var(--chain-primary)' }}
               >
                 {soloGame.message}
               </motion.div>
@@ -273,7 +273,7 @@ export default function MastermindPage() {
                   transition={{ duration: 0.15 }}
                   onClick={submitGuessWithSound}
                   disabled={soloGame.currentGuess.some(c => c === null) || soloGame.isPending}
-                  className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {t('games.mastermind.submitGuess')}
                 </motion.button>
@@ -300,7 +300,7 @@ export default function MastermindPage() {
                       transition={{ duration: 0.15 }}
                       onClick={soloGame.playOnChain}
                       disabled={soloGame.isPending || !soloGame.isConnected}
-                      className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       {soloGame.isPending ? t('games.mastermind.starting') : t('games.mastermind.startOnChainGame')}
                     </motion.button>
@@ -359,7 +359,7 @@ export default function MastermindPage() {
                 <div className="flex justify-center">
                   <button
                     onClick={() => setShowJoinCode(true)}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-celo dark:hover:text-celo underline"
+                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-chain dark:hover:text-chain underline"
                   >
                     {t('multiplayer.haveCode') || 'Have a room code?'}
                   </button>
@@ -411,7 +411,7 @@ export default function MastermindPage() {
                 </div>
 
                 {/* Attempts counter */}
-                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-4 grid grid-cols-2 gap-4 shadow-lg" style={{ border: '4px solid #FCFF52' }}>
+                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-4 grid grid-cols-2 gap-4 shadow-lg" style={{ border: '4px solid var(--chain-primary)' }}>
                   <div className="text-center">
                     <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">{t('multiplayer.you') || 'You'}</div>
                     <div className="text-2xl font-black text-gray-900 dark:text-white">{mp.myAttempts}/{MAX_ATTEMPTS}</div>
@@ -459,7 +459,7 @@ export default function MastermindPage() {
                         whileTap={{ scale: 0.95 }}
                         onClick={handleMpSubmitGuess}
                         disabled={mp.currentGuess.some(c => c === null)}
-                        className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                       >
                         {t('games.mastermind.submitGuess')}
                       </motion.button>
@@ -499,7 +499,7 @@ export default function MastermindPage() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="bg-white/95 dark:bg-gray-800/95 rounded-2xl p-4 shadow-xl text-center"
-                    style={{ border: '4px solid #FCFF52' }}
+                    style={{ border: '4px solid var(--chain-primary)' }}
                   >
                     <h3 className="font-bold text-gray-900 dark:text-white mb-2">Secret Code</h3>
                     <div className="flex gap-2 justify-center">
@@ -557,7 +557,7 @@ export default function MastermindPage() {
                     href={getExplorerAddressUrl(chain?.id, contractAddress)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                    className="text-gray-900 hover:text-chain font-semibold transition-colors underline decoration-chain"
                   >
                     {t('games.mastermind.viewOnCeloscan')?.replace('Celoscan', 'Explorer') || 'View on Explorer'}
                   </a>

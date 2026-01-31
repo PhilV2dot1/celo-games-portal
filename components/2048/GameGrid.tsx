@@ -16,7 +16,7 @@ export function GameGrid({ grid }: GameGridProps) {
     >
       <div
         className="grid grid-cols-4 gap-3 p-4 bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl border-2 border-gray-700"
-        style={{ boxShadow: '0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+        style={{ boxShadow: '0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
       >
         {grid.map((row, rowIndex) =>
           row.map((value, colIndex) => (

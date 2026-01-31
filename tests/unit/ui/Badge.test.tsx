@@ -69,7 +69,7 @@ describe('Badge Component', () => {
       const { container } = render(<Badge variant="celo">Celo</Badge>);
       const badge = container.firstChild as HTMLElement;
       expect(badge.className).toContain('bg-yellow-100');
-      expect(badge.className).toContain('border-celo');
+      expect(badge.className).toContain('border-chain');
     });
   });
 

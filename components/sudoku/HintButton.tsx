@@ -24,7 +24,7 @@ export function HintButton({ hintsRemaining, onHintClick, disabled }: HintButton
         className={`w-full px-6 py-3 rounded-xl font-black shadow-lg transition-all ${
           isOutOfHints
             ? "bg-gray-400 cursor-not-allowed text-gray-200"
-            : "bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900"
+            : "bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900"
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
         whileHover={!buttonDisabled ? { scale: 1.05 } : {}}
         whileTap={!buttonDisabled ? { scale: 0.95 } : {}}

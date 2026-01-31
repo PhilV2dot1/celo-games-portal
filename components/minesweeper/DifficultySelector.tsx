@@ -50,7 +50,7 @@ export function DifficultySelector({
               whileTap={!disabled ? { scale: 0.95 } : {}}
               className={`p-3 rounded-lg font-semibold transition-all ${
                 isActive
-                  ? "bg-gradient-to-br from-celo to-yellow-500 text-gray-900 shadow-lg ring-2 ring-celo ring-offset-2"
+                  ? "bg-gradient-to-br from-chain to-yellow-500 text-gray-900 shadow-lg ring-2 ring-chain ring-offset-2"
                   : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300"
               } ${
                 disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"

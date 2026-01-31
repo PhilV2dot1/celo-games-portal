@@ -131,7 +131,7 @@ describe('POST /api/badges/check', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.stats).toEqual({
+      expect(data.stats).toEqual(expect.objectContaining({
         games_played: 5,
         wins: 4,
         win_streak: 3, // 3 consecutive wins (rps, 2048, mastermind)
@@ -142,7 +142,10 @@ describe('POST /api/badges/check', () => {
         games_played_new: 2, // 2048, mastermind
         onchain_games: 1,
         celo_wagered: 0.01,
-      });
+      }));
+      // Also verify new stats fields are present
+      expect(data.stats.connect4Stats).toBeDefined();
+      expect(data.stats.sudokuStats).toBeDefined();
     });
 
     test('calculates win streak correctly with losses', async () => {

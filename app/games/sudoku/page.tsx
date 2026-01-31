@@ -100,7 +100,7 @@ export default function SudokuPage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           ← {t("games.backToPortal")}
         </Link>
@@ -109,7 +109,7 @@ export default function SudokuPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center space-y-1"
         >
           <div
             className="text-5xl mb-2"
@@ -216,7 +216,7 @@ export default function SudokuPage() {
             <motion.button
               onClick={startGame}
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
-              className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -247,7 +247,7 @@ export default function SudokuPage() {
                 href={getExplorerAddressUrl(chain?.id, contractAddress)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-celo transition-colors underline"
+                className="hover:text-chain transition-colors underline"
               >
                 View Contract on Explorer →
               </a>

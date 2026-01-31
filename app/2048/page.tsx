@@ -69,7 +69,7 @@ export default function Game2048Page() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>
@@ -78,7 +78,7 @@ export default function Game2048Page() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center space-y-1"
         >
           <div className="text-5xl mb-2">🔢</div>
           <h1 className="text-4xl font-black text-gray-900 dark:text-white">{t('games.2048.title')}</h1>
@@ -99,7 +99,7 @@ export default function Game2048Page() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="rounded-lg p-3 text-center bg-celo/10 border-2 border-celo"
+            className="rounded-lg p-3 text-center bg-chain/10 border-2 border-chain"
           >
             <p className="text-gray-900 text-sm font-bold">
               {t('games.2048.onChainFeeWarning').split('0.01 CELO')[0]}
@@ -148,7 +148,7 @@ export default function Game2048Page() {
               transition={{ duration: 0.15 }}
               onClick={startNewGame}
               disabled={isPending || (mode === "onchain" && !isConnected)}
-              className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isPending ? t('games.starting') : t('games.2048.newGame')}
             </motion.button>
@@ -183,7 +183,7 @@ export default function Game2048Page() {
                   href={getExplorerAddressUrl(chain?.id, contractAddress)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  className="text-gray-900 hover:text-chain font-semibold transition-colors underline decoration-chain"
                 >
                   {t('games.2048.viewOnCeloscan').replace('Celoscan', 'Explorer')}
                 </a>

@@ -29,7 +29,7 @@ export const TicTacToeCell = memo(function TicTacToeCell({ value, onClick, disab
         "transition-all duration-200",
         "border-2",
         value === 0 && !disabled
-          ? "border-gray-300 hover:border-[#FCFF52] hover:shadow-lg cursor-pointer"
+          ? "border-gray-300 hover:border-[var(--chain-primary)] hover:shadow-lg cursor-pointer"
           : "border-gray-200 cursor-not-allowed",
         "text-gray-800"
       )}

@@ -9,15 +9,18 @@ import userEvent from '@testing-library/user-event';
 import { Button } from '@/components/ui/Button';
 
 // Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
-  motion: {
-    button: ({ children, className, ...props }: any) => (
-      <button className={className} {...props}>
-        {children}
-      </button>
-    ),
-  },
-}));
+vi.mock('framer-motion', async () => {
+  const React = await import('react');
+  return {
+    motion: {
+      button: React.forwardRef(({ children, className, whileHover, whileTap, transition, ...props }: any, ref: any) => (
+        <button className={className} ref={ref} {...props}>
+          {children}
+        </button>
+      )),
+    },
+  };
+});
 
 // Mock useShould Animate hook
 vi.mock('@/lib/utils/motion', () => ({

@@ -58,9 +58,9 @@ export function WalletConnect() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-celo/10 border-2 border-celo rounded-xl p-3 flex items-center gap-3"
+            className="bg-chain/10 border-2 border-chain rounded-xl p-3 flex items-center gap-3"
           >
-            <div className="w-4 h-4 border-2 border-celo border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-chain border-t-transparent rounded-full animate-spin" />
             <span className="text-sm font-semibold text-gray-900">
               {t('wallet.switchingNetwork')}
             </span>
@@ -71,7 +71,7 @@ export function WalletConnect() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-celo/30 to-gray-100 border-2 border-celo rounded-xl p-4 flex items-center justify-between"
+          className="bg-gradient-to-r from-chain/30 to-gray-100 border-2 border-chain rounded-xl p-4 flex items-center justify-between"
         >
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full animate-pulse ${isOnSupportedChain ? 'bg-green-500' : 'bg-orange-500'}`} />
@@ -100,7 +100,7 @@ export function WalletConnect() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-celo rounded-xl p-4">
+    <div className="bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-chain rounded-xl p-4">
       <p className="text-sm sm:text-base mb-3 text-center text-white font-semibold">
         {t('wallet.connectPrompt')}
       </p>
@@ -112,7 +112,7 @@ export function WalletConnect() {
       )}
 
       {isInFarcaster && !isSDKReady && (
-        <div className="mb-3 p-2 bg-celo/10 border border-celo/30 rounded-lg text-xs text-gray-900">
+        <div className="mb-3 p-2 bg-chain/10 border border-chain/30 rounded-lg text-xs text-gray-900">
           {t('wallet.farcasterNotReady')}
         </div>
       )}

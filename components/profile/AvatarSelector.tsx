@@ -82,7 +82,7 @@ export function AvatarSelector({
         {canUploadCustom && (
           <button
             onClick={onUploadCustomClick}
-            className="px-4 py-2 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 text-sm font-bold rounded-xl transition-all shadow-md"
+            className="px-4 py-2 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 text-sm font-bold rounded-xl transition-all shadow-md"
           >
             📤 {t('avatar.uploadCustom')}
           </button>
@@ -95,7 +95,7 @@ export function AvatarSelector({
           <p className="text-gray-700">
             🔒 <span className="font-semibold text-gray-900">{t('avatar.uploadLocked')}</span> {t('avatar.afterGames')}{' '}
             <span className="font-bold text-gray-900">100 {t('avatar.games')}</span> {t('avatar.orBadge')}{' '}
-            <span className="font-bold text-celo">{t('avatar.veteran')}</span>
+            <span className="font-bold text-chain">{t('avatar.veteran')}</span>
           </p>
         </div>
       )}
@@ -145,7 +145,7 @@ export function AvatarSelector({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-celo rounded-full w-6 h-6 flex items-center justify-center shadow-md border-2 border-gray-900"
+                  className="absolute -top-1 -right-1 bg-chain rounded-full w-6 h-6 flex items-center justify-center shadow-md border-2 border-gray-900"
                 >
                   <span className="text-gray-900 text-xs font-bold">✓</span>
                 </motion.div>
@@ -156,7 +156,7 @@ export function AvatarSelector({
       </div>
 
       {/* Selected avatar name */}
-      <div className="text-center bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl py-2 px-4 border-2 border-celo">
+      <div className="text-center bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl py-2 px-4 border-2 border-chain">
         <p className="text-sm text-gray-700">
           {t('avatar.selected')}{' '}
           <span className="font-bold text-gray-900">

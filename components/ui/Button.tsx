@@ -135,7 +135,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ],
 
       celo: [
-        'text-gray-900 font-bold border-transparent',
+        'font-bold border-transparent',
         'hover:brightness-95',
         'focus:ring-yellow-200',
         'shadow-md hover:shadow-lg',
@@ -176,9 +176,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className
     );
 
-    // Inline styles for Celo variant (gradient background)
+    // Inline styles for Celo/chain variant (uses CSS variable for chain-aware theming)
     const inlineStyles = variant === 'celo'
-      ? { backgroundColor: colors.celo }
+      ? { backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }
       : undefined;
 
     // ========================================

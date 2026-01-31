@@ -21,6 +21,20 @@ vi.mock('wagmi', () => ({
   })),
 }));
 
+vi.mock('wagmi/chains', () => ({
+  celo: { id: 42220, name: 'Celo' },
+  base: { id: 8453, name: 'Base' },
+}));
+
+vi.mock('@/lib/contracts/addresses', () => ({
+  getContractAddress: () => '0xTicTacToe' as `0x${string}`,
+  isGameAvailableOnChain: () => true,
+  isSupportedChain: () => true,
+  getChainName: () => 'celo',
+  CHAIN_CONFIG: {},
+  CONTRACT_ADDRESSES: {},
+}));
+
 // Mock contract ABI
 vi.mock('@/lib/contracts/tictactoe-abi', () => ({
   TICTACTOE_CONTRACT_ADDRESS: '0xTicTacToe',

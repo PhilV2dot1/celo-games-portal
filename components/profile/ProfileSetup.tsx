@@ -143,7 +143,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-gray-700 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-              style={{ boxShadow: '0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+              style={{ boxShadow: '0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -173,7 +173,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                         onClick={() => handleAvatarSelect(avatar)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        className="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-300 hover:border-celo hover:ring-2 hover:ring-yellow-400 transition-all bg-gradient-to-br from-gray-100 to-gray-200"
+                        className="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-300 hover:border-chain hover:ring-2 hover:ring-yellow-400 transition-all bg-gradient-to-br from-gray-100 to-gray-200"
                       >
                         <Image
                           src={`/avatars/predefined/${avatar}.svg`}
@@ -211,7 +211,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                 >
                   {/* Avatar Preview */}
                   <div className="flex justify-center">
-                    <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-celo shadow-lg">
+                    <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-chain shadow-lg">
                       <Image
                         src={selectedAvatar}
                         alt="Avatar sélectionné"
@@ -231,7 +231,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="PlayerOne"
                       maxLength={20}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-celo transition-all text-lg text-center"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-chain transition-all text-lg text-center"
                     />
                     <p className="text-sm text-gray-500 mt-2 text-center">
                       {t('profileSetup.usernameRules')}
@@ -254,7 +254,7 @@ export function ProfileSetup({ isOpen, onClose, onComplete }: ProfileSetupProps)
                     <button
                       onClick={handleSave}
                       disabled={saving || !username.trim()}
-                      className="flex-1 bg-gradient-to-r from-celo to-celo hover:brightness-110 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
+                      className="flex-1 bg-gradient-to-r from-chain to-chain hover:brightness-110 disabled:from-gray-300 disabled:to-gray-400 text-gray-900 font-bold py-3 rounded-xl transition-all disabled:cursor-not-allowed shadow-lg"
                     >
                       {saving ? t('profileSetup.saving') : t('profileSetup.startPlaying')}
                     </button>

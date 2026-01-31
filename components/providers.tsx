@@ -11,6 +11,7 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AudioProvider } from "@/lib/audio/AudioContext";
 import { ThemeProvider } from "@/lib/theme/ThemeContext";
 import { ToastProvider } from "@/components/ui/Toast";
+import { ChainThemeProvider } from "@/components/shared/ChainThemeProvider";
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -103,14 +104,16 @@ export function Providers({ children }: { children: ReactNode }) {
               })}
             >
               <AuthProvider>
-                <ToastProvider>
-                  {initError && isInFarcaster && (
-                    <div className="bg-celo/5 border-l-4 border-celo p-3 text-xs text-yellow-700">
-                      ⚠️ Farcaster SDK: {initError}
-                    </div>
-                  )}
-                  {children}
-                </ToastProvider>
+                <ChainThemeProvider>
+                  <ToastProvider>
+                    {initError && isInFarcaster && (
+                      <div className="bg-chain/5 border-l-4 border-chain p-3 text-xs text-yellow-700">
+                        ⚠️ Farcaster SDK: {initError}
+                      </div>
+                    )}
+                    {children}
+                  </ToastProvider>
+                </ChainThemeProvider>
               </AuthProvider>
             </RainbowKitProvider>
           </QueryClientProvider>

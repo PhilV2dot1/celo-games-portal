@@ -48,12 +48,25 @@ vi.mock('wagmi', () => ({
 
 vi.mock('wagmi/chains', () => ({
   celo: { id: 42220, name: 'Celo' },
+  base: { id: 8453, name: 'Base' },
 }));
 
 vi.mock('@/lib/contracts/mastermind-abi', () => ({
   MASTERMIND_CONTRACT_ADDRESS: '0xMASTERMIND' as `0x${string}`,
   MASTERMIND_CONTRACT_ABI: [],
   MASTERMIND_GAME_FEE: '10000000000000000', // 0.01 CELO
+}));
+
+vi.mock('@/lib/contracts/addresses', () => ({
+  getContractAddress: () => '0xMASTERMIND' as `0x${string}`,
+  isGameAvailableOnChain: () => true,
+  isSupportedChain: () => true,
+  getChainName: () => 'celo',
+  CHAIN_CONFIG: {
+    celo: { name: 'Celo', shortName: 'Celo', chainId: 42220, icon: '🟡', nativeCurrency: 'CELO' },
+    base: { name: 'Base', shortName: 'Base', chainId: 8453, icon: '🔷', nativeCurrency: 'ETH' },
+  },
+  CONTRACT_ADDRESSES: {},
 }));
 
 describe('useMastermind', () => {

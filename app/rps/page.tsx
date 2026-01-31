@@ -166,7 +166,7 @@ export default function RockPaperScissorsPage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>
@@ -175,7 +175,7 @@ export default function RockPaperScissorsPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-2"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center space-y-2"
         >
           <div className="text-5xl mb-2" role="img" aria-label={t('games.rps.title')}>
             ✊
@@ -239,7 +239,7 @@ export default function RockPaperScissorsPage() {
                 <div className="flex justify-center">
                   <button
                     onClick={() => setShowJoinCode(true)}
-                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-celo dark:hover:text-celo underline"
+                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-chain dark:hover:text-chain underline"
                   >
                     {t('multiplayer.haveCode') || 'Have a room code?'}
                   </button>
@@ -340,7 +340,7 @@ export default function RockPaperScissorsPage() {
                           ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
                           : multiplayer.roundResult === "lose"
                           ? "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300"
-                          : "bg-celo/10 text-yellow-800 dark:text-yellow-300"
+                          : "bg-chain/10 text-yellow-800 dark:text-yellow-300"
                       }`}
                     >
                       {multiplayer.roundResult === 'win'
@@ -427,7 +427,7 @@ export default function RockPaperScissorsPage() {
                     href={getExplorerAddressUrl(chain?.id, contractAddress)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-900 dark:text-white hover:text-celo font-semibold transition-colors underline decoration-celo"
+                    className="text-gray-900 dark:text-white hover:text-chain font-semibold transition-colors underline decoration-chain"
                   >
                     {t('games.rps.viewOnCeloscan')}
                   </a>

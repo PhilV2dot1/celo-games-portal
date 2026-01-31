@@ -222,8 +222,11 @@ describe('Translations', () => {
     });
 
     test('has 2048 game with special key', () => {
-      expect(translations.en.games['2048']).toBe('Merge tiles to 2048!');
-      expect(translations.fr.games['2048']).toBe('Fusionnez les tuiles jusqu\'à 2048 !');
+      // games['2048'] is now a game-specific object with title, subtitle, etc.
+      expect(translations.en.games['2048']).toBeDefined();
+      expect(translations.en.games['2048'].title).toBe('2048');
+      expect(translations.fr.games['2048']).toBeDefined();
+      expect(translations.fr.games['2048'].title).toBe('2048');
     });
 
     test('games sections have the same keys', () => {

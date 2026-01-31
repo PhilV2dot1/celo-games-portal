@@ -122,7 +122,7 @@ export function StatsCharts({ userId, days = 30 }: StatsChartsProps) {
     <div className="space-y-6">
       {/* Title */}
       <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 border-2 border-gray-700 text-center"
-        style={{ boxShadow: '0 0 0 6px #FCFF52, 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+        style={{ boxShadow: '0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
       >
         <div className="text-4xl mb-2">📊</div>
         <h2 className="text-3xl font-black text-gray-900 mb-2">
@@ -176,7 +176,7 @@ export function StatsCharts({ userId, days = 30 }: StatsChartsProps) {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-celo">
+                  <div className="font-bold text-chain">
                     +{activity.points_earned} pts
                   </div>
                   {activity.result && (

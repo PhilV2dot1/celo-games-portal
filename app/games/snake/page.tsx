@@ -76,7 +76,7 @@ export default function SnakePage() {
         {/* Back to Portal Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-celo transition-colors font-bold"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
         >
           {t('games.backToPortal')}
         </Link>
@@ -85,7 +85,7 @@ export default function SnakePage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-celo text-center space-y-1"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center space-y-1"
         >
           <div className="text-5xl mb-2" role="img" aria-label={t('games.snake.title')}>
             🐍
@@ -146,26 +146,26 @@ export default function SnakePage() {
               <div />
               <button
                 onClick={() => changeDirection("UP")}
-                className="aspect-square bg-celo hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
+                className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 ↑
               </button>
               <div />
               <button
                 onClick={() => changeDirection("LEFT")}
-                className="aspect-square bg-celo hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
+                className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 ←
               </button>
               <button
                 onClick={() => changeDirection("DOWN")}
-                className="aspect-square bg-celo hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
+                className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 ↓
               </button>
               <button
                 onClick={() => changeDirection("RIGHT")}
-                className="aspect-square bg-celo hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
+                className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 →
               </button>
@@ -182,7 +182,7 @@ export default function SnakePage() {
               whileHover={{ scale: 1.05 }}
               onClick={startGame}
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
-              className="px-8 py-3 bg-gradient-to-r from-celo to-celo hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? t('games.starting') : t('games.startGame')}
             </motion.button>
@@ -220,7 +220,7 @@ export default function SnakePage() {
                 href={getExplorerAddressUrl(chain?.id, contractAddress)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-celo underline transition-colors"
+                className="hover:text-chain underline transition-colors"
               >
                 {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
               </a>

@@ -156,7 +156,7 @@ export function ScoreCard({
           className={`
             text-center py-3 px-6 rounded-xl font-bold text-lg
             ${isActive
-              ? "bg-gradient-to-r from-celo to-yellow-400 text-gray-900 shadow-lg ring-4 ring-celo/50"
+              ? "bg-gradient-to-r from-chain to-yellow-400 text-gray-900 shadow-lg ring-4 ring-chain/50"
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
             }
           `}
@@ -171,7 +171,7 @@ export function ScoreCard({
       {/* Upper Section */}
       <div className={`
         bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg
-        ${isActive ? "ring-4 ring-celo/30" : ""}
+        ${isActive ? "ring-4 ring-chain/30" : ""}
       `}>
         <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-gray-100">
           Upper Section
@@ -221,7 +221,7 @@ export function ScoreCard({
       {/* Lower Section */}
       <div className={`
         bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg
-        ${isActive ? "ring-4 ring-celo/30" : ""}
+        ${isActive ? "ring-4 ring-chain/30" : ""}
       `}>
         <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-gray-100">
           Lower Section
@@ -246,7 +246,7 @@ export function ScoreCard({
       <motion.div
         className={`
           bg-gray-900 rounded-xl p-4 sm:p-6 shadow-lg text-white
-          ${isActive ? "ring-4 ring-celo/50" : ""}
+          ${isActive ? "ring-4 ring-chain/50" : ""}
         `}
         animate={finalScore > 0 ? { scale: [1, 1.02, 1] } : {}}
         transition={{ duration: 0.5 }}

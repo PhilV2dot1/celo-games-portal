@@ -20,7 +20,7 @@ export function BlackjackTable({
     <div
       className="bg-gradient-to-br from-gray-100 via-gray-50 to-yellow-50/20 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden min-h-[280px] sm:min-h-[320px]"
       style={{
-        boxShadow: "0 0 0 3px #FCFF52, 0 10px 15px -3px rgba(0, 0, 0, 0.2)"
+        boxShadow: "0 0 0 3px var(--chain-primary), 0 10px 15px -3px rgba(0, 0, 0, 0.2)"
       }}
     >
       {/* Glassmorphic overlay */}

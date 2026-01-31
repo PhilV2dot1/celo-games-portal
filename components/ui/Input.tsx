@@ -135,6 +135,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       'focus:outline-none focus:ring-4 focus:ring-offset-0',
       'disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60',
       'placeholder:text-gray-400',
+    ];
+
+    // Icon padding overrides (applied after size styles to take precedence)
+    const iconPaddingStyles = [
       leftIcon && 'pl-10',
       rightIcon && 'pr-10',
     ];
@@ -150,7 +154,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const stateStyles: Record<InputState, string[]> = {
       default: [
         'border-gray-300',
-        'focus:border-celo focus:ring-yellow-200',
+        'focus:border-chain focus:ring-yellow-200',
         'hover:border-gray-400',
       ],
       error: [
@@ -165,11 +169,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       ],
     };
 
-    // Combine input styles
+    // Combine input styles (icon padding after size to override px-*)
     const inputStyles = cn(
       baseInputStyles,
       sizeStyles[size],
       stateStyles[inputState],
+      iconPaddingStyles,
       className
     );
 

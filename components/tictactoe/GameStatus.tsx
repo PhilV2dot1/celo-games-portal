@@ -19,9 +19,9 @@ export function GameStatus({ message, result }: GameStatusProps) {
         transition={{ duration: 0.3 }}
         className={cn(
           "px-6 py-3 rounded-xl font-bold text-center shadow-lg border-2",
-          result === "win" && "bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-[#FCFF52] text-white",
+          result === "win" && "bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-[var(--chain-primary)] text-white",
           result === "lose" && "bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 border-gray-500 text-white",
-          result === "draw" && "bg-gradient-to-br from-gray-700 to-gray-800 border-[#FCFF52] text-white",
+          result === "draw" && "bg-gradient-to-br from-gray-700 to-gray-800 border-[var(--chain-primary)] text-white",
           !result && "bg-white/90 border-gray-700 text-gray-900"
         )}
       >

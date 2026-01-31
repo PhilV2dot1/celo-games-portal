@@ -82,7 +82,7 @@ export function WinRateChart({ data }: WinRateChartProps) {
           <Tooltip
             contentStyle={{
               backgroundColor: '#fff',
-              border: '2px solid #FCFF52',
+              border: '2px solid var(--chain-primary)',
               borderRadius: '8px',
             }}
             formatter={(value: number | undefined, name: string | undefined) => {

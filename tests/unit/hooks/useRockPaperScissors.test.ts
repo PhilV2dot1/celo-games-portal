@@ -18,6 +18,7 @@ vi.mock('wagmi', () => ({
   useAccount: vi.fn(() => ({
     address: '0x1234567890ABCDEF1234567890ABCDEF12345678' as `0x${string}`,
     isConnected: true,
+    chain: { id: 42220 },
   })),
   useReadContract: vi.fn(() => ({
     data: [0n, 0n, 0n, 0n, 0n, 0n, 0n], // [wins, losses, ties, _, _, currentStreak, bestStreak]
@@ -35,6 +36,20 @@ vi.mock('wagmi', () => ({
     isSuccess: false,
   })),
   usePublicClient: vi.fn(() => ({})),
+}));
+
+vi.mock('wagmi/chains', () => ({
+  celo: { id: 42220, name: 'Celo' },
+  base: { id: 8453, name: 'Base' },
+}));
+
+vi.mock('@/lib/contracts/addresses', () => ({
+  getContractAddress: () => '0xRPS' as `0x${string}`,
+  isGameAvailableOnChain: () => true,
+  isSupportedChain: () => true,
+  getChainName: () => 'celo',
+  CHAIN_CONFIG: {},
+  CONTRACT_ADDRESSES: {},
 }));
 
 vi.mock('@/lib/contracts/rps-abi', () => ({
