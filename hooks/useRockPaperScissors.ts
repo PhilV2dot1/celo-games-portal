@@ -3,7 +3,8 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
 import { parseEventLogs } from "viem";
-import { RPS_CONTRACT_ADDRESS, RPS_CONTRACT_ABI } from "@/lib/contracts/rps-abi";
+import { RPS_CONTRACT_ABI } from "@/lib/contracts/rps-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 export type GameMode = "free" | "onchain";
 export type GameStatus = "idle" | "playing" | "processing" | "finished";
@@ -28,7 +29,9 @@ export interface PlayResult {
 const CHOICES = ["🪨 Rock", "📄 Paper", "✂️ Scissors"] as const;
 
 export function useRockPaperScissors() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('rps', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('rps', chain?.id);
   const [mode, setMode] = useState<GameMode>("free");
   const [status, setStatus] = useState<GameStatus>("idle");
   const [stats, setStats] = useState<GameStats>({ wins: 0, losses: 0, ties: 0 });
@@ -47,13 +50,13 @@ export function useRockPaperScissors() {
 
   // Get on-chain stats (no profile check needed with new contract)
   const { data: onchainStats, refetch: refetchStats } = useReadContract({
-    address: RPS_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: RPS_CONTRACT_ABI,
     functionName: 'obtenirStats',
     account: address, // Explicitly set account for read simulation
     // No args - obtenirStats uses msg.sender automatically
     query: {
-      enabled: isConnected && !!address && mode === "onchain",
+      enabled: isConnected && !!address && mode === "onchain" && gameAvailable,
       gcTime: 0, // Don't cache
       staleTime: 0, // Always consider stale
       refetchOnMount: true,
@@ -281,7 +284,7 @@ export function useRockPaperScissors() {
       try {
         // Call smart contract (profile created automatically if needed)
         writeContract({
-          address: RPS_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: RPS_CONTRACT_ABI,
           functionName: 'jouer',
           args: [BigInt(playerChoice)],

@@ -3,9 +3,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from "wagmi";
 import { parseEventLogs } from "viem";
-import { celo } from "wagmi/chains";
 import { Card, createShuffledDeck, convertToCard, determineWinner, Outcome } from "@/lib/games/blackjack-cards";
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contracts/blackjack-abi";
+import { CONTRACT_ABI } from "@/lib/contracts/blackjack-abi";
+import { getContractAddress, isGameAvailableOnChain, getExplorerTxUrl } from "@/lib/contracts/addresses";
 
 export type GamePhase = 'betting' | 'playing' | 'dealer' | 'finished';
 
@@ -47,12 +47,15 @@ export function useBlackjack() {
   });
   const { switchChain } = useSwitchChain();
 
+  const contractAddress = getContractAddress('blackjack', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('blackjack', chain?.id);
+
   const { data: onchainStats, refetch: refetchStats } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: CONTRACT_ABI,
     functionName: 'getStats',
     query: {
-      enabled: isConnected && mode === 'onchain',
+      enabled: isConnected && mode === 'onchain' && gameAvailable,
       gcTime: 0,
       staleTime: 0,
     }
@@ -105,7 +108,7 @@ export function useBlackjack() {
   useEffect(() => {
     if (hash && mode === 'onchain') {
       console.log('✅ Transaction sent:', hash);
-      console.log('🔍 View on Celoscan:', `https://celoscan.io/tx/${hash}`);
+      console.log('🔍 View on explorer:', getExplorerTxUrl(chain?.id, hash));
 
       // Show confirming status
       if (isConfirming) {
@@ -141,7 +144,7 @@ export function useBlackjack() {
       const errorMsg = receiptError.message || '';
 
       if (errorMsg.includes('timeout')) {
-        setMessage('⚠️ Transaction taking longer than expected. Check Celoscan for status.');
+        setMessage('⚠️ Transaction taking longer than expected. Check explorer for status.');
       } else {
         setMessage('❌ Transaction error - Please try again');
       }
@@ -337,18 +340,10 @@ export function useBlackjack() {
       // Reset previous transaction state
       resetWrite?.();
 
-      // Check if we're on the correct chain (Celo)
-      if (chain?.id !== celo.id) {
-        setMessage('⚡ Switching to Celo...');
-        try {
-          await switchChain?.({ chainId: celo.id });
-          // Give wallet time to switch
-          await new Promise(resolve => setTimeout(resolve, 500));
-        } catch (switchError) {
-          console.error('Chain switch error:', switchError);
-          setMessage('❌ Please switch to Celo network in your wallet');
-          return;
-        }
+      // Check if game is available on current chain
+      if (!contractAddress || !gameAvailable) {
+        setMessage('❌ Blackjack not available on this network');
+        return;
       }
 
       // Show immediate feedback
@@ -359,11 +354,11 @@ export function useBlackjack() {
 
       // Send transaction with explicit gas settings for reliability
       writeContract({
-        address: CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: CONTRACT_ABI,
         functionName: 'playGame',
-        chainId: celo.id,
-        gas: BigInt(500000), // Set explicit gas limit
+        chainId: chain!.id,
+        gas: BigInt(500000),
       });
 
     } catch (error) {

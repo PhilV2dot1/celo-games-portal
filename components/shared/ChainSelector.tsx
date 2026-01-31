@@ -1,0 +1,45 @@
+'use client';
+
+import { useChainSelector } from '@/hooks/useChainSelector';
+import { CHAIN_CONFIG } from '@/lib/contracts/addresses';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+
+interface ChainSelectorProps {
+  className?: string;
+}
+
+export function ChainSelector({ className = '' }: ChainSelectorProps) {
+  const { currentChainId, isOnCelo, isOnBase, switchToCelo, switchToBase } = useChainSelector();
+  const { t } = useLanguage();
+
+  if (!currentChainId) return null;
+
+  return (
+    <div className={`flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 ${className}`}>
+      <button
+        onClick={switchToCelo}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+          isOnCelo
+            ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+        }`}
+        title={t('chain.switchTo') + ' Celo'}
+      >
+        <span>{CHAIN_CONFIG.celo.icon}</span>
+        <span>{CHAIN_CONFIG.celo.shortName}</span>
+      </button>
+      <button
+        onClick={switchToBase}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+          isOnBase
+            ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+        }`}
+        title={t('chain.switchTo') + ' Base'}
+      >
+        <span>{CHAIN_CONFIG.base.icon}</span>
+        <span>{CHAIN_CONFIG.base.shortName}</span>
+      </button>
+    </div>
+  );
+}

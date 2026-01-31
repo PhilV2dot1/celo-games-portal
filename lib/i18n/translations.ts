@@ -793,6 +793,18 @@ export const translations = {
         novice: 'Novice',
       },
     },
+
+    // Chain / Network
+    chain: {
+      network: 'Network',
+      celo: 'Celo',
+      base: 'Base',
+      switchTo: 'Switch to',
+      notAvailable: 'Not available on this network',
+      comingSoon: 'Coming soon on Base',
+      unsupported: 'Unsupported Network',
+      switchToPlay: 'is not supported. Switch to a supported network to play.',
+    },
   },
 
   fr: {
@@ -1580,6 +1592,18 @@ export const translations = {
         beginner: 'Débutant',
         novice: 'Novice',
       },
+    },
+
+    // Chain / Network
+    chain: {
+      network: 'Réseau',
+      celo: 'Celo',
+      base: 'Base',
+      switchTo: 'Basculer vers',
+      notAvailable: 'Non disponible sur ce réseau',
+      comingSoon: 'Bientôt disponible sur Base',
+      unsupported: 'Réseau non supporté',
+      switchToPlay: "n'est pas supporté. Changez de réseau pour jouer.",
     },
   },
 } as const;

@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import {
-  SUDOKU_CONTRACT_ADDRESS,
   SUDOKU_CONTRACT_ABI,
 } from "@/lib/contracts/sudoku-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ========================================
 // TYPES
@@ -241,17 +241,19 @@ export function useSudoku() {
   });
 
   // Wallet connection
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('sudoku', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('sudoku', chain?.id);
   const { writeContractAsync, isPending: isProcessing } = useWriteContract();
 
   // Read contract stats (on-chain mode)
   const { data: contractStats, refetch: refetchStats } = useReadContract({
-    address: SUDOKU_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: SUDOKU_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
     query: {
-      enabled: mode === "onchain" && !!address,
+      enabled: mode === "onchain" && !!address && gameAvailable,
     },
   });
 
@@ -396,7 +398,7 @@ export function useSudoku() {
         setMessage("Starting game on blockchain...");
 
         await writeContractAsync({
-          address: SUDOKU_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: SUDOKU_CONTRACT_ABI,
           functionName: "startGame",
           args: [DIFFICULTY_ENUM[difficulty.toUpperCase() as keyof typeof DIFFICULTY_ENUM]],
@@ -525,7 +527,7 @@ export function useSudoku() {
           setMessage("Recording result on blockchain...");
 
           await writeContractAsync({
-            address: SUDOKU_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: SUDOKU_CONTRACT_ABI,
             functionName: "endGame",
             args: [

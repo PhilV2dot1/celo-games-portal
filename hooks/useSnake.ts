@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ========================================
 // TYPES
@@ -27,8 +28,7 @@ export const INITIAL_SPEED = 150; // milliseconds
 export const SPEED_INCREMENT = 5; // Speed increases every 5 food eaten
 export const SPEED_DECREASE = 10; // Decrease delay by 10ms
 
-// Contract configuration
-const SNAKE_CONTRACT_ADDRESS = "0x5646fda34aaf8a95b9b0607db5ca02bdee267598" as `0x${string}`;
+// Contract ABI
 const SNAKE_CONTRACT_ABI = [
   {
     type: "function",
@@ -141,7 +141,9 @@ export function useSnake() {
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('snake', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('snake', chain?.id);
   const { writeContractAsync } = useWriteContract();
 
   // Load stats from localStorage on mount
@@ -158,12 +160,12 @@ export function useSnake() {
 
   // Load on-chain stats when connected
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: SNAKE_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: SNAKE_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
     query: {
-      enabled: mode === "onchain" && isConnected && !!address,
+      enabled: mode === "onchain" && isConnected && !!address && gameAvailable,
     },
   });
 
@@ -263,7 +265,7 @@ export function useSnake() {
           setMessage("Recording score on blockchain...");
 
           await writeContractAsync({
-            address: SNAKE_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: SNAKE_CONTRACT_ABI,
             functionName: "endGame",
             args: [BigInt(score), BigInt(foodEaten)],
@@ -357,7 +359,7 @@ export function useSnake() {
         setMessage("Starting game on blockchain...");
 
         await writeContractAsync({
-          address: SNAKE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: SNAKE_CONTRACT_ABI,
           functionName: "startGame",
         });

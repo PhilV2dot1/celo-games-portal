@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ============================================================================
 // TYPES
@@ -55,8 +56,6 @@ export interface Move {
 // ============================================================================
 // CONSTANTS
 // ============================================================================
-
-const SOLITAIRE_CONTRACT_ADDRESS = "0x552c22fe8e0dbff856d45bcf32ddf6fe1ccb1525" as `0x${string}`;
 
 const SOLITAIRE_CONTRACT_ABI = [
   {
@@ -352,14 +351,16 @@ export function useSolitaire() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Wagmi hooks
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('solitaire', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('solitaire', chain?.id);
   const { writeContractAsync } = useWriteContract();
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: SOLITAIRE_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: SOLITAIRE_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
-    query: { enabled: mode === "onchain" && isConnected && !!address },
+    query: { enabled: mode === "onchain" && isConnected && !!address && gameAvailable },
   });
 
   // Load stats from localStorage
@@ -426,7 +427,7 @@ export function useSolitaire() {
         setMessage("Recording win on blockchain...");
 
         await writeContractAsync({
-          address: SOLITAIRE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: SOLITAIRE_CONTRACT_ABI,
           functionName: "endGame",
           args: [
@@ -481,7 +482,7 @@ export function useSolitaire() {
         setMessage("Recording game on blockchain...");
 
         await writeContractAsync({
-          address: SOLITAIRE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: SOLITAIRE_CONTRACT_ABI,
           functionName: "endGame",
           args: [
@@ -539,7 +540,7 @@ export function useSolitaire() {
         setMessage("Starting game on blockchain...");
 
         await writeContractAsync({
-          address: SOLITAIRE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: SOLITAIRE_CONTRACT_ABI,
           functionName: "startGame",
         });

@@ -10,6 +10,8 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 export default function Game2048Page() {
   const {
@@ -27,6 +29,8 @@ export default function Game2048Page() {
 
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('2048', chain?.id);
   const { play } = useGameAudio('2048');
   const prevScore = useRef(score);
   const prevStatus = useRef(status);
@@ -171,17 +175,23 @@ export default function Game2048Page() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>{t('games.contract')} 0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1</p>
-          <p>
-            <a
-              href="https://celoscan.io/address/0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-            >
-              {t('games.2048.viewOnCeloscan')}
-            </a>
-          </p>
+          {isGameAvailableOnChain('2048', chain?.id) ? (
+            <>
+              <p>{t('games.contract')} {contractAddress}</p>
+              <p>
+                <a
+                  href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                >
+                  {t('games.2048.viewOnCeloscan').replace('Celoscan', 'Explorer')}
+                </a>
+              </p>
+            </>
+          ) : (
+            <p>Coming soon on Base</p>
+          )}
         </motion.div>
       </div>
     </main>

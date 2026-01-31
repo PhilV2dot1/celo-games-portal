@@ -12,6 +12,8 @@ import { WalletConnect } from "@/components/shared/WalletConnect";
 import { PlayerStats } from "@/components/snake/PlayerStats";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 export default function SnakePage() {
   const {
@@ -30,6 +32,8 @@ export default function SnakePage() {
     changeDirection,
   } = useSnake();
 
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('snake', chain?.id);
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('snake');
@@ -209,17 +213,21 @@ export default function SnakePage() {
           <p className="font-semibold">
             {t('games.snake.footer')}
           </p>
-          <p className="text-gray-500 dark:text-gray-500">
-            {t('games.contract')}{" "}
-            <a
-              href="https://celoscan.io/address/0x5646fda34aaf8a95b9b0607db5ca02bdee267598"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-celo underline transition-colors"
-            >
-              0x5646...7598
-            </a>
-          </p>
+          {isGameAvailableOnChain('snake', chain?.id) && contractAddress ? (
+            <p className="text-gray-500 dark:text-gray-500">
+              {t('games.contract')}{" "}
+              <a
+                href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-celo underline transition-colors"
+              >
+                {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
+              </a>
+            </p>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">Coming soon on Base</p>
+          )}
         </motion.div>
       </div>
     </main>

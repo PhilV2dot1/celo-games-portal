@@ -20,6 +20,8 @@ import {
 } from "@/components/multiplayer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
 
@@ -37,6 +39,8 @@ export default function ConnectFivePage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('connectfive');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('connectfive', chain?.id);
 
   // Wrapper for handleMove with sound effect (solo)
   const handleSoloMoveWithSound = useCallback((column: number) => {
@@ -357,17 +361,21 @@ export default function ConnectFivePage() {
             className="text-center text-xs text-gray-600 dark:text-gray-400 pt-2 space-y-1"
           >
             <p className="font-semibold">{t('games.connectfive.aiInfo')}</p>
-            <p className="text-gray-500 dark:text-gray-500">
-              {t('games.contract')}{" "}
-              <a
-                href="https://celoscan.io/address/0xd00a6170d83b446314b2e79f9603bc0a72c463e6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-celo underline transition-colors"
-              >
-                0xd00a...63e6
-              </a>
-            </p>
+            {isGameAvailableOnChain('connectfive', chain?.id) && contractAddress ? (
+              <p className="text-gray-500 dark:text-gray-500">
+                {t('games.contract')}{" "}
+                <a
+                  href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-celo underline transition-colors"
+                >
+                  {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
+                </a>
+              </p>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">Coming soon on Base</p>
+            )}
           </motion.div>
         )}
       </div>

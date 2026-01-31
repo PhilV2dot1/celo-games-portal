@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract } from "wagmi";
-import { GAME2048_CONTRACT_ADDRESS, GAME2048_CONTRACT_ABI, GAME_FEE } from "@/lib/contracts/2048-abi";
+import { GAME2048_CONTRACT_ABI, GAME_FEE } from "@/lib/contracts/2048-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 import {
   Grid,
   Direction,
@@ -21,7 +22,9 @@ export function use2048() {
   const [status, setStatus] = useState<GameStatus>("playing");
   const [gameStartedOnChain, setGameStartedOnChain] = useState(false);
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('2048', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('2048', chain?.id);
   const { writeContractAsync, isPending } = useWriteContract();
 
   const handleMove = useCallback((direction: Direction) => {
@@ -76,7 +79,7 @@ export function use2048() {
     if (mode === "onchain") {
       try {
         await writeContractAsync({
-          address: GAME2048_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: GAME2048_CONTRACT_ABI,
           functionName: "startGame",
           value: BigInt(GAME_FEE),
@@ -98,7 +101,7 @@ export function use2048() {
     if (mode === "onchain" && gameStartedOnChain) {
       try {
         await writeContractAsync({
-          address: GAME2048_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: GAME2048_CONTRACT_ABI,
           functionName: "submitScore",
           args: [BigInt(score), status === "won"],

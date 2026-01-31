@@ -16,6 +16,8 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 export default function SudokuPage() {
   const {
@@ -45,6 +47,8 @@ export default function SudokuPage() {
 
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('sudoku', chain?.id);
   const { play } = useGameAudio('sudoku');
   const prevConflicts = useRef(conflictCells.size);
 
@@ -238,14 +242,18 @@ export default function SudokuPage() {
         {/* Footer with Contract Link */}
         {mode === "onchain" && (
           <div className="text-center text-xs text-gray-600 pt-2">
-            <a
-              href={`https://celoscan.io/address/SUDOKU_CONTRACT_ADDRESS`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-celo transition-colors underline"
-            >
-              View Contract on Celoscan →
-            </a>
+            {isGameAvailableOnChain('sudoku', chain?.id) ? (
+              <a
+                href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-celo transition-colors underline"
+              >
+                View Contract on Explorer →
+              </a>
+            ) : (
+              <span>Coming soon on Base</span>
+            )}
           </div>
         )}
       </div>

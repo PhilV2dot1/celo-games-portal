@@ -14,6 +14,8 @@ import { PlayerStats } from "@/components/minesweeper/PlayerStats";
 import { DifficultySelector } from "@/components/minesweeper/DifficultySelector";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 export default function MinesweeperPage() {
   const {
@@ -37,6 +39,8 @@ export default function MinesweeperPage() {
     changeDifficulty,
   } = useMinesweeper();
 
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('minesweeper', chain?.id);
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('minesweeper');
@@ -196,17 +200,23 @@ export default function MinesweeperPage() {
           <p className="font-semibold">
             {t("games.minesweeper.gameInfo")}
           </p>
-          <p className="text-gray-500 dark:text-gray-500">
-            {t("games.contract")}{" "}
-            <a
-              href="https://celoscan.io/address/0x62798e5246169e655901C546c0496bb2C6158041"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-celo underline transition-colors"
-            >
-              {t("games.minesweeper.viewOnCeloscan")}
-            </a>
-          </p>
+          {isGameAvailableOnChain('minesweeper', chain?.id) && contractAddress ? (
+            <p className="text-gray-500 dark:text-gray-500">
+              {t("games.contract")}{" "}
+              <a
+                href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-celo underline transition-colors"
+              >
+                {t("games.minesweeper.viewOnCeloscan").replace("Celoscan", "Explorer")}
+              </a>
+            </p>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-500">
+              Coming soon on Base
+            </p>
+          )}
         </motion.div>
       </div>
     </main>

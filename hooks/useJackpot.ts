@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useWriteContract, useAccount } from "wagmi";
-import { JACKPOT_CONTRACT_ADDRESS, JACKPOT_CONTRACT_ABI } from "@/lib/contracts/jackpot-abi";
+import { JACKPOT_CONTRACT_ABI } from "@/lib/contracts/jackpot-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 export type GameState = "idle" | "spinning" | "revealing" | "result";
 export type GameMode = "free" | "onchain";
@@ -50,7 +51,9 @@ export function useJackpot() {
   const [isSpinning, setIsSpinning] = useState(false);
 
   // Wagmi hooks for contract interaction
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('jackpot', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('jackpot', chain?.id);
   const { writeContractAsync, isPending } = useWriteContract();
 
   const spin = useCallback(async () => {
@@ -84,7 +87,7 @@ export function useJackpot() {
           const fid = BigInt(1); // Default FID for testing
 
           const tx = await writeContractAsync({
-            address: JACKPOT_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: JACKPOT_CONTRACT_ABI,
             functionName: "startParty",
             args: [fid],
@@ -128,7 +131,7 @@ export function useJackpot() {
       setIsSpinning(true);
 
       await writeContractAsync({
-        address: JACKPOT_CONTRACT_ADDRESS,
+        address: contractAddress!,
         abi: JACKPOT_CONTRACT_ABI,
         functionName: "submitScore",
         args: [sessionId, BigInt(lastResult.score)],

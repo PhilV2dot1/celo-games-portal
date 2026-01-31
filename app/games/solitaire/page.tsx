@@ -13,6 +13,8 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 interface DragItem {
   fromWaste?: boolean;
@@ -44,6 +46,8 @@ export default function SolitairePage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('solitaire');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('solitaire', chain?.id);
 
   // Record game to portal stats when finished
   useEffect(() => {
@@ -231,18 +235,21 @@ export default function SolitairePage() {
           <p className="font-semibold">
             {t('games.solitaire.footer')}
           </p>
-          <p className="text-gray-500">
-            {t('games.contract')}{" "}
-            <a
-              href="https://celoscan.io/address/0x0000000000000000000000000000000000000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-purple-700 underline transition-colors"
-            >
-              0x0000...0000
-            </a>
-            {" "}{t('games.solitaire.awaitingDeployment')}
-          </p>
+          {isGameAvailableOnChain('solitaire', chain?.id) && contractAddress ? (
+            <p className="text-gray-500">
+              {t('games.contract')}{" "}
+              <a
+                href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-purple-700 underline transition-colors"
+              >
+                {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
+              </a>
+            </p>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">Coming soon on Base</p>
+          )}
         </motion.div>
       </div>
     </main>

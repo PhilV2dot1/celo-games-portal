@@ -9,6 +9,8 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { AudioControls } from "@/components/shared/AudioControls";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { ChainSelector } from "@/components/shared/ChainSelector";
+import { ChainWarning } from "@/components/shared/ChainWarning";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { CreateAccountModal } from "@/components/auth/CreateAccountModal";
 import Link from "next/link";
@@ -180,23 +182,30 @@ export function Header() {
               </Link>
             </div>
 
-            {/* Stats - Compact */}
-            {profile.gamesPlayed > 0 && (
-              <div className="hidden md:flex items-center gap-4 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-600 dark:text-gray-400">Points:</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{profile.totalPoints}</span>
+            {/* Chain Selector + Stats */}
+            <div className="hidden md:flex items-center gap-4">
+              <ChainSelector />
+              {profile.gamesPlayed > 0 && (
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-gray-600 dark:text-gray-400">Points:</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{profile.totalPoints}</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-gray-600 dark:text-gray-400">Games:</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{profile.gamesPlayed}</span>
+                  </div>
                 </div>
-                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-600 dark:text-gray-400">Games:</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{profile.gamesPlayed}</span>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </nav>
       </div>
+
+      {/* Chain Warning (unsupported network) */}
+      <ChainWarning className="mb-4" />
 
       {/* Authentication Modals */}
       <LoginModal

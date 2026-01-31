@@ -20,6 +20,8 @@ import {
 } from "@/components/multiplayer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
 
@@ -36,6 +38,8 @@ export default function BlackjackPage() {
 
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('blackjack', chain?.id);
   const { play } = useGameAudio('blackjack');
   const prevHandLength = useRef(soloGame.playerHand.length);
 
@@ -420,17 +424,23 @@ export default function BlackjackPage() {
         {/* Footer (solo modes only) */}
         {!isMultiplayer && (
           <footer className="mt-12 text-center text-gray-600 text-sm">
-            <p>Contract: 0x6cb9971850767026feBCb4801c0b8a946F28C9Ec</p>
-            <p className="mt-1">
-              <a
-                href="https://celoscan.io/address/0x6cb9971850767026feBCb4801c0b8a946F28C9Ec"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-              >
-                View on Celoscan →
-              </a>
-            </p>
+            {isGameAvailableOnChain('blackjack', chain?.id) && contractAddress ? (
+              <>
+                <p>Contract: {contractAddress}</p>
+                <p className="mt-1">
+                  <a
+                    href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  >
+                    View on Explorer →
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">Coming soon on Base</p>
+            )}
           </footer>
         )}
       </div>

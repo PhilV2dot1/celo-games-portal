@@ -4,9 +4,9 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import type { GameMode, GameResult } from "@/lib/types";
 import {
-  YAHTZEE_CONTRACT_ADDRESS,
   YAHTZEE_CONTRACT_ABI,
 } from "@/lib/contracts/yahtzee-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // Player types
 export type Player = "human" | "ai";
@@ -486,11 +486,13 @@ export function useYahtzee() {
   const playAITurnRef = useRef<(() => Promise<void>) | null>(null);
 
   // Wagmi hooks
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('yahtzee', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('yahtzee', chain?.id);
   const { writeContractAsync, isPending } = useWriteContract();
 
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: YAHTZEE_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: YAHTZEE_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
@@ -678,7 +680,7 @@ export function useYahtzee() {
             setStatus("processing");
             try {
               await writeContractAsync({
-                address: YAHTZEE_CONTRACT_ADDRESS,
+                address: contractAddress!,
                 abi: YAHTZEE_CONTRACT_ABI,
                 functionName: "endGame",
                 args: [BigInt(finalScore)],
@@ -846,7 +848,7 @@ export function useYahtzee() {
       setStatus("processing");
       try {
         await writeContractAsync({
-          address: YAHTZEE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: YAHTZEE_CONTRACT_ABI,
           functionName: "startGame",
         });

@@ -22,6 +22,8 @@ import {
   RoomCodeInput,
 } from "@/components/multiplayer";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 import type { ScoreCard as ScoreCardType } from "@/hooks/useYahtzee";
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
@@ -40,6 +42,8 @@ export default function YahtzeePage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('yahtzee');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('yahtzee', chain?.id);
   const prevTurn = useRef(soloGame.currentTurn);
 
   // Wrapper functions with sound effects (solo)
@@ -405,7 +409,21 @@ export default function YahtzeePage() {
                 transition={{ delay: 0.6 }}
                 className="text-center text-sm text-gray-500 dark:text-gray-400"
               >
-                <p>Smart contract powered game on Celo blockchain</p>
+                {isGameAvailableOnChain('yahtzee', chain?.id) && contractAddress ? (
+                  <p>
+                    {t('games.contract')}{" "}
+                    <a
+                      href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-celo underline transition-colors"
+                    >
+                      {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
+                    </a>
+                  </p>
+                ) : (
+                  <p>Coming soon on Base</p>
+                )}
               </motion.div>
             )}
           </>

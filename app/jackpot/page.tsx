@@ -10,6 +10,8 @@ import { WalletConnect } from "@/components/shared/WalletConnect";
 import { JackpotMachine } from "@/components/jackpot/JackpotMachine";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 export default function JackpotPage() {
   const {
@@ -25,6 +27,8 @@ export default function JackpotPage() {
     isConnected,
   } = useJackpot();
 
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('jackpot', chain?.id);
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('jackpot');
@@ -217,17 +221,23 @@ export default function JackpotPage() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="text-center text-xs text-gray-600 pt-2 space-y-1"
         >
-          <p>{t('games.contract')} 0x07Bc49E8A2BaF7c68519F9a61FCD733490061644</p>
-          <p>
-            <a
-              href="https://celoscan.io/address/0x07Bc49E8A2BaF7c68519F9a61FCD733490061644"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-            >
-              {t('games.jackpot.viewOnCeloscan')}
-            </a>
-          </p>
+          {isGameAvailableOnChain('jackpot', chain?.id) ? (
+            <>
+              <p>{t('games.contract')} {contractAddress}</p>
+              <p>
+                <a
+                  href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                >
+                  View on Explorer
+                </a>
+              </p>
+            </>
+          ) : (
+            <p>Coming soon on Base</p>
+          )}
         </motion.div>
       </div>
     </main>

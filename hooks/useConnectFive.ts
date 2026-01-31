@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ========================================
 // TYPES
@@ -28,8 +29,7 @@ export const ROWS = 6;
 export const COLS = 7;
 const WIN_LENGTH = 4;
 
-// Contract configuration
-const CONNECTFIVE_CONTRACT_ADDRESS = "0xd00a6170d83b446314b2e79f9603bc0a72c463e6" as `0x${string}`;
+// Contract ABI
 const CONNECTFIVE_CONTRACT_ABI = [
   {
     "type": "function",
@@ -329,7 +329,9 @@ export function useConnectFive() {
   const [gameStartedOnChain, setGameStartedOnChain] = useState(false);
   const [message, setMessage] = useState("Click Start to begin!");
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('connectfive', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('connectfive', chain?.id);
   const { writeContractAsync } = useWriteContract();
 
   // Load stats from localStorage on mount
@@ -346,12 +348,12 @@ export function useConnectFive() {
 
   // Load on-chain stats when connected
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: CONNECTFIVE_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: CONNECTFIVE_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
     query: {
-      enabled: mode === "onchain" && isConnected && !!address,
+      enabled: mode === "onchain" && isConnected && !!address && gameAvailable,
     },
   });
 
@@ -414,7 +416,7 @@ export function useConnectFive() {
           else setMessage("🤝 Draw! Recording on blockchain...");
 
           await writeContractAsync({
-            address: CONNECTFIVE_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: CONNECTFIVE_CONTRACT_ABI,
             functionName: "endGame",
             args: [resultCode],
@@ -514,7 +516,7 @@ export function useConnectFive() {
         setMessage("Starting game on blockchain...");
 
         await writeContractAsync({
-          address: CONNECTFIVE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: CONNECTFIVE_CONTRACT_ABI,
           functionName: "startGame",
         });

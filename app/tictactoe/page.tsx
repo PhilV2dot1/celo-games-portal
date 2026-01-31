@@ -20,6 +20,8 @@ import {
 } from "@/components/multiplayer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
 
@@ -37,6 +39,8 @@ export default function TicTacToePage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('tictactoe');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('tictactoe', chain?.id);
 
   // Wrapper for handleMove with sound effect (solo)
   const handleSoloMoveWithSound = useCallback((index: number) => {
@@ -341,17 +345,23 @@ export default function TicTacToePage() {
             transition={{ delay: 0.5 }}
             className="text-center text-xs text-gray-600 pt-2 space-y-1"
           >
-            <p>{t('games.contract')} 0xa9596b4a5A7F0E10A5666a3a5106c4F2C3838881</p>
-            <p>
-              <a
-                href="https://celoscan.io/address/0xa9596b4a5A7F0E10A5666a3a5106c4F2C3838881"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-              >
-                {t('games.tictactoe.viewOnCeloscan')}
-              </a>
-            </p>
+            {isGameAvailableOnChain('tictactoe', chain?.id) ? (
+              <>
+                <p>{t('games.contract')} {contractAddress}</p>
+                <p>
+                  <a
+                    href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  >
+                    {t('games.tictactoe.viewOnCeloscan')}
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p>Coming soon on Base</p>
+            )}
           </motion.div>
         )}
       </div>

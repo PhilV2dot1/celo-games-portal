@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import {
-  MINESWEEPER_CONTRACT_ADDRESS,
   MINESWEEPER_CONTRACT_ABI,
 } from "@/lib/contracts/minesweeper-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ========================================
 // TYPES
@@ -294,17 +294,19 @@ export function useMinesweeper() {
   const [message, setMessage] = useState("Click Start to begin!");
   const [focusedCell, setFocusedCell] = useState<[number, number]>([0, 0]);
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('minesweeper', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('minesweeper', chain?.id);
   const { writeContractAsync, isPending } = useWriteContract();
 
   // Read on-chain stats
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: MINESWEEPER_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: MINESWEEPER_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
     query: {
-      enabled: mode === "onchain" && isConnected && !!address,
+      enabled: mode === "onchain" && isConnected && !!address && gameAvailable,
     },
   });
 
@@ -425,7 +427,7 @@ export function useMinesweeper() {
         setMessage("Starting game on blockchain...");
 
         await writeContractAsync({
-          address: MINESWEEPER_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: MINESWEEPER_CONTRACT_ABI,
           functionName: "startGame",
           args: [getDifficultyEnum(difficulty)],
@@ -579,7 +581,7 @@ export function useMinesweeper() {
           );
 
           await writeContractAsync({
-            address: MINESWEEPER_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: MINESWEEPER_CONTRACT_ABI,
             functionName: "endGame",
             args: [resultCode, getDifficultyEnum(difficulty), BigInt(timer)],

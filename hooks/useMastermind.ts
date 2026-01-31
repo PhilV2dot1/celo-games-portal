@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain } from "wagmi";
-import { celo } from "wagmi/chains";
 import {
   Code,
   Guess,
@@ -15,7 +14,8 @@ import {
   calculateScore,
   Color,
 } from "@/lib/games/mastermind-logic";
-import { MASTERMIND_CONTRACT_ADDRESS, MASTERMIND_CONTRACT_ABI, MASTERMIND_GAME_FEE } from "@/lib/contracts/mastermind-abi";
+import { MASTERMIND_CONTRACT_ABI, MASTERMIND_GAME_FEE } from "@/lib/contracts/mastermind-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 type GamePhase = 'playing' | 'won' | 'lost';
 export type GameMode = 'free' | 'onchain';
@@ -58,29 +58,32 @@ export function useMastermind() {
   const { data: receipt, isLoading: isConfirming } = useWaitForTransactionReceipt({ hash });
   const { switchChain } = useSwitchChain();
 
+  const contractAddress = getContractAddress('mastermind', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('mastermind', chain?.id);
+
   // Read on-chain stats
   const { data: onchainStats, refetch: refetchStats } = useReadContract({
-    address: MASTERMIND_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: MASTERMIND_CONTRACT_ABI,
     functionName: 'getStats',
     args: address ? [address] : undefined,
     query: {
-      enabled: isConnected && mode === 'onchain' && MASTERMIND_CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000",
-      gcTime: 0, // Don't cache - always fetch fresh data
-      staleTime: 0, // Consider data immediately stale
+      enabled: isConnected && mode === 'onchain' && gameAvailable,
+      gcTime: 0,
+      staleTime: 0,
     },
   });
 
   // Check if user has an active on-chain game
   const { data: activeGameData, refetch: refetchActiveGame } = useReadContract({
-    address: MASTERMIND_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: MASTERMIND_CONTRACT_ABI,
     functionName: 'hasActiveGame',
     args: address ? [address] : undefined,
     query: {
-      enabled: isConnected && mode === 'onchain' && MASTERMIND_CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000",
-      gcTime: 0, // Don't cache - always fetch fresh data
-      staleTime: 0, // Consider data immediately stale
+      enabled: isConnected && mode === 'onchain' && gameAvailable,
+      gcTime: 0,
+      staleTime: 0,
     },
   });
 
@@ -327,18 +330,10 @@ export function useMastermind() {
       // Reset previous transaction state
       resetWrite?.();
 
-      // Check if we're on the correct chain (Celo)
-      if (chain?.id !== celo.id) {
-        setMessage('⚡ Switching to Celo network...');
-        try {
-          await switchChain?.({ chainId: celo.id });
-          // Give wallet time to switch
-          await new Promise(resolve => setTimeout(resolve, 500));
-        } catch (switchError) {
-          console.error('Chain switch error:', switchError);
-          setMessage('❌ Please switch to Celo network in your wallet');
-          return;
-        }
+      // Check if game is available on current chain
+      if (!contractAddress || !gameAvailable) {
+        setMessage('❌ Mastermind not available on this network');
+        return;
       }
 
       setMessage('🎲 Starting your on-chain game...');
@@ -347,12 +342,12 @@ export function useMastermind() {
       setLastTransactionType('startGame');
 
       writeContract({
-        address: MASTERMIND_CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: MASTERMIND_CONTRACT_ABI,
         functionName: 'startGame',
-        chainId: celo.id,
+        chainId: chain!.id,
         gas: BigInt(200000),
-        value: BigInt(MASTERMIND_GAME_FEE), // 0.01 CELO in wei
+        value: BigInt(MASTERMIND_GAME_FEE),
       });
 
     } catch (error) {
@@ -390,18 +385,9 @@ export function useMastermind() {
       // Reset previous transaction state
       resetWrite?.();
 
-      // Check if we're on the correct chain (Celo)
-      if (chain?.id !== celo.id) {
-        setMessage('⚡ Switching to Celo network...');
-        try {
-          await switchChain?.({ chainId: celo.id });
-          // Give wallet time to switch
-          await new Promise(resolve => setTimeout(resolve, 500));
-        } catch (switchError) {
-          console.error('❌ Chain switch error:', switchError);
-          setMessage('❌ Please switch to Celo network in your wallet');
-          return;
-        }
+      if (!contractAddress || !gameAvailable) {
+        setMessage('❌ Mastermind not available on this network');
+        return;
       }
 
       setMessage('⏳ Submitting score on-chain...');
@@ -410,11 +396,11 @@ export function useMastermind() {
       setLastTransactionType('submitScore');
 
       writeContract({
-        address: MASTERMIND_CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: MASTERMIND_CONTRACT_ABI,
         functionName: 'submitScore',
         args: [BigInt(score), won, BigInt(attempts)],
-        chainId: celo.id,
+        chainId: chain!.id,
         gas: BigInt(200000),
       });
 
@@ -422,7 +408,7 @@ export function useMastermind() {
       console.error('❌ Failed to submit score:', error);
       setMessage('❌ Failed to submit score - Please try again');
     }
-  }, [isConnected, address, mode, gamePhase, attempts, chain, switchChain, writeContract, resetWrite]);
+  }, [isConnected, address, mode, gamePhase, attempts, chain, contractAddress, gameAvailable, writeContract, resetWrite]);
 
   // Abandon current on-chain game
   const abandonGame = useCallback(async () => {
@@ -445,18 +431,9 @@ export function useMastermind() {
       // Reset previous transaction state
       resetWrite?.();
 
-      // Check if we're on the correct chain (Celo)
-      if (chain?.id !== celo.id) {
-        setMessage('⚡ Switching to Celo network...');
-        try {
-          await switchChain?.({ chainId: celo.id });
-          // Give wallet time to switch
-          await new Promise(resolve => setTimeout(resolve, 500));
-        } catch (switchError) {
-          console.error('Chain switch error:', switchError);
-          setMessage('❌ Please switch to Celo network in your wallet');
-          return;
-        }
+      if (!contractAddress || !gameAvailable) {
+        setMessage('❌ Mastermind not available on this network');
+        return;
       }
 
       setMessage('⏳ Abandoning game on-chain...');
@@ -466,18 +443,18 @@ export function useMastermind() {
 
       // Submit score of 0 to reset the game state
       writeContract({
-        address: MASTERMIND_CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: MASTERMIND_CONTRACT_ABI,
         functionName: 'submitScore',
         args: [BigInt(0), false, BigInt(0)],
-        chainId: celo.id,
+        chainId: chain!.id,
         gas: BigInt(200000),
       });
     } catch (error) {
       console.error('❌ Failed to abandon game:', error);
       setMessage('❌ Failed to abandon game - Please try again');
     }
-  }, [isConnected, address, mode, chain, switchChain, writeContract, resetWrite]);
+  }, [isConnected, address, mode, chain, contractAddress, gameAvailable, writeContract, resetWrite]);
 
   // Get current stats (free or on-chain)
   const stats: GameStats = mode === 'onchain' && onchainStats

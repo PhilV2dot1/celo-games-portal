@@ -19,6 +19,8 @@ import {
 } from "@/components/multiplayer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
 
@@ -42,6 +44,8 @@ export default function RockPaperScissorsPage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play: playSound } = useGameAudio('rps');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('rps', chain?.id);
 
   // Wrapper for play with sound effects (solo)
   const handleSoloChoice = useCallback((choice: Choice) => {
@@ -415,17 +419,23 @@ export default function RockPaperScissorsPage() {
             transition={{ delay: 0.5 }}
             className="text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 pt-2 space-y-1"
           >
-            <p>{t('games.contract')} 0xc4f5f0201bf609535ec7a6d88a05b05013ae0c49</p>
-            <p>
-              <a
-                href="https://celoscan.io/address/0xc4f5f0201bf609535ec7a6d88a05b05013ae0c49"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-900 dark:text-white hover:text-celo font-semibold transition-colors underline decoration-celo"
-              >
-                {t('games.rps.viewOnCeloscan')}
-              </a>
-            </p>
+            {isGameAvailableOnChain('rps', chain?.id) ? (
+              <>
+                <p>{t('games.contract')} {contractAddress}</p>
+                <p>
+                  <a
+                    href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 dark:text-white hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  >
+                    {t('games.rps.viewOnCeloscan')}
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p>Coming soon on Base</p>
+            )}
           </motion.div>
         )}
       </div>

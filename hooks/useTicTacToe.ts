@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
-import { TICTACTOE_CONTRACT_ADDRESS, TICTACTOE_CONTRACT_ABI, GAME_RESULT } from "@/lib/contracts/tictactoe-abi";
+import { TICTACTOE_CONTRACT_ABI, GAME_RESULT } from "@/lib/contracts/tictactoe-abi";
+import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 type CellValue = 0 | 1 | 2; // 0 = empty, 1 = X (player), 2 = O (AI)
 type Board = CellValue[];
@@ -29,7 +30,9 @@ export function useTicTacToe() {
   const [gameStartedOnChain, setGameStartedOnChain] = useState(false);
   const [message, setMessage] = useState("Click Start to begin!");
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
+  const contractAddress = getContractAddress('tictactoe', chain?.id);
+  const gameAvailable = isGameAvailableOnChain('tictactoe', chain?.id);
   const { writeContractAsync } = useWriteContract();
 
   // Load stats from localStorage on mount
@@ -46,12 +49,12 @@ export function useTicTacToe() {
 
   // Load on-chain stats when connected
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
-    address: TICTACTOE_CONTRACT_ADDRESS,
+    address: contractAddress!,
     abi: TICTACTOE_CONTRACT_ABI,
     functionName: "getPlayerStats",
     args: address ? [address] : undefined,
     query: {
-      enabled: mode === "onchain" && isConnected && !!address,
+      enabled: mode === "onchain" && isConnected && !!address && gameAvailable,
     },
   });
 
@@ -173,7 +176,7 @@ export function useTicTacToe() {
           else setMessage("🤝 Draw! Recording on blockchain...");
 
           await writeContractAsync({
-            address: TICTACTOE_CONTRACT_ADDRESS,
+            address: contractAddress!,
             abi: TICTACTOE_CONTRACT_ABI,
             functionName: "endGame",
             args: [resultCode],
@@ -269,7 +272,7 @@ export function useTicTacToe() {
         setMessage("Recording game start on blockchain...");
 
         await writeContractAsync({
-          address: TICTACTOE_CONTRACT_ADDRESS,
+          address: contractAddress!,
           abi: TICTACTOE_CONTRACT_ABI,
           functionName: "startGame",
           args: [],

@@ -3,7 +3,7 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { motion } from "framer-motion";
 import { useFarcaster } from "../providers";
-import { useSwitchToCelo } from "@/hooks/useSwitchToCelo";
+import { useChainSelector } from "@/hooks/useChainSelector";
 import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -37,8 +37,9 @@ export function WalletConnect() {
     }
   };
 
-  // Automatically switch to Celo network when connected
-  const { isOnCelo, isSwitching } = useSwitchToCelo();
+  // Multichain support - accept both Celo and Base
+  const { isSupportedChain: isOnSupportedChain } = useChainSelector();
+  const isSwitching = isConnected && !isOnSupportedChain;
 
   // Filter connectors based on context
   const availableConnectors = connectors.filter((connector) => {
@@ -73,7 +74,7 @@ export function WalletConnect() {
           className="bg-gradient-to-r from-celo/30 to-gray-100 border-2 border-celo rounded-xl p-4 flex items-center justify-between"
         >
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full animate-pulse ${isOnCelo ? 'bg-green-500' : 'bg-orange-500'}`} />
+            <div className={`w-2 h-2 rounded-full animate-pulse ${isOnSupportedChain ? 'bg-green-500' : 'bg-orange-500'}`} />
             <div className="flex flex-col">
               <span className="font-mono text-sm font-semibold text-gray-800">
                 {address.slice(0, 6)}...{address.slice(-4)}

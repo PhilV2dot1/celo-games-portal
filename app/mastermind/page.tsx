@@ -21,6 +21,8 @@ import {
 } from "@/components/multiplayer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { useAccount } from "wagmi";
+import { getContractAddress, getExplorerAddressUrl, isGameAvailableOnChain } from '@/lib/contracts/addresses';
 
 type GameMode = 'free' | 'onchain' | 'multiplayer';
 
@@ -38,6 +40,8 @@ export default function MastermindPage() {
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { play } = useGameAudio('mastermind');
+  const { chain } = useAccount();
+  const contractAddress = getContractAddress('mastermind', chain?.id);
 
   // Wrappers with sound effects (solo)
   const updateGuessWithSound = useCallback((position: number, color: Color | null) => {
@@ -545,17 +549,23 @@ export default function MastermindPage() {
             transition={{ duration: 0.3, delay: 0.2 }}
             className="text-center text-xs text-gray-600 pt-2 space-y-1"
           >
-            <p>{t('games.contract')} 0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9</p>
-            <p>
-              <a
-                href="https://celoscan.io/address/0x04481EeB5111BDdd2f05A6E20BE51B295b5251C9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
-              >
-                {t('games.mastermind.viewOnCeloscan')}
-              </a>
-            </p>
+            {isGameAvailableOnChain('mastermind', chain?.id) ? (
+              <>
+                <p>{t('games.contract')} {contractAddress}</p>
+                <p>
+                  <a
+                    href={getExplorerAddressUrl(chain?.id, contractAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:text-celo font-semibold transition-colors underline decoration-celo"
+                  >
+                    {t('games.mastermind.viewOnCeloscan')?.replace('Celoscan', 'Explorer') || 'View on Explorer'}
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p>Coming soon on Base</p>
+            )}
           </motion.div>
         )}
       </div>
