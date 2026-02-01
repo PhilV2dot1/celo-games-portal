@@ -162,9 +162,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Size-specific styles
     const sizeStyles: Record<ButtonSize, string[]> = {
-      sm: ['px-4 py-2', 'text-sm', 'h-8'],
-      md: ['px-6 py-3', 'text-base', 'h-10'],
-      lg: ['px-8 py-4', 'text-lg', 'h-12'],
+      sm: ['px-4 py-2', 'text-sm', 'min-h-[44px]'],
+      md: ['px-6 py-3', 'text-base', 'min-h-[44px]'],
+      lg: ['px-8 py-4', 'text-lg', 'min-h-[48px]'],
     };
 
     // Combine all styles

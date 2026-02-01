@@ -11,6 +11,7 @@ import { AudioControls } from "@/components/shared/AudioControls";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { ChainSelector } from "@/components/shared/ChainSelector";
 import { ChainWarning } from "@/components/shared/ChainWarning";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { CreateAccountModal } from "@/components/auth/CreateAccountModal";
 import Link from "next/link";
@@ -23,6 +24,7 @@ export function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [displayName, setDisplayName] = useState<string | null>(null);
 
   // Fetch user's display name from database
@@ -55,11 +57,11 @@ export function Header() {
         <div className="flex items-center justify-between p-4">
           {/* Logo/Brand */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
-              <span className="text-2xl">🎮</span>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
+              <span className="text-xl sm:text-2xl">🎮</span>
             </div>
             <div>
-              <h1 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white">
                 Mini Games Portal
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
@@ -70,87 +72,99 @@ export function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
-            <ThemeToggle size="sm" />
-            <AudioControls size="sm" />
-            <LanguageSwitcher />
+            {/* Desktop controls - hidden on mobile (available in MobileMenu) */}
+            <div className="hidden md:flex items-center gap-3">
+              <ThemeToggle size="sm" />
+              <AudioControls size="sm" />
+              <LanguageSwitcher />
+            </div>
 
-            {/* Authentication */}
-            {!isAuthenticated ? (
-              <>
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white font-semibold text-sm rounded-lg transition-colors"
-                >
-                  {t('auth.login')}
-                </button>
-                <button
-                  onClick={() => setShowSignupModal(true)}
-                  className="px-4 py-2 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
-                  style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}
-                >
-                  {t('auth.createAccount')}
-                </button>
-                <div className="hidden sm:block">
+            {/* Authentication - hidden on mobile (available in MobileMenu) */}
+            <div className="hidden md:flex items-center gap-3">
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => setShowLoginModal(true)}
+                    className="px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white font-semibold text-sm rounded-lg transition-colors"
+                  >
+                    {t('auth.login')}
+                  </button>
+                  <button
+                    onClick={() => setShowSignupModal(true)}
+                    className="px-4 py-2 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
+                    style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}
+                  >
+                    {t('auth.createAccount')}
+                  </button>
                   <ConnectButton
                     showBalance={false}
                     chainStatus="icon"
                   />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="hidden sm:block">
+                </>
+              ) : (
+                <>
                   <ConnectButton
                     showBalance={true}
                     chainStatus="icon"
                   />
-                </div>
-                <div className="relative">
-                  <button
-                    onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    <span>{displayName || user?.email?.split('@')[0] || t('nav.profile')}</span>
-                    <svg className={`w-4 h-4 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowUserMenu(!showUserMenu)}
+                      className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <span>{displayName || user?.email?.split('@')[0] || t('nav.profile')}</span>
+                      <svg className={`w-4 h-4 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
 
-                  {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-                      <Link
-                        href="/profile/me"
-                        className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        {t('nav.profile')}
-                      </Link>
-                      <Link
-                        href="/profile/edit"
-                        className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        {t('edit')}
-                      </Link>
-                      <button
-                        onClick={() => {
-                          signOut();
-                          setShowUserMenu(false);
-                        }}
-                        className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
-                      >
-                        {t('nav.signOut')}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
+                    {showUserMenu && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                        <Link
+                          href="/profile/me"
+                          className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          {t('nav.profile')}
+                        </Link>
+                        <Link
+                          href="/profile/edit"
+                          className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          {t('edit')}
+                        </Link>
+                        <button
+                          onClick={() => {
+                            signOut();
+                            setShowUserMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
+                        >
+                          {t('nav.signOut')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Mobile hamburger button */}
+            <button
+              onClick={() => setShowMobileMenu(true)}
+              className="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label={t('nav.menu')}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="border-t border-gray-200 dark:border-gray-700">
+        {/* Navigation - hidden on mobile (available in MobileMenu) */}
+        <nav className="hidden md:block border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
               <Link
@@ -221,6 +235,19 @@ export function Header() {
         isOpen={showSignupModal}
         onClose={() => setShowSignupModal(false)}
         currentStats={profile}
+      />
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={showMobileMenu}
+        onClose={() => setShowMobileMenu(false)}
+        profile={profile}
+        isAuthenticated={isAuthenticated}
+        user={user}
+        displayName={displayName}
+        signOut={signOut}
+        onLoginClick={() => setShowLoginModal(true)}
+        onSignupClick={() => setShowSignupModal(true)}
       />
     </motion.header>
   );

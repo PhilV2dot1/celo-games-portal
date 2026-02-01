@@ -112,21 +112,21 @@ describe('Button Component', () => {
     test('should render small size', () => {
       render(<Button size="sm">Small</Button>);
       const button = screen.getByRole('button');
-      expect(button.className).toContain('h-8');
+      expect(button.className).toContain('min-h-[44px]');
       expect(button.className).toContain('text-sm');
     });
 
     test('should render medium size (default)', () => {
       render(<Button size="md">Medium</Button>);
       const button = screen.getByRole('button');
-      expect(button.className).toContain('h-10');
+      expect(button.className).toContain('min-h-[44px]');
       expect(button.className).toContain('text-base');
     });
 
     test('should render large size', () => {
       render(<Button size="lg">Large</Button>);
       const button = screen.getByRole('button');
-      expect(button.className).toContain('h-12');
+      expect(button.className).toContain('min-h-[48px]');
       expect(button.className).toContain('text-lg');
     });
   });
@@ -338,7 +338,7 @@ describe('Button Component', () => {
 
       const button = screen.getByRole('button');
       expect(button).toBeInTheDocument();
-      expect(button.className).toContain('h-12');
+      expect(button.className).toContain('min-h-[48px]');
       expect(button.className).toContain('w-full');
       expect(button.className).toContain('extra-class');
       expect(button).toHaveAttribute('aria-label', 'Star button');

@@ -18,7 +18,7 @@ export function ChainSelector({ className = '' }: ChainSelectorProps) {
     <div className={`flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 ${className}`}>
       <button
         onClick={switchToCelo}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+        className={`flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-md text-sm font-medium transition-all ${
           isOnCelo
             ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -30,7 +30,7 @@ export function ChainSelector({ className = '' }: ChainSelectorProps) {
       </button>
       <button
         onClick={switchToBase}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+        className={`flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-md text-sm font-medium transition-all ${
           isOnBase
             ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'

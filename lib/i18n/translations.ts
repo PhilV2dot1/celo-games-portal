@@ -339,6 +339,8 @@ export const translations = {
       about: 'About',
       guide: 'Guide',
       signOut: 'Sign Out',
+      menu: 'Menu',
+      closeMenu: 'Close menu',
     },
 
     // Home Page
@@ -1144,6 +1146,8 @@ export const translations = {
       about: 'À propos',
       guide: 'Guide',
       signOut: 'Déconnexion',
+      menu: 'Menu',
+      closeMenu: 'Fermer le menu',
     },
 
     // Home Page

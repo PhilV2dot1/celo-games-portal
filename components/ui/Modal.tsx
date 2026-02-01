@@ -11,7 +11,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useShouldAnimate } from '@/lib/utils/motion';
 import { backdropVariants, modalVariants } from '@/lib/utils/motion';
 import { cn } from '@/lib/utils';
-import { colors } from '@/lib/constants/design-tokens';
 
 // ========================================
 // TYPES
@@ -202,8 +201,8 @@ export function Modal({
     className
   );
 
-  // Celo glow shadow
-  const celoShadow = `0 0 0 6px ${colors.celo}, 0 20px 25px -5px rgba(0, 0, 0, 0.1)`;
+  // Chain glow shadow (dynamic based on active chain)
+  const chainShadow = `0 0 0 6px var(--chain-primary), 0 20px 25px -5px rgba(0, 0, 0, 0.1)`;
 
   // ========================================
   // RENDER
@@ -230,7 +229,7 @@ export function Modal({
           <motion.div
             ref={modalRef}
             className={modalClasses}
-            style={{ boxShadow: celoShadow }}
+            style={{ boxShadow: chainShadow, maxHeight: '90vh', overflowY: 'auto' }}
             variants={shouldAnimate ? modalVariants : undefined}
             initial={shouldAnimate ? 'initial' : undefined}
             animate={shouldAnimate ? 'animate' : undefined}
