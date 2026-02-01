@@ -121,12 +121,14 @@ export async function checkUsernameUniqueness(
   try {
     const client = supabaseClient || defaultSupabase;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (client
-      .from('users') as any)
+    const result = await client
+      .from('users')
       .select('id, auth_user_id')
       .eq('username', username)
-      .maybeSingle() as { data: { id: string; auth_user_id: string } | null; error: unknown };
+      .maybeSingle();
+
+    const data = result.data as { id: string; auth_user_id: string } | null;
+    const error = result.error;
 
     if (error) {
       console.error('Error checking username uniqueness:', error);
