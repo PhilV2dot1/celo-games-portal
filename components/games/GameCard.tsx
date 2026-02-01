@@ -62,7 +62,7 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
           <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(to right, var(--chain-primary), var(--chain-dark))' }} />
 
           {/* Content */}
-          <div className="relative z-10">
+          <div className="relative z-10 flex flex-col h-full">
             {/* Icon */}
             <div className="flex justify-center mb-4">
               <motion.div
@@ -109,7 +109,7 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
             )}
 
             {/* Play button */}
-            <div className="text-center">
+            <div className="text-center mt-auto">
               <Button
                 variant="primary"
                 size="md"
