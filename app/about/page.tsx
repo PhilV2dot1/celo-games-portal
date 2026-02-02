@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div className="bg-blue-50 rounded-xl p-4 border-2 border-blue-300">
               <h3 className="text-lg font-bold text-blue-900 mb-2">🆓 {t('about.freePlayTitle')}</h3>
               <ul className="space-y-2 text-sm text-blue-800">
-                {(t('about.freePlayBullets') as string[]).map((bullet, i) => (
+                {(t('about.freePlayBullets') as unknown as string[]).map((bullet, i) => (
                   <li key={i}>• {bullet}</li>
                 ))}
               </ul>
@@ -54,7 +54,7 @@ export default function AboutPage() {
             <div className="bg-purple-50 rounded-xl p-4 border-2 border-purple-300">
               <h3 className="text-lg font-bold text-purple-900 mb-2">⛓️ {t('about.onChainTitle')}</h3>
               <ul className="space-y-2 text-sm text-purple-800">
-                {(t('about.onChainBullets') as string[]).map((bullet, i) => (
+                {(t('about.onChainBullets') as unknown as string[]).map((bullet, i) => (
                   <li key={i}>• {bullet}</li>
                 ))}
               </ul>
