@@ -49,7 +49,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
     base: '0x1aE5359EE59a01202E22b848156eFd8A682b5977',
   },
   '2048': {
-    celo: '0x3a4A909ed31446FFF21119071F4Db0b7DAe36Ed1',
+    celo: '0xeD8D3C3aA578049743492a813EC327A3209Ef151',
     base: '0xf2424dE8d85f95F5346bA480a6A72d6d860C153D',
   },
   mastermind: {
