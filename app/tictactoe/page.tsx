@@ -42,6 +42,15 @@ export default function TicTacToePage() {
   const { chain } = useAccount();
   const contractAddress = getContractAddress('tictactoe', chain?.id);
 
+  // Translate game messages from hook
+  const translateMessage = useCallback((message: string): string => {
+    const messageMap: Record<string, string> = {
+      'Click Start to begin!': t('games.tictactoe.clickToStart'),
+      'Recording game start on blockchain...': t('games.tictactoe.recordingGameStart'),
+    };
+    return messageMap[message] || message;
+  }, [t]);
+
   // Wrapper for handleMove with sound effect (solo)
   const handleSoloMoveWithSound = useCallback((index: number) => {
     play('place');
@@ -170,7 +179,7 @@ export default function TicTacToePage() {
         {!isMultiplayer && (
           <>
             {/* Game Status */}
-            <GameStatus message={soloGame.message} result={soloGame.result} />
+            <GameStatus message={translateMessage(soloGame.message)} result={soloGame.result} />
 
             {/* Game Board */}
             <TicTacToeBoard

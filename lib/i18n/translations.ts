@@ -77,6 +77,8 @@ export const translations = {
         title: 'Tic Tac Toe',
         subtitle: 'Three in a row on Celo',
         viewOnCeloscan: 'View on Celoscan →',
+        clickToStart: 'Click Start to begin!',
+        recordingGameStart: 'Recording game start on blockchain...',
       },
 
       // 2048 specific
@@ -395,6 +397,7 @@ export const translations = {
       wins: 'Wins',
       losses: 'Losses',
       ties: 'Ties',
+      draws: 'Draws',
       played: 'Played',
       winRate: 'Win Rate',
       current: 'Current',
@@ -940,6 +943,8 @@ export const translations = {
         title: 'Morpion',
         subtitle: 'Trois d\'affilée sur Celo',
         viewOnCeloscan: 'Voir sur Celoscan →',
+        clickToStart: 'Cliquez sur Démarrer pour commencer !',
+        recordingGameStart: 'Enregistrement du début de partie sur la blockchain...',
       },
 
       // 2048 specific
@@ -1258,6 +1263,7 @@ export const translations = {
       wins: 'Victoires',
       losses: 'Défaites',
       ties: 'Égalités',
+      draws: 'Nuls',
       played: 'Jouées',
       winRate: 'Taux de Victoire',
       current: 'Actuel',

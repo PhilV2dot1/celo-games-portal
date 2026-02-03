@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface PlayerStatsProps {
   stats: {
@@ -12,11 +13,13 @@ interface PlayerStatsProps {
 }
 
 export function PlayerStats({ stats }: PlayerStatsProps) {
+  const { t } = useLanguage();
+
   const statItems = [
-    { label: "Games", value: stats.games },
-    { label: "Wins", value: stats.wins },
-    { label: "Losses", value: stats.losses },
-    { label: "Draws", value: stats.draws },
+    { label: t('stats.games'), value: stats.games },
+    { label: t('stats.wins'), value: stats.wins },
+    { label: t('stats.losses'), value: stats.losses },
+    { label: t('stats.draws'), value: stats.draws },
   ];
 
   return (
@@ -26,7 +29,7 @@ export function PlayerStats({ stats }: PlayerStatsProps) {
       transition={{ delay: 0.2 }}
       className="bg-white/95 backdrop-blur-lg rounded-xl p-4 shadow-lg border border-gray-300"
     >
-      <h3 className="text-xs font-bold text-gray-600 mb-3">YOUR STATS</h3>
+      <h3 className="text-xs font-bold text-gray-600 mb-3">{t('games.yourStats').toUpperCase()}</h3>
       <div className="grid grid-cols-4 gap-3">
         {statItems.map((item, index) => (
           <motion.div
