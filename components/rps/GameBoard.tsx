@@ -4,6 +4,7 @@ import { memo } from "react";
 import { motion } from "framer-motion";
 import type { Choice } from "@/hooks/useRockPaperScissors";
 import { useFarcaster } from "@/components/providers";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface GameBoardProps {
   onChoice: (choice: Choice) => void;
@@ -18,6 +19,7 @@ const CHOICES = [
 
 export const GameBoard = memo(function GameBoard({ onChoice, disabled }: GameBoardProps) {
   const { isInFarcaster } = useFarcaster();
+  const { t } = useLanguage();
 
   // Check for reduced motion preference
   const prefersReducedMotion =
@@ -30,7 +32,7 @@ export const GameBoard = memo(function GameBoard({ onChoice, disabled }: GameBoa
   return (
     <div className="space-y-4 sm:space-y-5">
       <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-900">
-        Choose Your Move
+        {t('games.chooseYourMove')}
       </h2>
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {CHOICES.map((choice) => (

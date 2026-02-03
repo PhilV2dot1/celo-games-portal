@@ -53,6 +53,8 @@ export const translations = {
       reset: 'Reset',
       backToPortal: '← Back to Portal',
       contract: 'Contract:',
+      chooseYourMove: 'Choose Your Move',
+      yourStats: 'Your Stats',
 
       // Blackjack specific
       blackjack: {
@@ -392,8 +394,11 @@ export const translations = {
     stats: {
       wins: 'Wins',
       losses: 'Losses',
+      ties: 'Ties',
       played: 'Played',
       winRate: 'Win Rate',
+      current: 'Current',
+      best: 'Best',
       perGame: 'Per-Game Statistics',
       noGames: 'No games played yet',
       loading: 'Loading statistics...',
@@ -911,6 +916,8 @@ export const translations = {
       reset: 'Réinitialiser',
       backToPortal: '← Retour au Portail',
       contract: 'Contrat :',
+      chooseYourMove: 'Choisissez votre coup',
+      yourStats: 'Vos Statistiques',
 
       // Blackjack specific
       blackjack: {
@@ -1250,8 +1257,11 @@ export const translations = {
     stats: {
       wins: 'Victoires',
       losses: 'Défaites',
+      ties: 'Égalités',
       played: 'Jouées',
       winRate: 'Taux de Victoire',
+      current: 'Actuel',
+      best: 'Meilleur',
       perGame: 'Statistiques par Jeu',
       noGames: 'Aucune partie jouée pour le moment',
       loading: 'Chargement des statistiques...',

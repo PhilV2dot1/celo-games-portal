@@ -3,6 +3,7 @@
 import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import type { GameStats } from "@/hooks/useRockPaperScissors";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface PlayerStatsProps {
   stats: GameStats;
@@ -10,11 +11,13 @@ interface PlayerStatsProps {
 }
 
 export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerStatsProps) {
+  const { t } = useLanguage();
+
   // Memoize calculations to prevent unnecessary re-computation
   const { total, winRate } = useMemo(() => {
-    const t = stats.wins + stats.losses + stats.ties;
-    const wr = t > 0 ? Math.round((stats.wins / t) * 100) : 0;
-    return { total: t, winRate: wr };
+    const totalGames = stats.wins + stats.losses + stats.ties;
+    const wr = totalGames > 0 ? Math.round((stats.wins / totalGames) * 100) : 0;
+    return { total: totalGames, winRate: wr };
   }, [stats.wins, stats.losses, stats.ties]);
 
   return (
@@ -27,13 +30,13 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-bold text-gray-900">Your Stats</h3>
+        <h3 className="text-lg font-bold text-gray-900">{t('games.yourStats')}</h3>
         {onReset && total > 0 && (
           <button
             onClick={onReset}
             className="text-xs px-3 py-1 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors font-semibold"
           >
-            Reset
+            {t('games.reset')}
           </button>
         )}
       </div>
@@ -43,25 +46,25 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
           <div className="text-2xl font-black text-green-600">
             {stats.wins}
           </div>
-          <div className="text-xs font-semibold text-green-700">Wins</div>
+          <div className="text-xs font-semibold text-green-700">{t('stats.wins')}</div>
         </div>
         <div className="text-center bg-red-50 border-2 border-red-200 rounded-xl p-3">
           <div className="text-2xl font-black text-red-600">
             {stats.losses}
           </div>
-          <div className="text-xs font-semibold text-red-700">Losses</div>
+          <div className="text-xs font-semibold text-red-700">{t('stats.losses')}</div>
         </div>
         <div className="text-center bg-chain/5 border-2 border-yellow-200 rounded-xl p-3">
           <div className="text-2xl font-black text-chain">
             {stats.ties}
           </div>
-          <div className="text-xs font-semibold text-yellow-700">Ties</div>
+          <div className="text-xs font-semibold text-yellow-700">{t('stats.ties')}</div>
         </div>
       </div>
 
       <div className="flex items-center justify-between bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl p-3 border border-gray-200">
         <span className="text-sm font-semibold text-gray-700">
-          Win Rate:
+          {t('stats.winRate')}:
         </span>
         <span className="text-lg font-black text-gray-900">{winRate}%</span>
       </div>
@@ -74,7 +77,7 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
               <div className="text-sm font-bold text-blue-600">
                 🔥 {stats.currentStreak}
               </div>
-              <div className="text-xs text-blue-700">Current</div>
+              <div className="text-xs text-blue-700">{t('stats.current')}</div>
             </div>
           )}
           {stats.bestStreak !== undefined && (
@@ -82,7 +85,7 @@ export const PlayerStats = memo(function PlayerStats({ stats, onReset }: PlayerS
               <div className="text-sm font-bold text-gray-700">
                 🏆 {stats.bestStreak}
               </div>
-              <div className="text-xs text-gray-600">Best</div>
+              <div className="text-xs text-gray-600">{t('stats.best')}</div>
             </div>
           )}
         </div>
