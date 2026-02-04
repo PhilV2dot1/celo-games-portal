@@ -55,9 +55,11 @@ export const translations = {
       contract: 'Contract:',
       chooseYourMove: 'Choose Your Move',
       yourStats: 'Your Stats',
+      playNow: 'Play Now',
 
       // Blackjack specific
       blackjack: {
+        title: 'Blackjack',
         hit: 'HIT',
         stand: 'STAND',
         newGame: 'NEW GAME',
@@ -926,9 +928,11 @@ export const translations = {
       contract: 'Contrat :',
       chooseYourMove: 'Choisissez votre coup',
       yourStats: 'Vos Statistiques',
+      playNow: 'Jouer',
 
       // Blackjack specific
       blackjack: {
+        title: 'Blackjack',
         hit: 'CARTE',
         stand: 'RESTER',
         newGame: 'NOUVELLE PARTIE',

@@ -23,9 +23,16 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
   const audio = useOptionalAudio();
   const shouldAnimate = useShouldAnimate();
 
-  // Get translated description
-  const translationKey = `games.${game.id}`;
-  const description = t(translationKey as 'games.blackjack') || game.description;
+  // Get translated description from games.<gameId>.subtitle
+  const descriptionKey = `games.${game.id}.subtitle`;
+  const translatedDescription = t(descriptionKey);
+  // If translation key is returned as-is, fallback to game.description
+  const description = translatedDescription !== descriptionKey ? translatedDescription : game.description;
+
+  // Get translated game name from games.<gameId>.title
+  const nameKey = `games.${game.id}.title`;
+  const translatedName = t(nameKey);
+  const gameName = translatedName !== nameKey ? translatedName : game.name;
 
   const handleClick = () => {
     audio?.playUISound('click');
@@ -82,7 +89,7 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
 
             {/* Title */}
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white text-center mb-2 leading-tight tracking-tight">
-              {game.name}
+              {gameName}
             </h3>
 
             {/* Description */}
@@ -95,15 +102,15 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
               <div className="flex justify-center gap-4 text-gray-500 dark:text-gray-400 text-xs mb-4 pb-4 border-b border-gray-200 dark:border-gray-600">
                 <div className="text-center">
                   <div className="font-bold text-gray-900 dark:text-white text-sm mb-0.5">{stats.played}</div>
-                  <div className="uppercase tracking-wide">Played</div>
+                  <div className="uppercase tracking-wide">{t('stats.played')}</div>
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-gray-900 dark:text-white text-sm mb-0.5">{stats.wins}</div>
-                  <div className="uppercase tracking-wide">Wins</div>
+                  <div className="uppercase tracking-wide">{t('stats.wins')}</div>
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-gray-900 dark:text-white text-sm mb-0.5">{stats.totalPoints}</div>
-                  <div className="uppercase tracking-wide">Points</div>
+                  <div className="uppercase tracking-wide">{t('points')}</div>
                 </div>
               </div>
             )}
@@ -130,9 +137,9 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </motion.svg>
                 }
-                ariaLabel={`Play ${game.name}`}
+                ariaLabel={`${t('games.playNow')} ${gameName}`}
               >
-                Play Now
+                {t('games.playNow')}
               </Button>
             </div>
           </div>
