@@ -27,8 +27,34 @@ vi.mock('@farcaster/miniapp-sdk', () => ({
 }));
 
 // Mock @vanilla-extract modules to avoid CommonJS issues
-vi.mock('@vanilla-extract/sprinkles/createUtils', () => ({}));
-vi.mock('@vanilla-extract/css', () => ({}));
+// These are used by @rainbow-me/rainbowkit internally
+vi.mock('@vanilla-extract/sprinkles/createUtils', () => ({
+  default: {
+    createMapValueFn: vi.fn(() => vi.fn()),
+    createNormalizeValueFn: vi.fn(() => vi.fn()),
+  },
+  createMapValueFn: vi.fn(() => vi.fn()),
+  createNormalizeValueFn: vi.fn(() => vi.fn()),
+}));
+vi.mock('@vanilla-extract/css', () => ({
+  style: vi.fn(() => ''),
+  styleVariants: vi.fn(() => ({})),
+  createVar: vi.fn(() => ''),
+  fallbackVar: vi.fn(() => ''),
+  createTheme: vi.fn(() => ['', {}]),
+  createThemeContract: vi.fn(() => ({})),
+  assignVars: vi.fn(() => ({})),
+  createGlobalTheme: vi.fn(),
+  globalStyle: vi.fn(),
+  keyframes: vi.fn(() => ''),
+}));
+vi.mock('@vanilla-extract/dynamic', () => ({
+  assignInlineVars: vi.fn(() => ({})),
+  setElementVars: vi.fn(),
+}));
+vi.mock('@vanilla-extract/recipes', () => ({
+  recipe: vi.fn(() => vi.fn(() => '')),
+}));
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({

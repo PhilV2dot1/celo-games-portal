@@ -14,7 +14,11 @@ export default defineConfig({
       inline: [
         '@farcaster/miniapp-sdk',
         '@vanilla-extract/sprinkles',
+        '@vanilla-extract/sprinkles/createUtils',
         '@vanilla-extract/css',
+        '@vanilla-extract/dynamic',
+        '@vanilla-extract/recipes',
+        '@rainbow-me/rainbowkit',
       ],
     },
     pool: 'forks',
