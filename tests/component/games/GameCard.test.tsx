@@ -35,14 +35,28 @@ vi.mock('@/lib/i18n/LanguageContext', () => ({
     language: 'en',
     setLanguage: vi.fn(),
     t: (key: string) => {
-      // Mock translations for game descriptions
+      // Mock translations for game cards
       const translations: Record<string, string> = {
-        'games.blackjack': 'Beat the dealer to 21!',
-        'games.rps': 'Classic hand game!',
-        'games.tictactoe': 'Get three in a row!',
-        'games.jackpot': 'Spin the crypto wheel!',
-        'games.2048': 'Merge tiles to 2048!',
-        'games.mastermind': 'Crack the crypto code!',
+        // Game subtitles (descriptions)
+        'games.blackjack.subtitle': 'Beat the dealer to 21!',
+        'games.rps.subtitle': 'Classic hand game!',
+        'games.tictactoe.subtitle': 'Get three in a row!',
+        'games.jackpot.subtitle': 'Spin the crypto wheel!',
+        'games.2048.subtitle': 'Merge tiles to 2048!',
+        'games.mastermind.subtitle': 'Crack the crypto code!',
+        // Game titles
+        'games.blackjack.title': 'Blackjack',
+        'games.rps.title': 'Rock Paper Scissors',
+        'games.tictactoe.title': 'Tic-Tac-Toe',
+        'games.jackpot.title': 'Jackpot',
+        'games.2048.title': '2048',
+        'games.mastermind.title': 'Mastermind',
+        // Stats labels
+        'stats.played': 'Played',
+        'stats.wins': 'Wins',
+        'points': 'Points',
+        // Button
+        'games.playNow': 'Play Now',
       };
       return translations[key] || key;
     },
@@ -380,44 +394,48 @@ describe('GameCard', () => {
     expect(screen.queryByText('Played')).not.toBeInTheDocument();
   });
 
-  test('should handle very long game name', () => {
+  test('should handle unknown game with fallback to name prop', () => {
     mockGetStats.mockReturnValue({ played: 0, wins: 0, totalPoints: 0 });
 
-    const longNameGame: GameMetadata = {
+    const unknownGame: GameMetadata = {
       ...mockGame,
+      id: 'unknown-game', // Use ID not in i18n mock to trigger fallback
       name: 'Super Ultra Mega Awesome Game Name',
     };
 
-    render(<GameCard game={longNameGame} />);
+    render(<GameCard game={unknownGame} />);
 
+    // When translation not found, falls back to game.name
     expect(screen.getByText('Super Ultra Mega Awesome Game Name')).toBeInTheDocument();
   });
 
-  test('should handle very long description', () => {
+  test('should handle unknown game with fallback to description prop', () => {
     mockGetStats.mockReturnValue({ played: 0, wins: 0, totalPoints: 0 });
 
-    const longDescGame: GameMetadata = {
+    const unknownGame: GameMetadata = {
       ...mockGame,
       id: 'unknown-game', // Use ID not in i18n mock to trigger fallback
-      description: 'This is a very long description that explains the game in great detail and might wrap to multiple lines in the UI',
+      description: 'This is a very long description',
     };
 
-    render(<GameCard game={longDescGame} />);
+    render(<GameCard game={unknownGame} />);
 
-    // When translation not found, i18n returns the key
-    expect(screen.getByText('games.unknown-game')).toBeInTheDocument();
+    // When translation not found, falls back to game.description
+    expect(screen.getByText('This is a very long description')).toBeInTheDocument();
   });
 
-  test('should handle game with special characters in name', () => {
+  test('should handle game with special characters in fallback name', () => {
     mockGetStats.mockReturnValue({ played: 0, wins: 0, totalPoints: 0 });
 
     const specialCharGame: GameMetadata = {
       ...mockGame,
+      id: 'special-game', // Use ID not in i18n mock to trigger fallback
       name: 'Rock, Paper & Scissors!',
     };
 
     render(<GameCard game={specialCharGame} />);
 
+    // When translation not found, falls back to game.name
     expect(screen.getByText('Rock, Paper & Scissors!')).toBeInTheDocument();
   });
 

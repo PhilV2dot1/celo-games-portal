@@ -10,6 +10,19 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/e2e/**', '**/*.spec.ts'],
+    deps: {
+      inline: [
+        '@farcaster/miniapp-sdk',
+        '@vanilla-extract/sprinkles',
+        '@vanilla-extract/css',
+      ],
+    },
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],

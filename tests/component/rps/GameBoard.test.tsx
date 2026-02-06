@@ -21,6 +21,19 @@ vi.mock('@/components/providers', () => ({
   useFarcaster: vi.fn(),
 }));
 
+vi.mock('@/lib/i18n/LanguageContext', () => ({
+  useLanguage: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'games.chooseYourMove': 'Choose Your Move',
+      };
+      return translations[key] || key;
+    },
+    language: 'en',
+    setLanguage: vi.fn(),
+  }),
+}));
+
 vi.mock('framer-motion', () => ({
   motion: {
     button: ({ children, onClick, disabled, className, style, whileTap, ...props }: any) => (

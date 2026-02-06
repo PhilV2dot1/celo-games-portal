@@ -1,6 +1,5 @@
 import { describe, test, expect, vi } from 'vitest';
-import { screen } from '@testing-library/react';
-import { render } from '@/tests/helpers/render';
+import { render, screen } from '@testing-library/react';
 import { PlayerStats } from '@/components/tictactoe/PlayerStats';
 
 // Mock framer-motion
@@ -10,6 +9,24 @@ vi.mock('framer-motion', () => ({
       <div className={className} {...props}>{children}</div>
     ),
   },
+}));
+
+// Mock i18n
+vi.mock('@/lib/i18n/LanguageContext', () => ({
+  useLanguage: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'games.yourStats': 'Your Stats',
+        'stats.games': 'Games',
+        'stats.wins': 'Wins',
+        'stats.losses': 'Losses',
+        'stats.draws': 'Draws',
+      };
+      return translations[key] || key;
+    },
+    language: 'en',
+    setLanguage: vi.fn(),
+  }),
 }));
 
 /**

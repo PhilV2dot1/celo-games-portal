@@ -13,6 +13,23 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
 process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID = 'test-project-id';
 
+// Mock @farcaster/miniapp-sdk to avoid ES module issues
+vi.mock('@farcaster/miniapp-sdk', () => ({
+  sdk: {
+    actions: {
+      ready: vi.fn(),
+      openUrl: vi.fn(),
+    },
+    wallet: {
+      ethProvider: null,
+    },
+  },
+}));
+
+// Mock @vanilla-extract modules to avoid CommonJS issues
+vi.mock('@vanilla-extract/sprinkles/createUtils', () => ({}));
+vi.mock('@vanilla-extract/css', () => ({}));
+
 // Mock Next.js router
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
