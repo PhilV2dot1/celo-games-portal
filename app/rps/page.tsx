@@ -162,7 +162,7 @@ export default function RockPaperScissorsPage() {
         paddingRight: "max(1rem, env(safe-area-inset-right))",
       }}
     >
-      <div className="max-w-md mx-auto space-y-4 sm:space-y-5">
+      <div className="max-w-xl mx-auto space-y-4 sm:space-y-5">
         {/* Back to Portal Link */}
         <Link
           href="/"

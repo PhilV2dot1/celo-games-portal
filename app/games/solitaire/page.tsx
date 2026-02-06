@@ -174,7 +174,7 @@ export default function SolitairePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="max-w-xl mx-auto space-y-4">
         {/* Back to Portal Link */}
         <Link
           href="/"

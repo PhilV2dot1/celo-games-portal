@@ -128,70 +128,66 @@ export default function BlackjackPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-xl mx-auto space-y-4">
+        {/* Back to Portal Link */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold"
+        >
+          {t('games.backToPortal')}
+        </Link>
+
         {/* Header */}
-        <header className="mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-chain transition-colors font-bold mb-4"
-          >
-            {t('games.backToPortal')}
-          </Link>
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center mb-4">
-            <div className="text-6xl mb-2">🃏</div>
-            <h1 className="text-4xl sm:text-6xl font-black text-gray-900 dark:text-white mb-2">
-              Blackjack
-            </h1>
-            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base font-medium">
-              {t('games.blackjack.subtitle')}
-            </p>
-          </div>
-        </header>
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 border-chain text-center">
+          <div className="text-6xl mb-2">🃏</div>
+          <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2">
+            Blackjack
+          </h1>
+          <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">
+            {t('games.blackjack.subtitle')}
+          </p>
+        </div>
 
         {/* Mode Toggle */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center">
           <GameModeToggle mode={mode} onModeChange={handleModeChange} />
         </div>
 
         {/* ===== SOLO GAME UI ===== */}
         {!isMultiplayer && (
-          <div className="grid lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-4">
-              {soloGame.mode === 'onchain' && !soloGame.isConnected && (
-                <WalletConnect />
-              )}
-              {soloGame.message && <GameMessage message={translateMessage(soloGame.message)} />}
-              <BlackjackTable
-                playerCards={soloGame.playerHand}
-                dealerCards={soloGame.dealerHand}
-                playerTotal={soloGame.playerTotal}
-                dealerTotal={soloGame.dealerTotal}
-                showDealerCard={soloGame.showDealerCard}
-              />
-              <GameControls
-                onHit={hitWithSound}
-                onStand={soloGame.stand}
-                onNewGame={newGameWithSound}
-                onPlayOnChain={soloGame.playOnChain}
-                gamePhase={soloGame.gamePhase}
-                mode={soloGame.mode}
-                disabled={soloGame.isPending}
-              />
-            </div>
-            <div className="lg:col-span-1">
-              <GameStats
-                stats={soloGame.stats}
-                mode={soloGame.mode}
-                credits={soloGame.credits}
-                onResetCredits={soloGame.resetCredits}
-              />
-            </div>
+          <div className="space-y-4">
+            {soloGame.mode === 'onchain' && !soloGame.isConnected && (
+              <WalletConnect />
+            )}
+            {soloGame.message && <GameMessage message={translateMessage(soloGame.message)} />}
+            <BlackjackTable
+              playerCards={soloGame.playerHand}
+              dealerCards={soloGame.dealerHand}
+              playerTotal={soloGame.playerTotal}
+              dealerTotal={soloGame.dealerTotal}
+              showDealerCard={soloGame.showDealerCard}
+            />
+            <GameControls
+              onHit={hitWithSound}
+              onStand={soloGame.stand}
+              onNewGame={newGameWithSound}
+              onPlayOnChain={soloGame.playOnChain}
+              gamePhase={soloGame.gamePhase}
+              mode={soloGame.mode}
+              disabled={soloGame.isPending}
+            />
+            <GameStats
+              stats={soloGame.stats}
+              mode={soloGame.mode}
+              credits={soloGame.credits}
+              onResetCredits={soloGame.resetCredits}
+            />
           </div>
         )}
 
         {/* ===== MULTIPLAYER UI ===== */}
         {isMultiplayer && (
-          <div className="max-w-2xl mx-auto space-y-4">
+          <div className="space-y-4">
             {/* Error display */}
             {mp.error && (
               <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-700 dark:text-red-300 text-center">
@@ -432,7 +428,7 @@ export default function BlackjackPage() {
 
         {/* Footer (solo modes only) */}
         {!isMultiplayer && (
-          <footer className="mt-12 text-center text-gray-600 text-sm">
+          <footer className="text-center text-gray-600 text-sm">
             {isGameAvailableOnChain('blackjack', chain?.id) && contractAddress ? (
               <>
                 <p>Contract: {contractAddress}</p>
