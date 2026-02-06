@@ -20,9 +20,11 @@ export default defineConfig({
     pool: 'forks',
     poolOptions: {
       forks: {
-        singleFork: true,
+        isolate: true,
       },
     },
+    // Increase memory for CI and prevent heap exhaustion
+    testTimeout: 10000,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
