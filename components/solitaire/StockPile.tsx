@@ -13,7 +13,7 @@ export function StockPile({ cards, onClick }: StockPileProps) {
   return (
     <div
       className={cn(
-        "w-14 h-20 rounded-md border shadow-sm",
+        "w-16 h-24 rounded-md border shadow-sm",
         "flex items-center justify-center relative",
         "transition-all duration-150",
         hasCards ? "bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 border-slate-700 cursor-pointer hover:scale-105 hover:shadow-md"

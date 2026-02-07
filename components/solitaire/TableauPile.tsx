@@ -42,7 +42,7 @@ export function TableauPile({ column, columnIndex, onCardClick, onDrop }: Tablea
     <div
       ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={cn(
-        "relative w-14 min-h-32 rounded-md",
+        "relative w-16 min-h-32 rounded-md",
         "transition-all duration-150",
         isOver && canDrop && "bg-green-200 ring-2 ring-green-500",
         isOver && !canDrop && "bg-red-200 ring-2 ring-red-500"
@@ -50,8 +50,8 @@ export function TableauPile({ column, columnIndex, onCardClick, onDrop }: Tablea
       style={{ minHeight: "140px" }}
     >
       {column.length === 0 ? (
-        <div className="w-14 h-20 rounded-md border border-dashed border-gray-400 bg-gray-100 flex items-center justify-center">
-          <span className="text-2xl font-bold text-gray-300">K</span>
+        <div className="w-16 h-24 rounded-md border border-dashed border-gray-400 bg-gray-100 flex items-center justify-center">
+          <span className="text-3xl font-bold text-gray-300">K</span>
         </div>
       ) : (
         <div className="relative">
@@ -63,7 +63,7 @@ export function TableauPile({ column, columnIndex, onCardClick, onDrop }: Tablea
                 key={card.id}
                 className="absolute"
                 style={{
-                  top: `${index * 22}px`,
+                  top: `${index * 26}px`,
                   zIndex: index,
                 }}
               >

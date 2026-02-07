@@ -33,7 +33,7 @@ export function Card({ card, isDraggable = false, isTopCard = true, onClick, sty
     return (
       <div
         className={cn(
-          "w-14 h-20 rounded-md border border-slate-700 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900",
+          "w-16 h-24 rounded-md border border-slate-700 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900",
           "flex items-center justify-center cursor-default shadow-sm",
           "relative"
         )}
@@ -55,7 +55,7 @@ export function Card({ card, isDraggable = false, isTopCard = true, onClick, sty
     <div
       ref={drag as unknown as React.Ref<HTMLDivElement>}
       className={cn(
-        "w-14 h-20 rounded-md border border-gray-300 shadow-sm",
+        "w-16 h-24 rounded-md border border-gray-300 shadow-sm",
         bgColor,
         "flex flex-col relative",
         "transition-all duration-150",
@@ -74,7 +74,7 @@ export function Card({ card, isDraggable = false, isTopCard = true, onClick, sty
 
       {/* Center symbol */}
       <div className={cn("flex-1 flex items-center justify-center", color)}>
-        <div className="text-2xl">{getSuitSymbol(card.suit)}</div>
+        <div className="text-3xl">{getSuitSymbol(card.suit)}</div>
       </div>
 
       {/* Bottom right corner (rotated) */}
