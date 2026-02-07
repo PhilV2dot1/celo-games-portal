@@ -527,59 +527,72 @@ export function useConnectFive() {
 
       try {
         setStatus("processing");
-        setMessage("Checking for previous game...");
+        setMessage("Starting new game on blockchain...");
 
-        // Use publicClient.readContract to directly check if there's an active game
-        let isActive = false;
+        // Try to start the game directly first
         try {
-          isActive = await publicClient.readContract({
+          await writeContractAsync({
             address: contractAddress,
             abi: CONNECTFIVE_CONTRACT_ABI,
-            functionName: "isGameActive",
-            args: [address],
-          }) as boolean;
-          console.log("isGameActive result:", isActive);
-        } catch (readError) {
-          console.error("Error reading isGameActive:", readError);
-          // Continue anyway - try to start the game
-        }
+            functionName: "startGame",
+          });
 
-        // If there's an active game, end it first with a LOSE result (forfeit)
-        if (isActive === true) {
-          console.log("Active game detected, ending previous game...");
-          setMessage("Ending previous unfinished game...");
+          setGameStartedOnChain(true);
+          setStatus("playing");
+          setMessage("Game started! Your turn");
+          return;
+        } catch (startError) {
+          // If startGame fails, it might be because there's an active game
+          console.log("startGame failed, checking if there's an active game to end...", startError);
 
-          try {
-            await writeContractAsync({
-              address: contractAddress,
-              abi: CONNECTFIVE_CONTRACT_ABI,
-              functionName: "endGame",
-              args: [GAME_RESULT.LOSE], // Forfeit the previous game
-            });
-            console.log("Previous game ended successfully");
-            // Wait a bit for the transaction to be processed
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          } catch (endError) {
-            console.error("Error ending previous game:", endError);
-            // Continue anyway - the game might have been ended already
+          const errorStr = String(startError);
+          // Check if the error is about an active game
+          if (errorStr.includes("already in progress") || errorStr.includes("Game already") || errorStr.includes("revert")) {
+            setMessage("Ending previous unfinished game...");
+
+            try {
+              // Try to end the previous game
+              await writeContractAsync({
+                address: contractAddress,
+                abi: CONNECTFIVE_CONTRACT_ABI,
+                functionName: "endGame",
+                args: [GAME_RESULT.LOSE], // Forfeit the previous game
+              });
+              console.log("Previous game ended successfully");
+
+              // Wait a bit for the transaction to be processed
+              await new Promise(resolve => setTimeout(resolve, 2000));
+
+              // Now try to start the new game again
+              setMessage("Starting new game on blockchain...");
+              await writeContractAsync({
+                address: contractAddress,
+                abi: CONNECTFIVE_CONTRACT_ABI,
+                functionName: "startGame",
+              });
+
+              setGameStartedOnChain(true);
+              setStatus("playing");
+              setMessage("Game started! Your turn");
+              return;
+            } catch (endError) {
+              console.error("Error ending/restarting game:", endError);
+              throw endError;
+            }
+          } else {
+            // Some other error, rethrow
+            throw startError;
           }
         }
-
-        // Now start the new game
-        setMessage("Starting new game on blockchain...");
-        await writeContractAsync({
-          address: contractAddress,
-          abi: CONNECTFIVE_CONTRACT_ABI,
-          functionName: "startGame",
-        });
-
-        setGameStartedOnChain(true);
-        setStatus("playing");
-        setMessage("Game started! Your turn");
       } catch (error) {
         console.error("Failed to start on-chain game:", error);
         const errorMessage = error instanceof Error ? error.message : String(error);
-        setMessage(`⚠️ Failed to start on-chain game: ${errorMessage.slice(0, 50)}`);
+        // Check for user rejection
+        if (errorMessage.includes("User rejected") || errorMessage.includes("user rejected")) {
+          setMessage("Transaction cancelled");
+        } else {
+          setMessage(`⚠️ Failed: ${errorMessage.slice(0, 60)}`);
+        }
         setStatus("idle");
       }
     } else {
