@@ -498,6 +498,17 @@ export function useYahtzee() {
     args: address ? [address] : undefined,
   });
 
+  // Check if there's an active game on-chain
+  const { refetch: refetchActiveGame } = useReadContract({
+    address: contractAddress!,
+    abi: YAHTZEE_CONTRACT_ABI,
+    functionName: "isGameActive",
+    args: address ? [address] : undefined,
+    query: {
+      enabled: mode === "onchain" && isConnected && !!address && gameAvailable,
+    },
+  });
+
   // Load stats from localStorage (free mode) or blockchain (on-chain mode)
   useEffect(() => {
     if (mode === "free") {
@@ -872,6 +883,25 @@ export function useYahtzee() {
     if (mode === "onchain" && address && isConnected) {
       setStatus("processing");
       try {
+        // Check if there's an active game that needs to be abandoned first
+        const { data: currentActiveGame } = await refetchActiveGame();
+
+        if (currentActiveGame === true) {
+          console.log("Active game detected, abandoning previous game...");
+          setMessage("Abandoning previous unfinished game...");
+
+          await writeContractAsync({
+            address: contractAddress!,
+            abi: YAHTZEE_CONTRACT_ABI,
+            functionName: "abandonGame",
+          });
+
+          // Wait a bit for the transaction to be processed
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        // Now start the new game
+        setMessage("Starting new game on blockchain...");
         await writeContractAsync({
           address: contractAddress!,
           abi: YAHTZEE_CONTRACT_ABI,
@@ -879,6 +909,7 @@ export function useYahtzee() {
         });
         setGameStartedOnChain(true);
         setStatus("playing");
+        setMessage("Turn 1/13 - Roll the dice!");
       } catch (error) {
         console.error("Failed to start game on-chain:", error);
         setMessage("Blockchain error! Switching to free mode.");
@@ -886,7 +917,7 @@ export function useYahtzee() {
         setStatus("playing");
       }
     }
-  }, [status, mode, address, isConnected, vsAI, writeContractAsync]);
+  }, [status, mode, address, isConnected, vsAI, writeContractAsync, refetchActiveGame, contractAddress]);
 
   /**
    * Reset game to idle state
