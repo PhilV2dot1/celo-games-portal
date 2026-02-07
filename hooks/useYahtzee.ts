@@ -578,8 +578,9 @@ export function useYahtzee() {
     async (category: CategoryName) => {
       if (status !== "playing") return;
 
-      // Must roll dice at least once before selecting a category
-      if (rollsRemaining === 3) {
+      // Must roll dice at least once before selecting a category (only for human players)
+      // AI manages its own dice rolling in playAITurn, so skip this check for AI
+      if (rollsRemaining === 3 && currentPlayer !== "ai") {
         setMessage("Roll the dice first!");
         return;
       }
