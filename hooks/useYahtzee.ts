@@ -578,6 +578,12 @@ export function useYahtzee() {
     async (category: CategoryName) => {
       if (status !== "playing") return;
 
+      // Must roll dice at least once before selecting a category
+      if (rollsRemaining === 3) {
+        setMessage("Roll the dice first!");
+        return;
+      }
+
       // Validate category
       if (!category) {
         console.error("Invalid category selected:", category);
@@ -750,6 +756,7 @@ export function useYahtzee() {
     },
     [
       status,
+      rollsRemaining,
       scoreCard,
       playerScoreCard,
       aiScoreCard,
