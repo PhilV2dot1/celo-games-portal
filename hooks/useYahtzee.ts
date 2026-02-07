@@ -662,6 +662,23 @@ export function useYahtzee() {
 
           if (mode === "free") {
             saveStats(newStats);
+          } else if (mode === "onchain" && address && gameStartedOnChain) {
+            // End game on-chain (player score only)
+            setStatus("processing");
+            try {
+              await writeContractAsync({
+                address: contractAddress!,
+                abi: YAHTZEE_CONTRACT_ABI,
+                functionName: "endGame",
+                args: [BigInt(playerFinalScore)],
+              });
+              setStatus("finished");
+              refetchStats();
+            } catch (error) {
+              console.error("Failed to end game on-chain:", error);
+              setMessage("Blockchain error! Game saved locally.");
+              setStatus("finished");
+            }
           }
         } else {
           // Solo mode
@@ -843,8 +860,8 @@ export function useYahtzee() {
 
     setMessage("Turn 1/13 - Roll the dice!");
 
-    // Start game on-chain if in on-chain mode (AI mode is always free mode)
-    if (mode === "onchain" && address && isConnected && !vsAI) {
+    // Start game on-chain if in on-chain mode (works with AI mode too - only player score is recorded)
+    if (mode === "onchain" && address && isConnected) {
       setStatus("processing");
       try {
         await writeContractAsync({
