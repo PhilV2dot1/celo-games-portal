@@ -266,7 +266,7 @@ export function DiceBoard3D({
               index={index}
               value={value}
               isHeld={heldDice[index]}
-              isRolling={rollingDice[index]}
+              isRolling={rollingDice[index] && !heldDice[index]}
               onToggleHold={() => onToggleHold(index)}
               disabled={disabled}
             />
