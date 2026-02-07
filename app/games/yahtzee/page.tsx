@@ -104,7 +104,8 @@ export default function YahtzeePage() {
       hasRecordedGame.current = false;
     }
 
-    if (mode !== 'multiplayer' && soloGame.status === "finished" && soloGame.isComplete && !hasRecordedGame.current) {
+    // When status is "finished", the game is complete by definition (the hook sets this when all categories are filled)
+    if (mode !== 'multiplayer' && soloGame.status === "finished" && !hasRecordedGame.current) {
       // For AI mode, use player's score and win/lose based on AI comparison
       // For solo mode, use finalScore >= 200 as win threshold
       let result: "win" | "lose";
@@ -113,11 +114,11 @@ export default function YahtzeePage() {
       } else {
         result = soloGame.finalScore >= 200 ? "win" : "lose";
       }
-      console.log("Recording Yahtzee game:", { mode: soloGame.mode, result, vsAI: soloGame.vsAI, isComplete: soloGame.isComplete });
+      console.log("Recording Yahtzee game:", { mode: soloGame.mode, result, vsAI: soloGame.vsAI, finalScore: soloGame.finalScore });
       hasRecordedGame.current = true;
       recordGame("yahtzee", soloGame.mode, result);
     }
-  }, [mode, soloGame.status, soloGame.isComplete, soloGame.mode, soloGame.finalScore, soloGame.vsAI, soloGame.winner, recordGame]);
+  }, [mode, soloGame.status, soloGame.mode, soloGame.finalScore, soloGame.vsAI, soloGame.winner, recordGame]);
 
   // Play sound when multiplayer game finishes
   useEffect(() => {
