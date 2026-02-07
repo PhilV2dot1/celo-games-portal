@@ -232,14 +232,12 @@ export default function YahtzeePage() {
                     </button>
                     <button
                       onClick={() => soloGame.setVsAI(true)}
-                      disabled={soloGame.mode === "onchain"}
                       className={`
                         flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200
                         ${soloGame.vsAI
                           ? "bg-chain text-gray-900 shadow-md scale-105"
                           : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                         }
-                        ${soloGame.mode === "onchain" ? "opacity-50 cursor-not-allowed" : ""}
                       `}
                     >
                       🤖 vs AI Mode
@@ -247,7 +245,7 @@ export default function YahtzeePage() {
                   </div>
                   {soloGame.mode === "onchain" && soloGame.vsAI && (
                     <p className="text-xs text-gray-500 text-center mt-2">
-                      AI mode is only available in Free mode
+                      Your score will be recorded on-chain (AI plays locally)
                     </p>
                   )}
                 </div>
