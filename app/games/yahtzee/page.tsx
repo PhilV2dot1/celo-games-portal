@@ -9,7 +9,7 @@ import { useLocalStats } from "@/hooks/useLocalStats";
 import { useGameAudio } from "@/lib/audio/AudioContext";
 import { GameModeToggle } from "@/components/shared/GameModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
-import { DiceBoard } from "@/components/yahtzee/DiceBoard";
+import { DiceBoard3D } from "@/components/yahtzee/Dice3D";
 import { ScoreCard } from "@/components/yahtzee/ScoreCard";
 import { GameControls } from "@/components/yahtzee/GameControls";
 import { GameStatus } from "@/components/yahtzee/GameStatus";
@@ -336,7 +336,7 @@ export default function YahtzeePage() {
                 className="space-y-6"
               >
                 {/* Dice Board */}
-                <DiceBoard
+                <DiceBoard3D
                   dice={soloGame.dice}
                   heldDice={soloGame.heldDice}
                   onToggleHold={handleToggleHold}
@@ -517,7 +517,7 @@ export default function YahtzeePage() {
                 )}
 
                 {/* Dice Board */}
-                <DiceBoard
+                <DiceBoard3D
                   dice={mp.dice}
                   heldDice={mp.heldDice}
                   onToggleHold={handleMPToggleHold}
