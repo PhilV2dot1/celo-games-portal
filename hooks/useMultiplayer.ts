@@ -311,7 +311,18 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
     if (!room?.id || !user?.id) return;
 
     try {
-      await fetch(`/api/multiplayer/rooms/${room.id}/action`, {
+      // Optimistic update: update local player ready state immediately
+      setPlayers(prev =>
+        prev.map(p => p.player_number === myPlayerNumber ? { ...p, ready } : p)
+      );
+
+      if (ready) {
+        setStatus('ready');
+      } else {
+        setStatus('waiting');
+      }
+
+      const response = await fetch(`/api/multiplayer/rooms/${room.id}/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -321,16 +332,20 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
         }),
       });
 
-      if (ready) {
-        setStatus('ready');
-      } else {
+      if (!response.ok) {
+        // Revert on failure
+        setPlayers(prev =>
+          prev.map(p => p.player_number === myPlayerNumber ? { ...p, ready: !ready } : p)
+        );
         setStatus('waiting');
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to set ready status');
       }
     } catch (err) {
       console.error('[useMultiplayer] Set ready error:', err);
       setError((err as Error).message);
     }
-  }, [room?.id, user?.id]);
+  }, [room?.id, user?.id, myPlayerNumber]);
 
   // Send game action
   const sendAction = useCallback(async (type: ActionType, data: Record<string, unknown>) => {
