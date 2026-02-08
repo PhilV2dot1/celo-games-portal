@@ -248,7 +248,13 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
       setRoom(data.room);
 
       // Add the creator as player 1 in the local players list
-      const creatorPlayer: RoomPlayer = {
+      // Include user info so PlayerCard can display the name
+      const displayName = user.user_metadata?.full_name
+        || user.user_metadata?.name
+        || user.user_metadata?.preferred_username
+        || user.email?.split('@')[0]
+        || 'Player';
+      const creatorPlayer: RoomPlayer & { users?: Record<string, string> } = {
         room_id: data.room.id,
         user_id: user.id,
         player_number: 1,
@@ -256,6 +262,14 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
         disconnected: false,
         joined_at: new Date().toISOString(),
         disconnected_at: null,
+        username: displayName,
+        display_name: displayName,
+        avatar_url: user.user_metadata?.avatar_url || undefined,
+        users: {
+          display_name: displayName,
+          username: displayName,
+          avatar_url: user.user_metadata?.avatar_url || '',
+        },
       };
       setPlayers([creatorPlayer]);
       setMyPlayerNumber(1);
