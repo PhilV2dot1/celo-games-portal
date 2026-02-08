@@ -70,7 +70,7 @@ export class MultiplayerRealtimeClient {
 
               // Check if ready status changed
               if (oldPlayer.ready !== player.ready) {
-                this.callbacks.onPlayerReady?.(player.user_id, player.ready);
+                this.callbacks.onPlayerReady?.(player.user_id, player.ready, player.player_number);
               }
 
               // Check if player disconnected

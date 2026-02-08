@@ -76,7 +76,7 @@ export interface MultiplayerStats {
 export interface RoomCallbacks {
   onPlayerJoin: (player: RoomPlayer) => void;
   onPlayerLeave: (playerId: string) => void;
-  onPlayerReady: (playerId: string, ready: boolean) => void;
+  onPlayerReady: (playerId: string, ready: boolean, playerNumber?: number) => void;
   onGameStart: () => void;
   onGameStateUpdate: (state: Record<string, unknown>) => void;
   onAction: (action: GameAction) => void;

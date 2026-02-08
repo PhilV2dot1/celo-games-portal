@@ -103,9 +103,11 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
       onPlayerJoin: (player) => {
         console.log('[useMultiplayer] Player joined:', player);
         setPlayers(prev => {
-          // Avoid duplicates
-          if (prev.some(p => p.user_id === player.user_id)) {
-            return prev;
+          // Avoid duplicates - check by player_number (more reliable than user_id
+          // since local creator uses auth ID but realtime sends internal DB ID)
+          if (prev.some(p => p.player_number === player.player_number)) {
+            // Update existing player with server data (replace local placeholder)
+            return prev.map(p => p.player_number === player.player_number ? player : p);
           }
           return [...prev, player];
         });
@@ -114,10 +116,15 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
         console.log('[useMultiplayer] Player left:', playerId);
         setPlayers(prev => prev.filter(p => p.user_id !== playerId));
       },
-      onPlayerReady: (playerId, ready) => {
-        console.log('[useMultiplayer] Player ready:', playerId, ready);
+      onPlayerReady: (playerId, ready, playerNumber) => {
+        console.log('[useMultiplayer] Player ready:', playerId, ready, 'playerNumber:', playerNumber);
         setPlayers(prev =>
-          prev.map(p => p.user_id === playerId ? { ...p, ready } : p)
+          prev.map(p => {
+            // Match by player_number (more reliable) or fall back to user_id
+            if (playerNumber && p.player_number === playerNumber) return { ...p, ready };
+            if (p.user_id === playerId) return { ...p, ready };
+            return p;
+          })
         );
       },
       onGameStart: () => {
