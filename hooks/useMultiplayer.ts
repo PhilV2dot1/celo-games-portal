@@ -51,6 +51,7 @@ interface UseMultiplayerReturn {
   setReady: (ready: boolean) => Promise<void>;
   sendAction: (type: ActionType, data: Record<string, unknown>) => Promise<void>;
   updateGameState: (state: GameState) => Promise<void>;
+  endGame: (winnerId?: string | null) => Promise<void>;
   surrender: () => Promise<void>;
   leaveRoom: () => Promise<void>;
   cancelSearch: () => void;
@@ -460,6 +461,26 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
     }
   }, [room?.id]);
 
+  // End game (set room status to finished with winner)
+  const endGame = useCallback(async (winnerId?: string | null) => {
+    if (!room?.id) return;
+
+    try {
+      await fetch(`/api/multiplayer/rooms/${room.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: 'finished',
+          winner_id: winnerId || null,
+        }),
+      });
+      setStatus('finished');
+    } catch (err) {
+      console.error('[useMultiplayer] End game error:', err);
+      setError((err as Error).message);
+    }
+  }, [room?.id]);
+
   // Surrender
   const surrender = useCallback(async () => {
     if (!room?.id || !user?.id) return;
@@ -535,6 +556,7 @@ export function useMultiplayer(options: UseMultiplayerOptions): UseMultiplayerRe
     setReady,
     sendAction,
     updateGameState,
+    endGame,
     surrender,
     leaveRoom,
     cancelSearch,

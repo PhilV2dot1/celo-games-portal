@@ -240,11 +240,22 @@ export function useYahtzeeMultiplayer(): UseYahtzeeMultiplayerReturn {
 
       if (p1Final > p2Final) {
         newState.winner = 1;
+        setMatchResult(myPlayerNumber === 1 ? 'win' : 'lose');
       } else if (p2Final > p1Final) {
         newState.winner = 2;
+        setMatchResult(myPlayerNumber === 2 ? 'win' : 'lose');
       } else {
         newState.winner = 'draw';
+        setMatchResult('draw');
       }
+
+      // End the room so both clients transition to finished
+      // Find winner's user_id for the room record
+      const winnerPlayerNumber = newState.winner === 'draw' ? null : newState.winner;
+      const winnerPlayer = winnerPlayerNumber
+        ? multiplayer.players.find(p => p.player_number === winnerPlayerNumber)
+        : null;
+      multiplayer.endGame(winnerPlayer?.user_id || null);
     } else {
       // Switch to other player's turn
       newState.currentTurn = gameState.currentTurn === 1 ? 2 : 1;
