@@ -70,6 +70,7 @@ export const translations = {
         clickPlayOnChain: 'Click "PLAY ON-CHAIN" to start',
         statistics: 'Statistics',
         pushes: 'Pushes',
+        viewOnCeloscan: 'View on Celoscan →',
       },
 
       // Connect Five specific
@@ -943,6 +944,7 @@ export const translations = {
         clickPlayOnChain: 'Cliquez sur "JOUER ON-CHAIN" pour commencer',
         statistics: 'Statistiques',
         pushes: 'Égalités',
+        viewOnCeloscan: 'Voir sur Celoscan →',
       },
 
       // Connect Five specific

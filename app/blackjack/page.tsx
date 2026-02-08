@@ -432,7 +432,7 @@ export default function BlackjackPage() {
                     rel="noopener noreferrer"
                     className="text-gray-900 hover:text-chain font-semibold transition-colors underline decoration-chain"
                   >
-                    View on {getExplorerName(chain?.id)} →
+                    {t('games.blackjack.viewOnCeloscan').replace('Celoscan', getExplorerName(chain?.id))}
                   </a>
                 </p>
               </>
