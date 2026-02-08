@@ -110,13 +110,13 @@ export class MultiplayerRealtimeClient {
               const room = payload.new as MultiplayerRoom;
               const oldRoom = payload.old as Partial<MultiplayerRoom>;
 
-              // Check if game started
-              if (oldRoom.status === 'waiting' && room.status === 'playing') {
+              // Check if game started (don't rely on oldRoom.status - Supabase may not include it)
+              if (room.status === 'playing') {
                 this.callbacks.onGameStart?.();
               }
 
               // Check if game ended
-              if (oldRoom.status === 'playing' && room.status === 'finished') {
+              if (room.status === 'finished') {
                 // Determine end reason based on game state
                 const reason = room.winner_id ? 'win' : 'draw';
                 this.callbacks.onGameEnd?.(room.winner_id, reason);
