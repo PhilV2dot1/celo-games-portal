@@ -135,6 +135,38 @@ export async function POST(
           { status: 500 }
         );
       }
+
+      // Check if all players are ready -> start the game automatically
+      if (actionData?.ready !== false) {
+        const { data: allPlayers } = await supabase
+          .from('multiplayer_room_players')
+          .select('ready')
+          .eq('room_id', roomId)
+          .eq('disconnected', false);
+
+        const maxPlayers = room.max_players || 2;
+        const allReady = allPlayers
+          && allPlayers.length >= maxPlayers
+          && allPlayers.every((p: any) => p.ready);
+
+        if (allReady) {
+          console.log('[Multiplayer API] All players ready, starting game:', roomId);
+
+          const initialGameState = {
+            currentTurn: 1,
+            startedAt: new Date().toISOString(),
+          };
+
+          await supabase
+            .from('multiplayer_rooms')
+            .update({
+              status: 'playing',
+              game_state: initialGameState,
+              started_at: new Date().toISOString(),
+            })
+            .eq('id', roomId);
+        }
+      }
     }
 
     // Insert action
