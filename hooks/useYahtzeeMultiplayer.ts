@@ -122,7 +122,17 @@ export function useYahtzeeMultiplayer(): UseYahtzeeMultiplayerReturn {
       console.log('[Yahtzee Multiplayer] Game state update:', state);
       if (state && 'player1ScoreCard' in state) {
         const yState = state as YahtzeeState;
-        setGameState(yState);
+
+        // Only apply server state when it's NOT our turn (avoid overwriting
+        // our local state which is always more up-to-date during our turn)
+        setGameState(prev => {
+          const isMyTurnNow = prev.currentTurn === multiplayer.myPlayerNumber;
+          if (isMyTurnNow && yState.currentTurn === multiplayer.myPlayerNumber) {
+            // It's our turn and the server echoed our own update - skip
+            return prev;
+          }
+          return yState;
+        });
 
         if (yState.winner !== null) {
           if (yState.winner === 'draw') {
