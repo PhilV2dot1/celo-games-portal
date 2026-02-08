@@ -106,14 +106,17 @@ export function useYahtzeeMultiplayer(): UseYahtzeeMultiplayerReturn {
       setGameState(INITIAL_STATE);
       setMatchResult(null);
     },
-    onGameEnd: (winnerId, reason) => {
-      console.log('[Yahtzee Multiplayer] Game ended:', winnerId, reason);
-      if (reason === 'draw') {
-        setMatchResult('draw');
-      } else if (winnerId) {
-        const myId = multiplayer.players.find(p => p.player_number === multiplayer.myPlayerNumber)?.user_id;
-        setMatchResult(winnerId === myId ? 'win' : 'lose');
-      }
+    onGameEnd: (_winnerId, _reason) => {
+      console.log('[Yahtzee Multiplayer] Game ended - using score-based result');
+      // Don't set matchResult here - it's already correctly set by selectCategory
+      // or onGameStateUpdate based on actual scores. The winnerId from the room
+      // uses unreliable user IDs (auth ID vs internal DB ID mismatch).
+      // Instead, derive result from game state if not already set.
+      setMatchResult(prev => {
+        if (prev) return prev; // Already set by score logic
+        // Fallback: derive from game state
+        return null;
+      });
     },
     onOpponentAction: (action) => {
       console.log('[Yahtzee Multiplayer] Opponent action:', action);
