@@ -185,6 +185,7 @@ export function MinesweeperBoard({
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
+      data-testid="minesweeper-board"
       className={`bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-2 sm:p-4 rounded-2xl shadow-2xl border-4 border-gray-500 ${containerClass}`}
     >
       <div

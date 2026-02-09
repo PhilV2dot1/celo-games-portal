@@ -145,6 +145,7 @@ export default function SnakePage() {
             <div className="grid grid-cols-3 gap-2 max-w-xs mx-auto">
               <div />
               <button
+                data-testid="direction-up"
                 onClick={() => changeDirection("UP")}
                 className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
@@ -152,18 +153,21 @@ export default function SnakePage() {
               </button>
               <div />
               <button
+                data-testid="direction-left"
                 onClick={() => changeDirection("LEFT")}
                 className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 ←
               </button>
               <button
+                data-testid="direction-down"
                 onClick={() => changeDirection("DOWN")}
                 className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
                 ↓
               </button>
               <button
+                data-testid="direction-right"
                 onClick={() => changeDirection("RIGHT")}
                 className="aspect-square bg-chain hover:brightness-110 rounded-lg font-black text-2xl shadow-md active:scale-95 transition-all"
               >
@@ -177,6 +181,7 @@ export default function SnakePage() {
         <div className="flex gap-3 justify-center">
           {status === "idle" || isGameOver ? (
             <motion.button
+              data-testid="start-game"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
@@ -188,6 +193,7 @@ export default function SnakePage() {
             </motion.button>
           ) : (
             <motion.button
+              data-testid="reset-game"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}

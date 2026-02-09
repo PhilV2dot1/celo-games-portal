@@ -12,6 +12,7 @@ interface DiceBoardProps {
 
 interface DieProps {
   value: number;
+  index: number;
   isHeld: boolean;
   isRolling: boolean;
   onToggleHold: () => void;
@@ -84,9 +85,10 @@ function RollingParticles() {
   );
 }
 
-function Die({ value, isHeld, isRolling, onToggleHold, disabled }: DieProps) {
+function Die({ value, index, isHeld, isRolling, onToggleHold, disabled }: DieProps) {
   return (
     <motion.button
+      data-testid={`die-${index}`}
       onClick={!disabled ? onToggleHold : undefined}
       disabled={disabled}
       className={`
@@ -265,6 +267,7 @@ export function DiceBoard({
             >
               <Die
                 value={value}
+                index={index}
                 isHeld={heldDice[index]}
                 isRolling={rollingDice[index]}
                 onToggleHold={() => onToggleHold(index)}

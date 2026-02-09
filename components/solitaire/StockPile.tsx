@@ -19,6 +19,7 @@ export function StockPile({ cards, onClick }: StockPileProps) {
         hasCards ? "bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 border-slate-700 cursor-pointer hover:scale-105 hover:shadow-md"
                : "bg-gray-100 border-dashed border-gray-400 cursor-pointer hover:bg-gray-200"
       )}
+      data-testid="stock-pile"
       onClick={onClick}
     >
       {hasCards ? (

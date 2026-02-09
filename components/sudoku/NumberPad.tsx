@@ -15,6 +15,7 @@ export function NumberPad({ onNumberClick, onErase, disabled }: NumberPadProps) 
         {numbers.map((num) => (
           <motion.button
             key={num}
+            data-testid={`numpad-${num}`}
             onClick={() => onNumberClick(num)}
             disabled={disabled}
             className="px-4 py-3 sm:px-6 sm:py-4 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black text-lg sm:text-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"

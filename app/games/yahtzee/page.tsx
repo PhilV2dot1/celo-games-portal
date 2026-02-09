@@ -315,6 +315,7 @@ export default function YahtzeePage() {
                 className="flex justify-center"
               >
                 <button
+                  data-testid="start-game"
                   onClick={soloGame.startGame}
                   disabled={soloGame.mode === "onchain" && !soloGame.isConnected}
                   className="px-8 py-4 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 text-xl font-black rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -333,6 +334,7 @@ export default function YahtzeePage() {
                 className="flex justify-center"
               >
                 <button
+                  data-testid="reset-game"
                   onClick={soloGame.resetGame}
                   className="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white text-xl font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
                 >

@@ -23,6 +23,7 @@ export function GameControls({
     <div className="flex flex-col items-center gap-4">
       {/* Roll Button */}
       <motion.button
+        data-testid="roll-dice"
         onClick={onRoll}
         disabled={!canRoll || isProcessing}
         className={`

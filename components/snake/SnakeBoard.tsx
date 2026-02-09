@@ -39,6 +39,7 @@ export function SnakeBoard({ snake, food, gridSize }: SnakeBoardProps) {
     <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-4 shadow-2xl border-4 border-chain">
       <div
         className="grid gap-0.5 bg-gray-300 p-0.5 rounded-lg"
+        data-testid="snake-board"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
           aspectRatio: "1/1",

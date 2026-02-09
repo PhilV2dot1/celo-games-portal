@@ -184,6 +184,7 @@ export default function MinesweeperPage() {
         <div className="flex gap-3 justify-center">
           {status === "idle" || isFinished ? (
             <motion.button
+              data-testid="start-game"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
@@ -195,6 +196,7 @@ export default function MinesweeperPage() {
             </motion.button>
           ) : (
             <motion.button
+              data-testid="reset-game"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}

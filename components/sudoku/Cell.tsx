@@ -67,6 +67,7 @@ export const Cell = React.memo(function Cell({
       onClick={handleClick}
       role="button"
       tabIndex={disabled ? -1 : 0}
+      data-testid={`sudoku-cell-${cell.row}-${cell.col}`}
       aria-label={`Cell row ${cell.row + 1}, column ${cell.col + 1}, ${
         cell.value === 0 ? "empty" : `value ${cell.value}`
       }${cell.isGiven ? ", given" : ", user-entered"}${isConflict ? ", conflict" : ""}`}

@@ -214,6 +214,7 @@ export default function SudokuPage() {
         <div className="flex gap-3 justify-center">
           {canStart && (
             <motion.button
+              data-testid="start-game"
               onClick={startGame}
               disabled={isProcessing || (mode === "onchain" && !isConnected)}
               className="px-8 py-3 bg-gradient-to-r from-chain to-chain hover:brightness-110 text-gray-900 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -226,6 +227,7 @@ export default function SudokuPage() {
 
           {(canPlay || isFinished) && (
             <motion.button
+              data-testid="reset-game"
               onClick={resetGame}
               className="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-black shadow-lg transition-all"
               whileHover={{ scale: 1.05 }}

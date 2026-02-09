@@ -22,12 +22,13 @@ export function ConnectFiveBoard({
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-4 shadow-2xl border-4 border-chain">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-4 shadow-2xl border-4 border-chain" data-testid="connectfive-board">
       <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}>
         {Array.from({ length: COLS }).map((_, col) => (
           <div key={col} className="space-y-2">
             {/* Column click area */}
             <button
+              data-testid={`cf-column-${col}`}
               onClick={() => !disabled && onColumnClick(col)}
               disabled={disabled || board[0][col] !== null}
               className={cn(

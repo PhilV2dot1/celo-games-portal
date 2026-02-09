@@ -52,6 +52,7 @@ export function DifficultySelector({
           return (
             <motion.button
               key={diff}
+              data-testid={`difficulty-${diff}`}
               onClick={() => onDifficultyChange(diff)}
               disabled={disabled}
               whileHover={!disabled ? { scale: 1.05 } : {}}

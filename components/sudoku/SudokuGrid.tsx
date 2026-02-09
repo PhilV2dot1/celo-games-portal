@@ -48,7 +48,7 @@ export function SudokuGrid({
   };
 
   return (
-    <div className="inline-block bg-white p-2 sm:p-4 rounded-xl shadow-2xl border-4 border-gray-800">
+    <div className="inline-block bg-white p-2 sm:p-4 rounded-xl shadow-2xl border-4 border-gray-800" data-testid="sudoku-grid">
       <div
         className="grid grid-cols-9 gap-0"
         style={{

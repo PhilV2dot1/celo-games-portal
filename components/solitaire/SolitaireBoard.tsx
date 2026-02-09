@@ -42,7 +42,7 @@ export function SolitaireBoard({
 
   return (
     <DndProvider backend={Backend}>
-      <div className="flex flex-col gap-3 sm:gap-4 p-2 sm:p-3" style={{ minHeight: "400px" }}>
+      <div className="flex flex-col gap-3 sm:gap-4 p-2 sm:p-3" data-testid="solitaire-board" style={{ minHeight: "400px" }}>
         {/* Top row: Stock, Waste, Spacer, Foundations */}
         <div className="flex justify-between items-start">
           {/* Left side: Stock and Waste */}

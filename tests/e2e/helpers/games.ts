@@ -1,13 +1,30 @@
 import { Page, expect } from '@playwright/test';
 
+// All game IDs with their route mapping
+type AllGameId =
+  | 'blackjack' | 'rps' | 'tictactoe' | 'jackpot' | '2048' | 'mastermind'
+  | 'snake' | 'minesweeper' | 'connect-five' | 'solitaire' | 'yahtzee' | 'sudoku';
+
+const GAME_ROUTES: Record<AllGameId, string> = {
+  blackjack: '/blackjack',
+  rps: '/rps',
+  tictactoe: '/tictactoe',
+  jackpot: '/jackpot',
+  '2048': '/2048',
+  mastermind: '/mastermind',
+  snake: '/games/snake',
+  minesweeper: '/games/minesweeper',
+  'connect-five': '/games/connect-five',
+  solitaire: '/games/solitaire',
+  yahtzee: '/games/yahtzee',
+  sudoku: '/games/sudoku',
+};
+
 /**
  * Navigate to a specific game
  */
-export async function navigateToGame(
-  page: Page,
-  gameId: 'blackjack' | 'rps' | 'tictactoe' | 'jackpot' | '2048' | 'mastermind'
-) {
-  await page.goto(`/${gameId}`);
+export async function navigateToGame(page: Page, gameId: AllGameId) {
+  await page.goto(GAME_ROUTES[gameId]);
   await page.waitForLoadState('networkidle');
 }
 
@@ -211,6 +228,182 @@ export async function playJackpotFree(page: Page) {
 }
 
 /**
+ * Play Snake game (free mode) - start and let it run briefly
+ */
+export async function playSnakeFree(page: Page) {
+  await navigateToGame(page, 'snake');
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for snake board to be visible
+  await page.waitForSelector('[data-testid="snake-board"]', { timeout: 5000 });
+
+  // Make a few moves via keyboard
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('ArrowLeft');
+  await page.waitForTimeout(300);
+
+  // Wait for game to end naturally or timeout
+  // Snake can die quickly if it runs into a wall
+  await page.waitForTimeout(3000);
+}
+
+/**
+ * Play Minesweeper game (free mode) - start and click some cells
+ */
+export async function playMinesweeperFree(page: Page) {
+  await navigateToGame(page, 'minesweeper');
+
+  // Select easy difficulty
+  const easyButton = page.locator('[data-testid="difficulty-easy"]');
+  if (await easyButton.isVisible()) {
+    await easyButton.click();
+  }
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for board to be visible
+  await page.waitForSelector('[data-testid="minesweeper-board"]', { timeout: 5000 });
+
+  // Click a few cells (center of easy board to increase odds of not hitting mine)
+  const cells = page.locator('[data-testid="minesweeper-board"] button');
+  const count = await cells.count();
+  if (count > 0) {
+    // Click the middle cell first (safer on easy boards)
+    const middleIndex = Math.floor(count / 2);
+    await cells.nth(middleIndex).click();
+    await page.waitForTimeout(500);
+  }
+}
+
+/**
+ * Play Connect Five game (free mode) - start and drop a piece
+ */
+export async function playConnectFiveFree(page: Page) {
+  await navigateToGame(page, 'connect-five');
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for board to be visible
+  await page.waitForSelector('[data-testid="connectfive-board"]', { timeout: 5000 });
+
+  // Drop a piece in column 3 (middle-ish)
+  const col3 = page.locator('[data-testid="cf-column-3"]');
+  if (await col3.isVisible()) {
+    await col3.click();
+    await page.waitForTimeout(1000); // Wait for AI response
+  }
+
+  // Drop another piece
+  const col4 = page.locator('[data-testid="cf-column-4"]');
+  if (await col4.isVisible()) {
+    await col4.click();
+    await page.waitForTimeout(1000);
+  }
+}
+
+/**
+ * Play Solitaire game (free mode) - start and click stock pile
+ */
+export async function playSolitaireFree(page: Page) {
+  await navigateToGame(page, 'solitaire');
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for board to be visible
+  await page.waitForSelector('[data-testid="solitaire-board"]', { timeout: 5000 });
+
+  // Click stock pile a few times
+  const stockPile = page.locator('[data-testid="stock-pile"]');
+  if (await stockPile.isVisible()) {
+    await stockPile.click();
+    await page.waitForTimeout(500);
+    await stockPile.click();
+    await page.waitForTimeout(500);
+    await stockPile.click();
+  }
+}
+
+/**
+ * Play Yahtzee game (free mode) - start, roll, select a category
+ */
+export async function playYahtzeeFree(page: Page) {
+  await navigateToGame(page, 'yahtzee');
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for dice to be visible
+  await page.waitForSelector('[data-testid="die-0"]', { timeout: 5000 });
+
+  // Roll dice
+  const rollButton = page.locator('[data-testid="roll-dice"]');
+  await rollButton.click();
+  await page.waitForTimeout(1500); // Wait for roll animation
+
+  // Hold first die
+  const die0 = page.locator('[data-testid="die-0"]');
+  await die0.click();
+
+  // Roll again
+  if (await rollButton.isEnabled()) {
+    await rollButton.click();
+    await page.waitForTimeout(1500);
+  }
+
+  // Select "chance" category (always available, accepts any dice combo)
+  const chanceCategory = page.locator('[data-category="chance"]');
+  if (await chanceCategory.isVisible()) {
+    await chanceCategory.click();
+  }
+}
+
+/**
+ * Play Sudoku game (free mode) - start, select a cell, enter a number
+ */
+export async function playSudokuFree(page: Page) {
+  await navigateToGame(page, 'sudoku');
+
+  // Click start game
+  const startButton = page.locator('[data-testid="start-game"]');
+  await startButton.click();
+
+  // Wait for grid to be visible
+  await page.waitForSelector('[data-testid="sudoku-grid"]', { timeout: 5000 });
+
+  // Find and click an empty cell (try a few positions)
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const cell = page.locator(`[data-testid="sudoku-cell-${row}-${col}"]`);
+      const text = await cell.textContent();
+      if (!text || text.trim() === '') {
+        await cell.click();
+        await page.waitForTimeout(300);
+
+        // Enter a number via numpad
+        const numpad1 = page.locator('[data-testid="numpad-1"]');
+        if (await numpad1.isVisible()) {
+          await numpad1.click();
+        }
+        return; // Done - we placed one number
+      }
+    }
+  }
+}
+
+/**
  * Get current points from header or profile
  */
 export async function getCurrentPoints(page: Page): Promise<number> {
@@ -258,7 +451,7 @@ export async function getGameResult(page: Page): Promise<string> {
 export async function playMultipleGames(
   page: Page,
   count: number,
-  gameType: 'blackjack' | 'rps' | 'tictactoe' | 'jackpot' | '2048' | 'mastermind' = 'blackjack'
+  gameType: AllGameId = 'blackjack'
 ) {
   for (let i = 0; i < count; i++) {
     switch (gameType) {
@@ -279,6 +472,24 @@ export async function playMultipleGames(
         break;
       case 'mastermind':
         await playMastermindFree(page);
+        break;
+      case 'snake':
+        await playSnakeFree(page);
+        break;
+      case 'minesweeper':
+        await playMinesweeperFree(page);
+        break;
+      case 'connect-five':
+        await playConnectFiveFree(page);
+        break;
+      case 'solitaire':
+        await playSolitaireFree(page);
+        break;
+      case 'yahtzee':
+        await playYahtzeeFree(page);
+        break;
+      case 'sudoku':
+        await playSudokuFree(page);
         break;
     }
 

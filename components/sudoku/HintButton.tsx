@@ -19,6 +19,7 @@ export function HintButton({ hintsRemaining, onHintClick, disabled }: HintButton
         Click to highlight all conflicts in the grid
       </p>
       <motion.button
+        data-testid="hint-button"
         onClick={onHintClick}
         disabled={buttonDisabled}
         className={`w-full px-6 py-3 rounded-xl font-black shadow-lg transition-all ${

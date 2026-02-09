@@ -29,6 +29,7 @@ export function GameControls({
           onClick={onStart}
           size="lg"
           className="bg-green-600 hover:bg-green-700 text-white px-8"
+          data-testid="start-game"
         >
           Start Game
         </Button>
@@ -39,6 +40,7 @@ export function GameControls({
           variant="outline"
           className="px-8"
           disabled={status === "processing"}
+          data-testid="reset-game"
         >
           Reset Game
         </Button>
