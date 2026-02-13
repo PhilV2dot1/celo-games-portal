@@ -38,6 +38,11 @@ interface BadgeRequirement {
   difficulty?: 'easy' | 'medium' | 'hard';
   all_difficulties?: boolean;
   all_difficulties_streak?: boolean;
+  // Social & Tournament
+  friends_count?: number;
+  tournaments_played?: number;
+  tournaments_won?: number;
+  tournament_win_streak?: number;
 }
 
 interface Badge {
@@ -194,6 +199,22 @@ export async function POST(request: NextRequest) {
                            sudokuSessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length > 0,
     };
 
+    // Social stats: friends count
+    const { count: friendsCount } = await supabase
+      .from('friendships')
+      .select('*', { count: 'exact', head: true })
+      .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`)
+      .eq('status', 'accepted');
+
+    // Tournament stats
+    const { data: tournamentParticipations } = await supabase
+      .from('tournament_participants')
+      .select('tournament_id, final_position')
+      .eq('user_id', userId) as { data: any[] | null }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    const tournamentsPlayed = tournamentParticipations?.length || 0;
+    const tournamentsWon = tournamentParticipations?.filter(t => t.final_position === 1).length || 0;
+
     const userStats = {
       games_played: gamesPlayed,
       wins,
@@ -207,6 +228,9 @@ export async function POST(request: NextRequest) {
       celo_wagered: onchainGames * 0.01, // Simplified: each on-chain game = 0.01 CELO
       connect4Stats,
       sudokuStats,
+      friends_count: friendsCount || 0,
+      tournaments_played: tournamentsPlayed,
+      tournaments_won: tournamentsWon,
     };
 
     console.log('[Badge Check] User stats:', userStats);
@@ -334,6 +358,15 @@ export async function POST(request: NextRequest) {
           qualifies = false;
         }
         if (req.celo_wagered !== undefined && userStats.celo_wagered < req.celo_wagered) {
+          qualifies = false;
+        }
+        if (req.friends_count !== undefined && userStats.friends_count < req.friends_count) {
+          qualifies = false;
+        }
+        if (req.tournaments_played !== undefined && userStats.tournaments_played < req.tournaments_played) {
+          qualifies = false;
+        }
+        if (req.tournaments_won !== undefined && userStats.tournaments_won < req.tournaments_won) {
           qualifies = false;
         }
       }

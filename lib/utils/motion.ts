@@ -144,6 +144,15 @@ export const scaleInVariants: Variants = animations.scaleIn;
 export const bounceInVariants: Variants = animations.bounceIn;
 
 /**
+ * Page enter animation props (spread onto motion.div)
+ */
+export const pageEnter = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+};
+
+/**
  * Stagger container for children animations
  */
 export const staggerContainerVariants: Variants = {

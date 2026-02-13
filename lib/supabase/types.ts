@@ -248,6 +248,148 @@ export interface Database {
           created_at?: string
         }
       }
+      // Social Tables
+      friendships: {
+        Row: {
+          id: string
+          requester_id: string
+          addressee_id: string
+          status: 'pending' | 'accepted' | 'blocked'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          requester_id: string
+          addressee_id: string
+          status?: 'pending' | 'accepted' | 'blocked'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          requester_id?: string
+          addressee_id?: string
+          status?: 'pending' | 'accepted' | 'blocked'
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      // Tournament Tables
+      tournaments: {
+        Row: {
+          id: string
+          game_id: string
+          name: string
+          status: 'registration' | 'in_progress' | 'completed' | 'cancelled'
+          format: 'single_elimination'
+          max_players: number
+          current_players: number
+          created_by: string
+          starts_at: string | null
+          created_at: string
+          started_at: string | null
+          finished_at: string | null
+          winner_id: string | null
+          prize_points: number
+        }
+        Insert: {
+          id?: string
+          game_id: string
+          name: string
+          status?: 'registration' | 'in_progress' | 'completed' | 'cancelled'
+          format?: 'single_elimination'
+          max_players: number
+          current_players?: number
+          created_by: string
+          starts_at?: string | null
+          created_at?: string
+          started_at?: string | null
+          finished_at?: string | null
+          winner_id?: string | null
+          prize_points?: number
+        }
+        Update: {
+          id?: string
+          game_id?: string
+          name?: string
+          status?: 'registration' | 'in_progress' | 'completed' | 'cancelled'
+          format?: 'single_elimination'
+          max_players?: number
+          current_players?: number
+          created_by?: string
+          starts_at?: string | null
+          created_at?: string
+          started_at?: string | null
+          finished_at?: string | null
+          winner_id?: string | null
+          prize_points?: number
+        }
+      }
+      tournament_participants: {
+        Row: {
+          tournament_id: string
+          user_id: string
+          seed: number
+          eliminated: boolean
+          final_position: number | null
+          joined_at: string
+        }
+        Insert: {
+          tournament_id: string
+          user_id: string
+          seed: number
+          eliminated?: boolean
+          final_position?: number | null
+          joined_at?: string
+        }
+        Update: {
+          tournament_id?: string
+          user_id?: string
+          seed?: number
+          eliminated?: boolean
+          final_position?: number | null
+          joined_at?: string
+        }
+      }
+      tournament_matches: {
+        Row: {
+          id: string
+          tournament_id: string
+          round: number
+          match_number: number
+          player1_id: string | null
+          player2_id: string | null
+          winner_id: string | null
+          room_id: string | null
+          status: 'pending' | 'playing' | 'completed' | 'bye'
+          scheduled_at: string | null
+        }
+        Insert: {
+          id?: string
+          tournament_id: string
+          round: number
+          match_number: number
+          player1_id?: string | null
+          player2_id?: string | null
+          winner_id?: string | null
+          room_id?: string | null
+          status?: 'pending' | 'playing' | 'completed' | 'bye'
+          scheduled_at?: string | null
+        }
+        Update: {
+          id?: string
+          tournament_id?: string
+          round?: number
+          match_number?: number
+          player1_id?: string | null
+          player2_id?: string | null
+          winner_id?: string | null
+          room_id?: string | null
+          status?: 'pending' | 'playing' | 'completed' | 'bye'
+          scheduled_at?: string | null
+        }
+      }
       multiplayer_stats: {
         Row: {
           user_id: string

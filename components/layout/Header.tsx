@@ -186,6 +186,18 @@ export function Header() {
                 {t('nav.profile')}
               </Link>
               <Link
+                href="/friends"
+                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                {t('nav.friends')}
+              </Link>
+              <Link
+                href="/tournaments"
+                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                {t('nav.tournaments')}
+              </Link>
+              <Link
                 href="/about"
                 className="px-4 py-2 text-sm font-semibold rounded-lg transition-colors"
                 style={{ color: 'var(--chain-dark)' }}

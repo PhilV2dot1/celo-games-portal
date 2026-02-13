@@ -156,9 +156,48 @@ export async function PATCH(
       );
     }
 
+    // Auto-advance tournament match when room finishes with a winner
+    let tournamentAdvanced = false;
+    if (status === 'finished' && winner_id) {
+      try {
+        const { data: tournamentMatch } = await supabase
+          .from('tournament_matches')
+          .select('id, tournament_id')
+          .eq('room_id', roomId)
+          .single();
+
+        if (tournamentMatch) {
+          // Call the tournament advance endpoint internally
+          const baseUrl = request.nextUrl.origin;
+          const advanceRes = await fetch(
+            `${baseUrl}/api/tournaments/${tournamentMatch.tournament_id}/advance`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                matchId: tournamentMatch.id,
+                winnerId: winner_id,
+              }),
+            }
+          );
+
+          if (advanceRes.ok) {
+            tournamentAdvanced = true;
+            console.log(`[Multiplayer API] Tournament match ${tournamentMatch.id} auto-advanced, winner: ${winner_id}`);
+          } else {
+            console.error('[Multiplayer API] Failed to auto-advance tournament match');
+          }
+        }
+      } catch (tError) {
+        // Non-blocking: tournament advance failure should not break room update
+        console.error('[Multiplayer API] Tournament auto-advance error:', tError);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       room,
+      tournamentAdvanced,
     });
   } catch (error) {
     console.error('[Multiplayer API] Error updating room:', error);

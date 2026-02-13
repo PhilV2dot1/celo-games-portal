@@ -154,6 +154,8 @@ export function MobileMenu({
                 { href: "/", label: t('nav.home') },
                 { href: "/leaderboard", label: t('nav.leaderboard') },
                 { href: "/profile/me", label: t('nav.profile') },
+                { href: "/friends", label: t('nav.friends') },
+                { href: "/tournaments", label: t('nav.tournaments') },
                 { href: "/about", label: t('nav.guide') },
               ].map((link) => (
                 <Link
