@@ -137,9 +137,9 @@ export default function MyProfilePage() {
 
   if (isLoadingProfile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400">
-        <div className="text-center bg-white/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300">
-          <div className="text-gray-900 text-xl font-semibold mb-2">{t('loading') || 'Chargement...'}</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300 dark:border-gray-700">
+          <div className="text-gray-900 dark:text-white text-xl font-semibold mb-2">{t('loading') || 'Chargement...'}</div>
         </div>
       </div>
     );
@@ -148,9 +148,9 @@ export default function MyProfilePage() {
   // Show loading for anonymous users (no auth, no wallet) while localStorage loads
   if (!isAuthenticated && !walletConnected && !localLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400">
-        <div className="text-center bg-white/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300">
-          <div className="text-gray-900 text-xl font-semibold mb-2">{t('loading') || 'Chargement...'}</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300 dark:border-gray-700">
+          <div className="text-gray-900 dark:text-white text-xl font-semibold mb-2">{t('loading') || 'Chargement...'}</div>
         </div>
       </div>
     );
@@ -174,7 +174,7 @@ export default function MyProfilePage() {
   const bio = hasDbProfile ? dbProfile.user.bio : '';
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 p-4 sm:p-8">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         <Header />
 
@@ -191,7 +191,7 @@ export default function MyProfilePage() {
         {/* Back to Home */}
         <Link
           href="/"
-          className="inline-block mb-6 text-gray-700 hover:text-gray-900 font-semibold transition-colors"
+          className="inline-block mb-6 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-semibold transition-colors"
         >
           ← {t('nav.home') || 'Accueil'}
         </Link>
@@ -200,7 +200,7 @@ export default function MyProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-chain"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-chain"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
@@ -215,19 +215,19 @@ export default function MyProfilePage() {
               </div>
 
               <div>
-                <h1 className="text-3xl font-black text-gray-900">
+                <h1 className="text-3xl font-black text-gray-900 dark:text-white dark:text-white">
                   {username}
                 </h1>
                 {bio && (
-                  <p className="text-sm text-gray-600 mt-1">{bio}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{bio}</p>
                 )}
                 {!isAuthenticated && (
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     🆓 {t('home.freePlay') || 'Mode Gratuit'}
                   </p>
                 )}
                 {isAuthenticated && user && (
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     {user.email || `User ID: ${user.id.substring(0, 8)}`}
                   </p>
                 )}
@@ -273,29 +273,29 @@ export default function MyProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300 dark:border-gray-700"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">📊 {t('home.stats') || 'Statistiques'}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">📊 {t('home.stats') || 'Statistiques'}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-4 text-center border-2 border-gray-300">
-              <div className="text-3xl font-black text-gray-900">{totalPoints}</div>
-              <div className="text-xs text-gray-600 font-semibold">{t('home.points') || 'Points Totaux'}</div>
+              <div className="text-3xl font-black text-gray-900 dark:text-white">{totalPoints}</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">{t('home.points') || 'Points Totaux'}</div>
             </div>
             <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-4 text-center border-2 border-gray-300">
-              <div className="text-3xl font-black text-gray-900">{stats.gamesPlayed}</div>
-              <div className="text-xs text-gray-600 font-semibold">{t('home.gamesPlayed') || 'Parties Jouées'}</div>
+              <div className="text-3xl font-black text-gray-900 dark:text-white">{stats.gamesPlayed}</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">{t('home.gamesPlayed') || 'Parties Jouées'}</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center border-2 border-green-300">
               <div className="text-3xl font-black text-green-600">
                 {stats.wins}
               </div>
-              <div className="text-xs text-gray-600 font-semibold">{t('stats.wins') || 'Victoires'}</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">{t('stats.wins') || 'Victoires'}</div>
             </div>
             <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 text-center border-2 border-red-300">
               <div className="text-3xl font-black text-red-600">
                 {stats.losses}
               </div>
-              <div className="text-xs text-gray-600 font-semibold">{t('stats.losses') || 'Défaites'}</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold">{t('stats.losses') || 'Défaites'}</div>
             </div>
           </div>
         </motion.div>
@@ -317,13 +317,13 @@ export default function MyProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-6 mb-6 shadow-lg border-2 border-gray-300 dark:border-gray-700"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">🏅 {t('badges.title') || 'Badges'}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">🏅 {t('badges.title') || 'Badges'}</h2>
             <Link
               href="/about"
-              className="text-sm text-gray-600 hover:text-gray-900 underline"
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white underline"
             >
               {t('home.learnMoreBadges') || 'Learn more'}
             </Link>
@@ -340,9 +340,9 @@ export default function MyProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white/90 backdrop-blur-lg rounded-xl p-6 shadow-lg border-2 border-gray-300"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-6 shadow-lg border-2 border-gray-300 dark:border-gray-700"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">🎮 {t('stats.perGame') || 'Statistiques par Jeu'}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">🎮 {t('stats.perGame') || 'Statistiques par Jeu'}</h2>
           {Object.keys(games).length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(games).map(([gameId, gameStats]) => {
@@ -356,29 +356,29 @@ export default function MyProfilePage() {
 
                 return (
                   <div key={gameId} className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-4 border-2 border-gray-300">
-                    <div className="font-black text-gray-900 mb-3 capitalize text-lg">
+                    <div className="font-black text-gray-900 dark:text-white mb-3 capitalize text-lg">
                       {gameId === '2048' ? '2048' : gameId}
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t('stats.played') || 'Jouées'}:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('stats.played') || 'Jouées'}:</span>
                         <span className="font-bold">{played}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t('stats.wins') || 'Victoires'}:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('stats.wins') || 'Victoires'}:</span>
                         <span className="font-bold text-green-600">{wins}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t('stats.losses') || 'Défaites'}:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('stats.losses') || 'Défaites'}:</span>
                         <span className="font-bold text-red-600">{losses}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t('stats.winRate') || 'Taux Victoire'}:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('stats.winRate') || 'Taux Victoire'}:</span>
                         <span className="font-bold">{winRate}%</span>
                       </div>
                       <div className="flex justify-between pt-2 border-t border-gray-300">
-                        <span className="text-gray-600">{t('home.points') || 'Points'}:</span>
-                        <span className="font-bold text-gray-900">{points}</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('home.points') || 'Points'}:</span>
+                        <span className="font-bold text-gray-900 dark:text-white">{points}</span>
                       </div>
                     </div>
                   </div>
@@ -400,10 +400,10 @@ export default function MyProfilePage() {
             transition={{ delay: 0.6 }}
             className="mt-6 bg-gradient-to-br from-chain/5 to-chain/10 border-2 border-chain rounded-xl p-6 text-center shadow-lg"
           >
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               🎉 {t('profile.saveYourProgress') || 'Sauvegardez votre Progression!'}
             </h3>
-            <p className="text-gray-700 mb-4">
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
               {t('profile.createAccountMessage') || 'Créez un compte pour sauvegarder vos statistiques et participer au classement mondial!'}
             </p>
             <Link

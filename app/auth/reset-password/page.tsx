@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
 
   if (checkingToken) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
         <div className="text-center bg-white/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl border-2 border-gray-300">
           <div className="text-gray-900 text-xl font-semibold mb-2">Vérification...</div>
           <div className="text-sm text-gray-600">Vérification du lien de réinitialisation</div>
@@ -121,7 +121,7 @@ export default function ResetPasswordPage() {
 
   if (!validToken) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -150,7 +150,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

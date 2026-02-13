@@ -14,7 +14,7 @@ export default function AboutPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 p-4 sm:p-8">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         <Header />
 
