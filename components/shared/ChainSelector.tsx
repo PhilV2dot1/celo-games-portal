@@ -9,7 +9,7 @@ interface ChainSelectorProps {
 }
 
 export function ChainSelector({ className = '' }: ChainSelectorProps) {
-  const { isOnCelo, isOnBase, switchToCelo, switchToBase } = useChainSelector();
+  const { isOnCelo, isOnBase, isOnMegaeth, switchToCelo, switchToBase, switchToMegaeth } = useChainSelector();
   const { t } = useLanguage();
 
   return (
@@ -37,6 +37,18 @@ export function ChainSelector({ className = '' }: ChainSelectorProps) {
       >
         <span>{CHAIN_CONFIG.base.icon}</span>
         <span>{CHAIN_CONFIG.base.shortName}</span>
+      </button>
+      <button
+        onClick={switchToMegaeth}
+        className={`flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-md text-sm font-medium transition-all ${
+          isOnMegaeth
+            ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+        }`}
+        title={t('chain.switchTo') + ' MegaETH'}
+      >
+        <span>{CHAIN_CONFIG.megaeth.icon}</span>
+        <span>{CHAIN_CONFIG.megaeth.shortName}</span>
       </button>
     </div>
   );

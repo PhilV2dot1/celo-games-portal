@@ -20,6 +20,12 @@ export const colors = {
   baseLight: '#3378FF',
   baseDark: '#003DB8',
 
+  // Brand Colors - MegaETH
+  megaeth: '#00D4AA',
+  megaethHover: '#00B891',
+  megaethLight: '#33DDBB',
+  megaethDark: '#00A882',
+
   // Semantic Colors
   success: '#10b981',
   successHover: '#059669',
@@ -368,7 +374,7 @@ export function getCeloShadow(size: 'sm' | 'md' | 'lg' | 'xl' = 'md'): string {
 // CHAIN THEMES
 // ========================================
 
-export type ChainThemeName = 'celo' | 'base';
+export type ChainThemeName = 'celo' | 'base' | 'megaeth';
 
 export interface ChainTheme {
   primary: string;
@@ -393,6 +399,13 @@ export const chainThemes: Record<ChainThemeName, ChainTheme> = {
     light: colors.baseLight,
     dark: colors.baseDark,
     contrastText: '#ffffff', // white text on blue
+  },
+  megaeth: {
+    primary: colors.megaeth,
+    hover: colors.megaethHover,
+    light: colors.megaethLight,
+    dark: colors.megaethDark,
+    contrastText: '#111827', // dark text on teal/green
   },
 } as const;
 

@@ -105,6 +105,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
   });
 
@@ -463,6 +465,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -485,6 +489,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -507,6 +513,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
 
     render(<WalletConnect />);
@@ -528,6 +536,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -551,6 +561,8 @@ describe('WalletConnect', () => {
       activeChain: 'celo',
       switchToCelo: vi.fn(),
       switchToBase: vi.fn(),
+      isOnMegaeth: false,
+      switchToMegaeth: vi.fn(),
     } as any);
 
     render(<WalletConnect />);

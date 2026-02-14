@@ -10,7 +10,7 @@ interface ChainWarningProps {
 }
 
 export function ChainWarning({ className = '' }: ChainWarningProps) {
-  const { isConnected, isSupportedChain: isSupported, currentChain, switchToCelo, switchToBase } = useChainSelector();
+  const { isConnected, isSupportedChain: isSupported, currentChain, switchToCelo, switchToBase, switchToMegaeth } = useChainSelector();
   const { t } = useLanguage();
 
   if (!isConnected || isSupported) return null;
@@ -41,6 +41,13 @@ export function ChainWarning({ className = '' }: ChainWarningProps) {
         >
           <span>{CHAIN_CONFIG.base.icon}</span>
           <span>{CHAIN_CONFIG.base.shortName}</span>
+        </button>
+        <button
+          onClick={switchToMegaeth}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors"
+        >
+          <span>{CHAIN_CONFIG.megaeth.icon}</span>
+          <span>{CHAIN_CONFIG.megaeth.shortName}</span>
         </button>
       </div>
     </motion.div>
