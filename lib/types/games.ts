@@ -1,5 +1,5 @@
 export type GameMode = "free" | "onchain";
-export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku";
+export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku" | "memory";
 
 export interface GameMetadata {
   id: GameId;
@@ -131,6 +131,15 @@ export const GAMES: Record<GameId, GameMetadata> = {
     route: "/games/sudoku",
     contractAddress: "0xB404882d0eb3A7c1022071559ab149e38d60cbE1",
     color: "from-orange-500 to-yellow-600",
+    hasFee: false,
+  },
+  memory: {
+    id: "memory",
+    name: "Memory",
+    description: "Match pairs of cards!",
+    icon: "/icons/memory.png",
+    route: "/games/memory",
+    color: "from-purple-400 to-pink-500",
     hasFee: false,
   },
 };

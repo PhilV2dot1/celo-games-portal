@@ -22,7 +22,8 @@ export type GameId =
   | 'yahtzee'
   | 'connectfive'
   | 'solitaire'
-  | 'snake';
+  | 'snake'
+  | 'memory';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -79,6 +80,10 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   snake: {
     celo: '0x5646fda34aaf8a95b9b0607db5ca02bdee267598',
     base: '0xdfe4364e40c79035dadC6B0E9e4a35Bf261412A9',
+  },
+  memory: {
+    celo: null,
+    base: null,
   },
 };
 

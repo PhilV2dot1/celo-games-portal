@@ -457,6 +457,21 @@ export const translations = {
         noHints: 'No hints remaining',
         viewOnCeloscan: 'View on Explorer →',
       },
+
+      // Memory specific
+      memory: {
+        title: 'Memory',
+        subtitle: 'Match pairs of cards!',
+        howToPlay: 'How to Play',
+        rule1: 'Flip two cards per turn to find matching pairs',
+        rule2: 'Remember card positions to make matches faster',
+        rule3: 'Find all pairs to win — fewer moves = better score!',
+        pairs: 'Pairs',
+        moves: 'Moves',
+        pairsFound: 'Pairs Found',
+        clickToStart: 'Click Start to begin!',
+        viewOnCeloscan: 'View on Explorer →',
+      },
     },
 
     // Wallet Connection
@@ -1547,6 +1562,21 @@ export const translations = {
         hint: 'Afficher les Conflits',
         hintUsed: 'Conflits mis en évidence !',
         noHints: 'Plus d\'indices disponibles',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
+      },
+
+      // Memory specific
+      memory: {
+        title: 'Mémoire',
+        subtitle: 'Trouvez les paires de cartes !',
+        howToPlay: 'Comment Jouer',
+        rule1: 'Retournez deux cartes par tour pour trouver les paires',
+        rule2: 'Mémorisez les positions pour trouver les paires plus vite',
+        rule3: 'Trouvez toutes les paires pour gagner — moins de coups = meilleur score !',
+        pairs: 'Paires',
+        moves: 'Coups',
+        pairsFound: 'Paires Trouvées',
+        clickToStart: 'Cliquez sur Démarrer pour commencer !',
         viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
     },

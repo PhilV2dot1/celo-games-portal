@@ -36,6 +36,7 @@ const DEFAULT_PROFILE: UserProfile = {
     minesweeper: { ...DEFAULT_GAME_STATS },
     yahtzee: { ...DEFAULT_GAME_STATS },
     sudoku: { ...DEFAULT_GAME_STATS },
+    memory: { ...DEFAULT_GAME_STATS },
   },
 };
 
