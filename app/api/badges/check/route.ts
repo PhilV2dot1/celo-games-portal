@@ -199,6 +199,64 @@ export async function POST(request: NextRequest) {
                            sudokuSessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length > 0,
     };
 
+    // Calculate Memory stats by difficulty
+    const memorySessions = sessions.filter(s => s.game_id === 'memory');
+    const memoryStats = {
+      easy: {
+        wins: memorySessions.filter(s => s.difficulty === 'easy' && s.result === 'win').length,
+        bestTime: Math.min(...memorySessions.filter(s => s.difficulty === 'easy' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      medium: {
+        wins: memorySessions.filter(s => s.difficulty === 'medium' && s.result === 'win').length,
+        bestTime: Math.min(...memorySessions.filter(s => s.difficulty === 'medium' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      hard: {
+        wins: memorySessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length,
+        bestTime: Math.min(...memorySessions.filter(s => s.difficulty === 'hard' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      totalGames: memorySessions.length,
+      winStreak: (() => {
+        let streak = 0;
+        let max = 0;
+        for (const s of memorySessions) {
+          if (s.result === 'win') { streak++; max = Math.max(max, streak); } else { streak = 0; }
+        }
+        return max;
+      })(),
+      hasAllDifficulties: memorySessions.filter(s => s.difficulty === 'easy' && s.result === 'win').length > 0 &&
+                           memorySessions.filter(s => s.difficulty === 'medium' && s.result === 'win').length > 0 &&
+                           memorySessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length > 0,
+    };
+
+    // Calculate Maze stats by difficulty
+    const mazeSessions = sessions.filter(s => s.game_id === 'maze');
+    const mazeStats = {
+      easy: {
+        wins: mazeSessions.filter(s => s.difficulty === 'easy' && s.result === 'win').length,
+        bestTime: Math.min(...mazeSessions.filter(s => s.difficulty === 'easy' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      medium: {
+        wins: mazeSessions.filter(s => s.difficulty === 'medium' && s.result === 'win').length,
+        bestTime: Math.min(...mazeSessions.filter(s => s.difficulty === 'medium' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      hard: {
+        wins: mazeSessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length,
+        bestTime: Math.min(...mazeSessions.filter(s => s.difficulty === 'hard' && s.result === 'win' && s.time_taken).map(s => s.time_taken), Infinity),
+      },
+      totalGames: mazeSessions.length,
+      winStreak: (() => {
+        let streak = 0;
+        let max = 0;
+        for (const s of mazeSessions) {
+          if (s.result === 'win') { streak++; max = Math.max(max, streak); } else { streak = 0; }
+        }
+        return max;
+      })(),
+      hasAllDifficulties: mazeSessions.filter(s => s.difficulty === 'easy' && s.result === 'win').length > 0 &&
+                           mazeSessions.filter(s => s.difficulty === 'medium' && s.result === 'win').length > 0 &&
+                           mazeSessions.filter(s => s.difficulty === 'hard' && s.result === 'win').length > 0,
+    };
+
     // Social stats: friends count
     const { count: friendsCount } = await supabase
       .from('friendships')
@@ -228,6 +286,8 @@ export async function POST(request: NextRequest) {
       celo_wagered: onchainGames * 0.01, // Simplified: each on-chain game = 0.01 CELO
       connect4Stats,
       sudokuStats,
+      memoryStats,
+      mazeStats,
       friends_count: friendsCount || 0,
       tournaments_played: tournamentsPlayed,
       tournaments_won: tournamentsWon,
@@ -326,6 +386,82 @@ export async function POST(request: NextRequest) {
 
         // Check total games played (for engagement badges)
         if (req.games_played !== undefined && userStats.sudokuStats.totalGames < req.games_played) {
+          qualifies = false;
+        }
+      } else if (req.game === 'memory') {
+        // Check Memory specific requirements
+        if (req.difficulty) {
+          const diffStats = userStats.memoryStats[req.difficulty];
+
+          if (req.wins !== undefined && diffStats.wins < req.wins) {
+            qualifies = false;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((req as any).time_under !== undefined && (diffStats.bestTime === Infinity || diffStats.bestTime > (req as any).time_under)) {
+            qualifies = false;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((req as any).perfect_game) {
+            // Perfect game = winning with minimum moves (pairs count = moves count)
+            qualifies = memorySessions.some(s => s.difficulty === req.difficulty && s.result === 'win' && s.moves_count && s.moves_count === s.pairs_count);
+          }
+        }
+
+        if (req.all_difficulties) {
+          qualifies = userStats.memoryStats.hasAllDifficulties;
+        }
+
+        if (req.win_streak !== undefined && userStats.memoryStats.winStreak < req.win_streak) {
+          qualifies = false;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((req as any).speed_champion) {
+          const hasSpeedEasy = userStats.memoryStats.easy.bestTime < 30;
+          const hasSpeedMedium = userStats.memoryStats.medium.bestTime < 60;
+          const hasSpeedHard = userStats.memoryStats.hard.bestTime < 120;
+          qualifies = hasSpeedEasy && hasSpeedMedium && hasSpeedHard;
+        }
+
+        if (req.games_played !== undefined && userStats.memoryStats.totalGames < req.games_played) {
+          qualifies = false;
+        }
+      } else if (req.game === 'maze') {
+        // Check Maze specific requirements
+        if (req.difficulty) {
+          const diffStats = userStats.mazeStats[req.difficulty];
+
+          if (req.wins !== undefined && diffStats.wins < req.wins) {
+            qualifies = false;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((req as any).time_under !== undefined && (diffStats.bestTime === Infinity || diffStats.bestTime > (req as any).time_under)) {
+            qualifies = false;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((req as any).perfect_game) {
+            // Perfect maze = minimal moves (close to optimal path)
+            qualifies = mazeSessions.some(s => s.difficulty === req.difficulty && s.result === 'win');
+          }
+        }
+
+        if (req.all_difficulties) {
+          qualifies = userStats.mazeStats.hasAllDifficulties;
+        }
+
+        if (req.win_streak !== undefined && userStats.mazeStats.winStreak < req.win_streak) {
+          qualifies = false;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((req as any).speed_champion) {
+          const hasSpeedEasy = userStats.mazeStats.easy.bestTime < 20;
+          const hasSpeedMedium = userStats.mazeStats.medium.bestTime < 60;
+          const hasSpeedHard = userStats.mazeStats.hard.bestTime < 180;
+          qualifies = hasSpeedEasy && hasSpeedMedium && hasSpeedHard;
+        }
+
+        if (req.games_played !== undefined && userStats.mazeStats.totalGames < req.games_played) {
           qualifies = false;
         }
       } else {
