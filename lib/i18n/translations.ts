@@ -172,7 +172,7 @@ export const translations = {
         clickPlayOnChain: 'Click "PLAY ON-CHAIN" to start',
         statistics: 'Statistics',
         pushes: 'Pushes',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
         dealer: 'Dealer',
         yourHand: 'Your Hand',
         blackjackLabel: 'BLACKJACK!',
@@ -205,16 +205,16 @@ export const translations = {
       // Connect Five specific
       connectfive: {
         title: 'Connect 4',
-        subtitle: 'Align 4 pieces in a row on Celo',
+        subtitle: 'Align 4 pieces in a row!',
         aiInfo: '🎮 Play against intelligent AI with minimax algorithm',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // TicTacToe specific
       tictactoe: {
         title: 'Tic Tac Toe',
-        subtitle: 'Three in a row on Celo',
-        viewOnCeloscan: 'View on Celoscan →',
+        subtitle: 'Three in a row!',
+        viewOnCeloscan: 'View on Explorer →',
         clickToStart: 'Click Start to begin!',
         recordingGameStart: 'Recording game start on blockchain...',
       },
@@ -232,7 +232,7 @@ export const translations = {
         newGame: 'New Game',
         submitting: 'Submitting...',
         submitScore: 'Submit Score',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Snake specific
@@ -247,14 +247,14 @@ export const translations = {
         rule4: 'Score 100+ points to win the game',
         rule5: 'Speed increases as you grow - stay focused!',
         footer: '🐍 Classic Snake game with blockchain integration',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Rock Paper Scissors specific
       rps: {
         title: 'Rock Paper Scissors',
-        subtitle: 'Classic hand game on Celo',
-        viewOnCeloscan: 'View on Celoscan →',
+        subtitle: 'Classic hand game on the blockchain!',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Mastermind specific
@@ -272,7 +272,7 @@ export const translations = {
         submitScoreOnChain: 'Submit Score On-Chain',
         abandoning: 'Abandoning...',
         abandonGame: 'Abandon Game',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Jackpot specific
@@ -288,7 +288,7 @@ export const translations = {
         spin: 'SPIN',
         submitting: 'Submitting...',
         submitScore: 'Submit Score',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Solitaire specific
@@ -314,13 +314,13 @@ export const translations = {
         contributions: 'Player Contributions',
         scoreLabel: 'Score',
         movesLabel: 'moves',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Minesweeper specific
       minesweeper: {
         title: 'Minesweeper',
-        subtitle: 'Classic mine-sweeping puzzle on Celo',
+        subtitle: 'Classic mine-sweeping puzzle on the blockchain!',
         instructions: '💡 Left-click to reveal cells | Right-click to place/remove flags 🚩',
         mobileInstructions: '💡 Tap to reveal cells | Long-press to place/remove flags 🚩',
         keyboardInstructions: '⌨️ Arrow keys to navigate, Space to reveal, F to flag',
@@ -364,7 +364,7 @@ export const translations = {
         difficultyHardHint: 'Expert mode - good luck!',
         soundOn: 'Sound On',
         soundOff: 'Sound Off',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Yahtzee specific
@@ -420,7 +420,7 @@ export const translations = {
         gamesPlayed: 'Games Played',
         highScore: 'High Score',
         avgScore: 'Average Score',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
 
       // Sudoku specific
@@ -435,7 +435,7 @@ export const translations = {
         rule4: 'Each 3×3 box must contain all numbers 1-9',
         rule5: 'Use hints (3 max) to highlight conflicts',
         keyboardInstructions: 'Arrow keys: Navigate | 1-9: Enter | Delete: Erase | H: Hint',
-        gameInfo: '🧩 Classic logic puzzle on Celo blockchain',
+        gameInfo: '🧩 Classic logic puzzle on the blockchain',
         clickToStart: 'Click Start to begin!',
         loadingPuzzle: 'Loading puzzle...',
         gameActive: 'Solve the puzzle!',
@@ -455,7 +455,7 @@ export const translations = {
         hint: 'Show Conflicts',
         hintUsed: 'Conflicts highlighted!',
         noHints: 'No hints remaining',
-        viewOnCeloscan: 'View on Celoscan →',
+        viewOnCeloscan: 'View on Explorer →',
       },
     },
 
@@ -471,7 +471,7 @@ export const translations = {
       connectWith: 'Connect with',
 
       // Status
-      switchingNetwork: 'Switching to Celo network...',
+      switchingNetwork: 'Switching network...',
       via: 'via',
 
       // Actions
@@ -517,13 +517,13 @@ export const translations = {
       freeModeDesc: 'Play without a wallet. Stats saved locally.',
       freePlay: 'Free Play',
       onChainMode: 'On-Chain Mode',
-      onChainModeDesc: 'Connect your wallet to save on Celo.',
+      onChainModeDesc: 'Connect your wallet to save on the blockchain.',
       learnMore: 'Learn more about points and badges →',
       availableBadges: 'Available Badges',
       viewAllBadges: 'View all badges →',
       availableGames: 'Available Games',
-      builtOn: 'Built with ❤️ on Celo Blockchain',
-      learnMoreCelo: 'Learn more about Celo →',
+      builtOn: 'Built with ❤️ on the Blockchain',
+      learnMoreCelo: 'Learn more →',
       createProfile: 'Create Profile',
       saveProgress: 'Save your progress and compete on the leaderboard',
       setupNow: 'Setup Now',
@@ -532,8 +532,8 @@ export const translations = {
       leaderboard: 'Leaderboard',
       gamesPlayed: 'Games',
       stats: 'Statistics',
-      footerBuilt: 'Built with ❤️ on Celo Blockchain',
-      footerLearnCelo: 'Learn more about Celo →',
+      footerBuilt: 'Built with ❤️ on the Blockchain',
+      footerLearnCelo: 'Learn more →',
       footerCreatedBy: 'Created by',
       learnMoreBadges: 'Learn more about badges',
     },
@@ -763,10 +763,10 @@ export const translations = {
       ],
       onChainTitle: 'On-Chain',
       onChainBullets: [
-        'Connect your Celo wallet',
+        'Connect your wallet',
         'Stats saved on blockchain',
         'Participate in global rankings',
-        'Some games require 0.01 CELO',
+        'Some games require a small gas fee',
       ],
       pointsSystemTitle: 'Points System',
       victory: 'Victory',
@@ -1264,7 +1264,7 @@ export const translations = {
         clickPlayOnChain: 'Cliquez sur "JOUER ON-CHAIN" pour commencer',
         statistics: 'Statistiques',
         pushes: 'Égalités',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
         dealer: 'Croupier',
         yourHand: 'Votre Main',
         blackjackLabel: 'BLACKJACK !',
@@ -1297,16 +1297,16 @@ export const translations = {
       // Connect Five specific
       connectfive: {
         title: 'Puissance 4',
-        subtitle: 'Alignez 4 pièces d\'affilée sur Celo',
+        subtitle: 'Alignez 4 pièces d\'affilée !',
         aiInfo: '🎮 Jouez contre une IA intelligente avec algorithme minimax',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // TicTacToe specific
       tictactoe: {
         title: 'Morpion',
-        subtitle: 'Trois d\'affilée sur Celo',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        subtitle: 'Trois d\'affilée !',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
         clickToStart: 'Cliquez sur Démarrer pour commencer !',
         recordingGameStart: 'Enregistrement du début de partie sur la blockchain...',
       },
@@ -1324,7 +1324,7 @@ export const translations = {
         newGame: 'Nouvelle Partie',
         submitting: 'Envoi...',
         submitScore: 'Envoyer le Score',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Snake specific
@@ -1339,14 +1339,14 @@ export const translations = {
         rule4: 'Marquez 100+ points pour gagner la partie',
         rule5: 'La vitesse augmente à mesure que vous grandissez - restez concentré !',
         footer: '🐍 Jeu Snake classique avec intégration blockchain',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Rock Paper Scissors specific
       rps: {
         title: 'Pierre Papier Ciseaux',
-        subtitle: 'Jeu de main classique sur Celo',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        subtitle: 'Jeu de main classique sur la blockchain !',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Mastermind specific
@@ -1364,7 +1364,7 @@ export const translations = {
         submitScoreOnChain: 'Envoyer Score On-Chain',
         abandoning: 'Abandon...',
         abandonGame: 'Abandonner',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Jackpot specific
@@ -1380,7 +1380,7 @@ export const translations = {
         spin: 'TOURNER',
         submitting: 'Envoi...',
         submitScore: 'Envoyer le Score',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Solitaire specific
@@ -1406,13 +1406,13 @@ export const translations = {
         contributions: 'Contributions des Joueurs',
         scoreLabel: 'Score',
         movesLabel: 'coups',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Minesweeper specific
       minesweeper: {
         title: 'Démineur',
-        subtitle: 'Puzzle classique de déminage sur Celo',
+        subtitle: 'Puzzle classique de déminage sur la blockchain !',
         instructions: '💡 Clic gauche pour révéler | Clic droit pour placer/retirer drapeaux 🚩',
         mobileInstructions: '💡 Tapez pour révéler | Appui long pour placer/retirer drapeaux 🚩',
         keyboardInstructions: '⌨️ Flèches pour naviguer, Espace pour révéler, F pour drapeau',
@@ -1456,7 +1456,7 @@ export const translations = {
         difficultyHardHint: 'Mode expert - bonne chance !',
         soundOn: 'Son Activé',
         soundOff: 'Son Désactivé',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Yahtzee specific
@@ -1512,7 +1512,7 @@ export const translations = {
         gamesPlayed: 'Parties Jouées',
         highScore: 'Meilleur Score',
         avgScore: 'Score Moyen',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
 
       // Sudoku specific
@@ -1527,7 +1527,7 @@ export const translations = {
         rule4: 'Chaque boîte 3×3 doit contenir tous les nombres 1-9',
         rule5: 'Utilisez les indices (3 max) pour mettre en évidence les conflits',
         keyboardInstructions: 'Flèches : Naviguer | 1-9 : Entrer | Suppr : Effacer | H : Indice',
-        gameInfo: '🧩 Puzzle de logique classique sur la blockchain Celo',
+        gameInfo: '🧩 Puzzle de logique classique sur la blockchain',
         clickToStart: 'Cliquez sur Démarrer pour commencer !',
         loadingPuzzle: 'Chargement du puzzle...',
         gameActive: 'Résolvez le puzzle !',
@@ -1547,7 +1547,7 @@ export const translations = {
         hint: 'Afficher les Conflits',
         hintUsed: 'Conflits mis en évidence !',
         noHints: 'Plus d\'indices disponibles',
-        viewOnCeloscan: 'Voir sur Celoscan →',
+        viewOnCeloscan: 'Voir sur l\'Explorer →',
       },
     },
 
@@ -1563,7 +1563,7 @@ export const translations = {
       connectWith: 'Connecter avec',
 
       // Status
-      switchingNetwork: 'Changement vers le réseau Celo...',
+      switchingNetwork: 'Changement de réseau...',
       via: 'via',
 
       // Actions
@@ -1609,13 +1609,13 @@ export const translations = {
       freeModeDesc: 'Jouez sans wallet. Stats sauvegardées localement.',
       freePlay: 'Mode Gratuit',
       onChainMode: 'Mode On-Chain',
-      onChainModeDesc: 'Connectez votre wallet pour sauvegarder sur Celo.',
+      onChainModeDesc: 'Connectez votre wallet pour sauvegarder sur la blockchain.',
       learnMore: 'En savoir plus sur les points et badges →',
       availableBadges: 'Badges Disponibles',
       viewAllBadges: 'Voir tous les badges →',
       availableGames: 'Jeux Disponibles',
-      builtOn: 'Construit avec ❤️ sur Celo Blockchain',
-      learnMoreCelo: 'En savoir plus sur Celo →',
+      builtOn: 'Construit avec ❤️ sur la Blockchain',
+      learnMoreCelo: 'En savoir plus →',
       createProfile: 'Créer un Profil',
       saveProgress: 'Sauvegardez votre progression et participez au classement',
       setupNow: 'Configurer Maintenant',
@@ -1624,8 +1624,8 @@ export const translations = {
       leaderboard: 'Classement',
       gamesPlayed: 'Parties',
       stats: 'Statistiques',
-      footerBuilt: 'Construit avec ❤️ sur Celo Blockchain',
-      footerLearnCelo: 'En savoir plus sur Celo →',
+      footerBuilt: 'Construit avec ❤️ sur la Blockchain',
+      footerLearnCelo: 'En savoir plus →',
       footerCreatedBy: 'Créé par',
       learnMoreBadges: 'En savoir plus sur les badges',
     },
@@ -1855,10 +1855,10 @@ export const translations = {
       ],
       onChainTitle: 'Mode On-Chain',
       onChainBullets: [
-        'Connectez votre wallet Celo',
+        'Connectez votre wallet',
         'Stats sauvegardées sur la blockchain',
         'Participez au classement global',
-        'Certains jeux requièrent 0.01 CELO',
+        'Certains jeux nécessitent un petit frais de gas',
       ],
       pointsSystemTitle: 'Système de Points',
       victory: 'Victoire',
