@@ -7,6 +7,7 @@ import type { MazeGrid } from "@/lib/games/maze-logic";
 interface MazeBoardProps {
   grid: MazeGrid;
   gridSize: number;
+  visibleCells?: Set<string> | null;
 }
 
 const CELL_COLORS: Record<number, string> = {
@@ -17,38 +18,50 @@ const CELL_COLORS: Record<number, string> = {
   [EXIT]: "bg-yellow-400 dark:bg-yellow-500 animate-pulse",
 };
 
+const FOG_CELL = "bg-gray-950";
+
 export const MazeBoard = memo(function MazeBoard({
   grid,
   gridSize,
+  visibleCells,
 }: MazeBoardProps) {
   if (grid.length === 0) return null;
+
+  const hasFog = visibleCells != null;
+  // Adjust cell sizing for larger grids
+  const cellMin = gridSize > 35 ? "6px" : gridSize > 21 ? "8px" : "12px";
+  const cellGap = gridSize > 21 ? "0px" : "1px";
 
   return (
     <div
       data-testid="maze-board"
-      className="bg-gray-800 dark:bg-gray-900 rounded-xl p-1 shadow-xl border-2 border-gray-700 dark:border-gray-600 mx-auto"
+      className="bg-gray-800 dark:bg-gray-900 rounded-xl p-1 shadow-xl border-2 border-gray-700 dark:border-gray-600 mx-auto overflow-auto"
       style={{ maxWidth: "100%" }}
     >
       <div
         className="grid"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-          gap: gridSize > 21 ? "0px" : "1px",
+          gap: cellGap,
         }}
       >
         {grid.flatMap((row, rowIdx) =>
-          row.map((cell, colIdx) => (
-            <div
-              key={`${rowIdx}-${colIdx}`}
-              data-testid={`maze-cell-${rowIdx}-${colIdx}`}
-              className={`aspect-square ${CELL_COLORS[cell] || CELL_COLORS[PATH]} ${
-                cell === PLAYER ? "rounded-full" : ""
-              }`}
-              style={{
-                minWidth: gridSize > 21 ? "8px" : "12px",
-              }}
-            />
-          ))
+          row.map((cell, colIdx) => {
+            const isVisible = !hasFog || visibleCells.has(`${rowIdx},${colIdx}`);
+
+            return (
+              <div
+                key={`${rowIdx}-${colIdx}`}
+                data-testid={`maze-cell-${rowIdx}-${colIdx}`}
+                className={`aspect-square ${
+                  isVisible
+                    ? `${CELL_COLORS[cell] || CELL_COLORS[PATH]} ${cell === PLAYER ? "rounded-full" : ""}`
+                    : FOG_CELL
+                } transition-colors duration-150`}
+                style={{ minWidth: cellMin }}
+              />
+            );
+          })
         )}
       </div>
     </div>

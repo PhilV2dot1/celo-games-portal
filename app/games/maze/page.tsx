@@ -65,9 +65,12 @@ export default function MazePage() {
       if (!msg) return "";
       const messageMap: Record<string, string> = {
         "Click Start to begin!": t("games.maze.clickToStart"),
+        "Time's up!": t("games.maze.timesUp"),
       };
       if (messageMap[msg]) return messageMap[msg];
-      if (msg.startsWith("🎉")) return msg;
+      if (msg.includes("Congratulations")) return msg;
+      if (msg.includes("Victory")) return msg;
+      if (msg.includes("Recording")) return msg;
       return msg;
     },
     [t]
@@ -156,12 +159,15 @@ export default function MazePage() {
           </motion.div>
         )}
 
-        {/* Game Controls (timer, moves) */}
+        {/* Game Controls (timer, moves, modifiers) */}
         {game.status === "playing" && (
           <GameControls
             timer={game.timer}
             moves={game.moves}
             formatTime={game.formatTime}
+            timeLimit={game.timeLimit}
+            fogRadius={game.fogRadius}
+            movingWalls={game.movingWalls}
           />
         )}
 
@@ -171,9 +177,11 @@ export default function MazePage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className={`text-center py-3 px-4 rounded-xl font-semibold shadow-lg ${
-              game.status === "finished"
-                ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-2 border-green-400"
-                : "bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white border-2 border-chain"
+              game.result === "timeout"
+                ? "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-2 border-red-400"
+                : game.status === "finished"
+                  ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-2 border-green-400"
+                  : "bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white border-2 border-chain"
             }`}
           >
             {translateMessage(game.message)}
@@ -186,7 +194,7 @@ export default function MazePage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <MazeBoard grid={game.grid} gridSize={game.gridSize} />
+            <MazeBoard grid={game.grid} gridSize={game.gridSize} visibleCells={game.visibleCells} />
           </motion.div>
         )}
 

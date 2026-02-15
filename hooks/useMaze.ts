@@ -8,10 +8,13 @@ import {
   type Position,
   type MazeGrid,
   DIFFICULTY_CONFIG,
+  WALL_SHIFT_INTERVAL,
   generateMaze,
   movePlayer,
   checkWin,
   calculateScore,
+  getVisibleCells,
+  shiftWalls,
   PLAYER,
 } from "@/lib/games/maze-logic";
 
@@ -21,7 +24,7 @@ import {
 
 export type GameMode = "free" | "onchain";
 export type GameStatus = "idle" | "playing" | "processing" | "finished";
-export type GameResult = "win" | null;
+export type GameResult = "win" | "timeout" | null;
 
 export interface PlayerStats {
   games: number;
@@ -87,12 +90,24 @@ export function useMaze() {
   const [timer, setTimer] = useState(0);
   const [gameStartedOnChain, setGameStartedOnChain] = useState(false);
 
+  // Fog of war state
+  const [visibleCells, setVisibleCells] = useState<Set<string> | null>(null);
+
   // Stats
   const [stats, setStats] = useState<PlayerStats>(DEFAULT_STATS);
 
-  // Timer ref
+  // Refs
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wallShiftRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
+  const gridRef = useRef<MazeGrid>(grid);
+  const playerPosRef = useRef<Position>(playerPos);
+  const statusRef = useRef<GameStatus>(status);
+
+  // Keep refs in sync
+  useEffect(() => { gridRef.current = grid; }, [grid]);
+  useEffect(() => { playerPosRef.current = playerPos; }, [playerPos]);
+  useEffect(() => { statusRef.current = status; }, [status]);
 
   // Wagmi hooks
   const { address, isConnected, chain } = useAccount();
@@ -154,13 +169,23 @@ export function useMaze() {
     }
   }, []);
 
-  // Timer management
+  // Get current difficulty config
+  const config = DIFFICULTY_CONFIG[difficulty];
+
+  // Timer management — countdown from timeLimit
   const startTimer = useCallback(() => {
     startTimeRef.current = Date.now();
+    setTimer(config.timeLimit);
     timerRef.current = setInterval(() => {
-      setTimer(Math.floor((Date.now() - startTimeRef.current) / 1000));
+      const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      const remaining = Math.max(0, config.timeLimit - elapsed);
+      setTimer(remaining);
+
+      if (remaining <= 0) {
+        // Time's up! — handled by the effect below
+      }
     }, 1000);
-  }, []);
+  }, [config.timeLimit]);
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
@@ -169,10 +194,50 @@ export function useMaze() {
     }
   }, []);
 
-  // Cleanup timer on unmount
+  // Stop wall shift interval
+  const stopWallShift = useCallback(() => {
+    if (wallShiftRef.current) {
+      clearInterval(wallShiftRef.current);
+      wallShiftRef.current = null;
+    }
+  }, []);
+
+  // Handle time's up
   useEffect(() => {
-    return () => stopTimer();
-  }, [stopTimer]);
+    if (status === "playing" && timer <= 0 && config.timeLimit > 0) {
+      stopTimer();
+      stopWallShift();
+      setStatus("finished");
+      setResult("timeout");
+      setMessage("Time's up!");
+    }
+  }, [timer, status, config.timeLimit, stopTimer, stopWallShift]);
+
+  // Moving walls interval (Hard mode)
+  const startWallShift = useCallback(() => {
+    if (!config.movingWalls) return;
+
+    wallShiftRef.current = setInterval(() => {
+      if (statusRef.current !== "playing") return;
+
+      setGrid(prevGrid => {
+        const newGrid = shiftWalls(prevGrid, playerPosRef.current);
+        // Update fog after wall shift
+        if (config.fogRadius > 0) {
+          setVisibleCells(getVisibleCells(playerPosRef.current, newGrid, config.fogRadius));
+        }
+        return newGrid;
+      });
+    }, WALL_SHIFT_INTERVAL * 1000);
+  }, [config.movingWalls, config.fogRadius]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopTimer();
+      stopWallShift();
+    };
+  }, [stopTimer, stopWallShift]);
 
   // End game (handles both free and on-chain)
   const endGame = useCallback(async (finalTime: number, finalMoves: number, score: number) => {
@@ -188,17 +253,17 @@ export function useMaze() {
         newStats.bestMoves[difficulty] = finalMoves;
       }
       saveStats(newStats);
-      setMessage(`🎉 Congratulations! Score: ${score}`);
+      setMessage(`Congratulations! Score: ${score}`);
     } else {
       // On-chain: record result
       if (!gameStartedOnChain) {
-        setMessage(`🎉 Congratulations! Score: ${score}`);
+        setMessage(`Congratulations! Score: ${score}`);
         return;
       }
 
       try {
         setStatus("processing");
-        setMessage("🎉 Recording victory on blockchain...");
+        setMessage("Recording victory on blockchain...");
 
         await writeContractAsync({
           address: contractAddress!,
@@ -209,11 +274,11 @@ export function useMaze() {
 
         setGameStartedOnChain(false);
         await refetchStats();
-        setMessage(`🎉 Victory! Score: ${score} - recorded on blockchain!`);
+        setMessage(`Victory! Score: ${score} - recorded on blockchain!`);
         setStatus("finished");
       } catch (error) {
         console.error("Failed to record result:", error);
-        setMessage("⚠️ Game finished but not recorded on-chain");
+        setMessage("Game finished but not recorded on-chain");
         setGameStartedOnChain(false);
         setStatus("finished");
       }
@@ -222,14 +287,13 @@ export function useMaze() {
 
   // Start a new game
   const startGame = useCallback(async () => {
-    const config = DIFFICULTY_CONFIG[difficulty];
     const newGrid = generateMaze(config.gridSize);
     // Place player at start
     newGrid[1][1] = PLAYER;
 
     if (mode === "onchain") {
       if (!isConnected || !address) {
-        setMessage("⚠️ Please connect wallet first");
+        setMessage("Please connect wallet first");
         return;
       }
 
@@ -250,12 +314,17 @@ export function useMaze() {
         setStatus("playing");
         setResult(null);
         setMoves(0);
-        setTimer(0);
         setMessage("");
+
+        // Initialize fog of war
+        const fog = getVisibleCells({ row: 1, col: 1 }, newGrid, config.fogRadius);
+        setVisibleCells(fog);
+
         startTimer();
+        startWallShift();
       } catch (error) {
         console.error("Failed to start on-chain game:", error);
-        setMessage("⚠️ Failed to start on-chain game");
+        setMessage("Failed to start on-chain game");
         setStatus("idle");
       }
     } else {
@@ -264,11 +333,16 @@ export function useMaze() {
       setStatus("playing");
       setResult(null);
       setMoves(0);
-      setTimer(0);
       setMessage("");
+
+      // Initialize fog of war
+      const fog = getVisibleCells({ row: 1, col: 1 }, newGrid, config.fogRadius);
+      setVisibleCells(fog);
+
       startTimer();
+      startWallShift();
     }
-  }, [difficulty, mode, isConnected, address, writeContractAsync, contractAddress, startTimer]);
+  }, [difficulty, config, mode, isConnected, address, writeContractAsync, contractAddress, startTimer, startWallShift]);
 
   // Handle player movement
   const move = useCallback(
@@ -287,21 +361,26 @@ export function useMaze() {
       setPlayerPos(newPos);
       setMoves((prev) => prev + 1);
 
+      // Update fog of war
+      if (config.fogRadius > 0) {
+        setVisibleCells(getVisibleCells(newPos, newGrid, config.fogRadius));
+      }
+
       // Check win
-      const gridSize = DIFFICULTY_CONFIG[difficulty].gridSize;
-      if (checkWin(newPos, gridSize)) {
+      if (checkWin(newPos, config.gridSize)) {
         stopTimer();
+        stopWallShift();
         const finalTime = Math.floor(
           (Date.now() - startTimeRef.current) / 1000
         );
         const finalMoves = moves + 1;
-        const score = calculateScore(gridSize, finalMoves, finalTime);
+        const score = calculateScore(config.gridSize, finalMoves, finalTime, difficulty);
         setStatus("finished");
         setResult("win");
         endGame(finalTime, finalMoves, score);
       }
     },
-    [status, grid, playerPos, difficulty, moves, stopTimer, endGame]
+    [status, grid, playerPos, difficulty, config, moves, stopTimer, stopWallShift, endGame]
   );
 
   // Keyboard controls
@@ -347,6 +426,7 @@ export function useMaze() {
   // Reset game
   const resetGame = useCallback(() => {
     stopTimer();
+    stopWallShift();
     setGrid([]);
     setPlayerPos({ row: 1, col: 1 });
     setStatus("idle");
@@ -355,7 +435,8 @@ export function useMaze() {
     setTimer(0);
     setMessage("Click Start to begin!");
     setGameStartedOnChain(false);
-  }, [stopTimer]);
+    setVisibleCells(null);
+  }, [stopTimer, stopWallShift]);
 
   // Switch mode
   const switchMode = useCallback(
@@ -397,7 +478,11 @@ export function useMaze() {
     stats,
     isConnected,
     isProcessing: isPending,
-    gridSize: DIFFICULTY_CONFIG[difficulty].gridSize,
+    gridSize: config.gridSize,
+    visibleCells,
+    timeLimit: config.timeLimit,
+    fogRadius: config.fogRadius,
+    movingWalls: config.movingWalls,
 
     // Actions
     startGame,
