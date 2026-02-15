@@ -8,7 +8,6 @@ import {
   type Grid,
   type Piece,
   COLS,
-  ROWS,
   createEmptyGrid,
   getRandomPiece,
   resetBag,
@@ -81,24 +80,24 @@ export function useTetris() {
 
   // Game loop ref
   const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const speedRef = useRef(getSpeed(1));
 
-  // Refs to avoid stale closures in game loop
-  const gridRef = useRef(grid);
-  const currentPieceRef = useRef(currentPiece);
-  const scoreRef = useRef(score);
-  const linesRef = useRef(lines);
-  const levelRef = useRef(level);
-  const statusRef = useRef(status);
-
-  useEffect(() => { gridRef.current = grid; }, [grid]);
-  useEffect(() => { currentPieceRef.current = currentPiece; }, [currentPiece]);
-  useEffect(() => { scoreRef.current = score; }, [score]);
-  useEffect(() => { linesRef.current = lines; }, [lines]);
-  useEffect(() => { levelRef.current = level; }, [level]);
-  useEffect(() => { statusRef.current = status; }, [status]);
+  // Mutable game state refs — the game loop reads from these to avoid stale closures
+  const stateRef = useRef({
+    grid: createEmptyGrid() as Grid,
+    currentPiece: null as Piece | null,
+    nextPiece: null as Piece | null,
+    score: 0,
+    lines: 0,
+    level: 1,
+    status: "idle" as GameStatus,
+  });
 
   // Stats
   const [stats, setStats] = useState<PlayerStats>(DEFAULT_STATS);
+  const statsRef = useRef(stats);
+  const modeRef = useRef(mode);
+  const gameStartedOnChainRef = useRef(gameStartedOnChain);
 
   // Wagmi hooks
   const { address, isConnected, chain } = useAccount();
@@ -117,12 +116,17 @@ export function useTetris() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STATS_KEY);
-      if (saved) setStats(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setStats(parsed);
+        statsRef.current = parsed;
+      }
     } catch { /* ignore */ }
   }, []);
 
   const saveStats = useCallback((newStats: PlayerStats) => {
     setStats(newStats);
+    statsRef.current = newStats;
     try {
       localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
     } catch { /* ignore */ }
@@ -161,15 +165,22 @@ export function useTetris() {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      stopTimer();
-      stopGameLoop();
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
-  }, [stopTimer, stopGameLoop]);
+  }, []);
 
-  // End game logic
-  const endGame = useCallback(async (finalScore: number, finalLines: number, finalLevel: number, won: boolean) => {
-    if (mode === "free") {
-      const newStats = { ...stats };
+  // Sync mode and gameStartedOnChain to refs
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { gameStartedOnChainRef.current = gameStartedOnChain; }, [gameStartedOnChain]);
+
+  // ========================================
+  // CORE GAME LOOP TICK — uses refs only, no stale closures
+  // ========================================
+
+  const finishGame = useCallback(async (finalScore: number, finalLines: number, finalLevel: number, won: boolean) => {
+    if (modeRef.current === "free") {
+      const newStats = { ...statsRef.current };
       newStats.games += 1;
       if (won) newStats.wins += 1;
       if (finalScore > newStats.bestScore) newStats.bestScore = finalScore;
@@ -178,12 +189,13 @@ export function useTetris() {
       saveStats(newStats);
       setMessage(won ? `Congratulations! Score: ${finalScore}` : `Game Over! Score: ${finalScore}`);
     } else {
-      if (!gameStartedOnChain) {
+      if (!gameStartedOnChainRef.current) {
         setMessage(won ? `Congratulations! Score: ${finalScore}` : `Game Over! Score: ${finalScore}`);
         return;
       }
       try {
         setStatus("processing");
+        stateRef.current.status = "processing";
         setMessage("Recording score on blockchain...");
         await writeContractAsync({
           address: contractAddress!,
@@ -195,109 +207,100 @@ export function useTetris() {
         await refetchStats();
         setMessage(`Score: ${finalScore} - recorded on blockchain!`);
         setStatus("finished");
+        stateRef.current.status = "finished";
       } catch (error) {
         console.error("Failed to record result:", error);
         setMessage("Game finished but not recorded on-chain");
         setGameStartedOnChain(false);
         setStatus("finished");
+        stateRef.current.status = "finished";
       }
     }
-  }, [mode, stats, saveStats, gameStartedOnChain, writeContractAsync, contractAddress, refetchStats]);
+  }, [saveStats, writeContractAsync, contractAddress, refetchStats]);
 
-  // Spawn next piece — returns false if game over
-  const spawnPiece = useCallback(() => {
-    const next = nextPiece || getRandomPiece();
-    const newNext = getRandomPiece();
+  // The actual tick function — called by setInterval
+  // It reads exclusively from stateRef to avoid stale closures
+  const gameTick = useCallback(() => {
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
 
-    if (isGameOver(gridRef.current, next)) {
-      // Game over
-      stopGameLoop();
-      stopTimer();
-      const finalScore = scoreRef.current;
-      const finalLines = linesRef.current;
-      const finalLevel = levelRef.current;
-      const won = finalScore >= WIN_THRESHOLD;
-      setStatus("finished");
-      setResult(won ? "win" : "lose");
-      endGame(finalScore, finalLines, finalLevel, won);
-      return false;
-    }
-
-    setCurrentPiece(next);
-    setNextPiece(newNext);
-    setCanHold(true);
-    return true;
-  }, [nextPiece, stopGameLoop, stopTimer, endGame]);
-
-  // Lock piece and process line clears
-  const lockPiece = useCallback(() => {
-    const piece = currentPieceRef.current;
-    if (!piece) return;
-
-    const newGrid = placePiece(gridRef.current, piece);
-    const { grid: clearedGrid, linesCleared } = clearLines(newGrid);
-
-    setGrid(clearedGrid);
-
-    if (linesCleared > 0) {
-      const newLines = linesRef.current + linesCleared;
-      const newLevel = getLevel(newLines);
-      const lineScore = calculateLineScore(linesCleared, levelRef.current);
-
-      setLines(newLines);
-      setLevel(newLevel);
-      setScore(prev => prev + lineScore);
-
-      // Restart game loop with new speed if level changed
-      if (newLevel !== levelRef.current) {
-        stopGameLoop();
-        const newSpeed = getSpeed(newLevel);
-        gameLoopRef.current = setInterval(() => {
-          tick();
-        }, newSpeed);
-      }
-    }
-
-    // Spawn next piece
-    setCurrentPiece(null); // Clear briefly
-    // Use setTimeout to allow state to settle
-    setTimeout(() => spawnPiece(), 0);
-  }, [spawnPiece, stopGameLoop]);
-
-  // Game tick — move piece down
-  const tick = useCallback(() => {
-    if (statusRef.current !== "playing") return;
-    const piece = currentPieceRef.current;
-    if (!piece) return;
-
+    const piece = s.currentPiece;
     const moved = { ...piece, row: piece.row + 1 };
-    if (isValidPosition(gridRef.current, moved)) {
+
+    if (isValidPosition(s.grid, moved)) {
+      // Piece can move down
+      s.currentPiece = moved;
       setCurrentPiece(moved);
     } else {
-      // Can't move down — lock piece
-      lockPiece();
+      // Lock piece
+      const newGrid = placePiece(s.grid, piece);
+      const { grid: clearedGrid, linesCleared } = clearLines(newGrid);
+
+      s.grid = clearedGrid;
+      setGrid(clearedGrid);
+
+      if (linesCleared > 0) {
+        const newLines = s.lines + linesCleared;
+        const newLevel = getLevel(newLines);
+        const lineScore = calculateLineScore(linesCleared, s.level);
+
+        s.lines = newLines;
+        s.level = newLevel;
+        s.score += lineScore;
+
+        setLines(newLines);
+        setLevel(newLevel);
+        setScore(s.score);
+
+        // Restart loop at new speed if level changed
+        if (newLevel !== speedRef.current) {
+          const newSpeed = getSpeed(newLevel);
+          speedRef.current = newLevel;
+          if (gameLoopRef.current) {
+            clearInterval(gameLoopRef.current);
+          }
+          gameLoopRef.current = setInterval(gameTick, newSpeed);
+        }
+      }
+
+      // Spawn next piece
+      const next = s.nextPiece || getRandomPiece();
+      const newNext = getRandomPiece();
+
+      if (isGameOver(s.grid, next)) {
+        // Game over
+        if (gameLoopRef.current) {
+          clearInterval(gameLoopRef.current);
+          gameLoopRef.current = null;
+        }
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+        s.status = "finished";
+        s.currentPiece = null;
+        setCurrentPiece(null);
+        setStatus("finished");
+        const won = s.score >= WIN_THRESHOLD;
+        setResult(won ? "win" : "lose");
+        finishGame(s.score, s.lines, s.level, won);
+        return;
+      }
+
+      s.currentPiece = next;
+      s.nextPiece = newNext;
+      setCurrentPiece(next);
+      setNextPiece(newNext);
+      setCanHold(true);
     }
-  }, [lockPiece]);
+  }, [finishGame]);
 
   // Start game loop
   const startGameLoop = useCallback((speed: number) => {
     stopGameLoop();
-    gameLoopRef.current = setInterval(() => {
-      tick();
-    }, speed);
-  }, [stopGameLoop, tick]);
-
-  // Restart game loop when level changes
-  useEffect(() => {
-    if (status === "playing" && currentPiece) {
-      stopGameLoop();
-      const speed = getSpeed(level);
-      gameLoopRef.current = setInterval(() => {
-        tick();
-      }, speed);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [level]);
+    speedRef.current = 1;
+    gameLoopRef.current = setInterval(gameTick, speed);
+  }, [stopGameLoop, gameTick]);
 
   // Start game
   const startGame = useCallback(async () => {
@@ -328,6 +331,17 @@ export function useTetris() {
       }
     }
 
+    // Reset state ref
+    stateRef.current = {
+      grid: newGrid,
+      currentPiece: first,
+      nextPiece: next,
+      score: 0,
+      lines: 0,
+      level: 1,
+      status: "playing",
+    };
+
     setGrid(newGrid);
     setCurrentPiece(first);
     setNextPiece(next);
@@ -345,89 +359,116 @@ export function useTetris() {
     startGameLoop(getSpeed(1));
   }, [mode, isConnected, address, writeContractAsync, contractAddress, startTimer, startGameLoop]);
 
-  // Player actions
+  // Player actions — read from stateRef for instant responsiveness
   const moveLeft = useCallback(() => {
-    if (status !== "playing" || !currentPiece) return;
-    const moved = { ...currentPiece, col: currentPiece.col - 1 };
-    if (isValidPosition(grid, moved)) {
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
+    const moved = { ...s.currentPiece, col: s.currentPiece.col - 1 };
+    if (isValidPosition(s.grid, moved)) {
+      s.currentPiece = moved;
       setCurrentPiece(moved);
     }
-  }, [status, currentPiece, grid]);
+  }, []);
 
   const moveRight = useCallback(() => {
-    if (status !== "playing" || !currentPiece) return;
-    const moved = { ...currentPiece, col: currentPiece.col + 1 };
-    if (isValidPosition(grid, moved)) {
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
+    const moved = { ...s.currentPiece, col: s.currentPiece.col + 1 };
+    if (isValidPosition(s.grid, moved)) {
+      s.currentPiece = moved;
       setCurrentPiece(moved);
     }
-  }, [status, currentPiece, grid]);
+  }, []);
 
   const moveDown = useCallback(() => {
-    if (status !== "playing" || !currentPiece) return;
-    const moved = { ...currentPiece, row: currentPiece.row + 1 };
-    if (isValidPosition(grid, moved)) {
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
+    const moved = { ...s.currentPiece, row: s.currentPiece.row + 1 };
+    if (isValidPosition(s.grid, moved)) {
+      s.currentPiece = moved;
+      s.score += 1;
       setCurrentPiece(moved);
-      setScore(prev => prev + 1); // Soft drop score
+      setScore(s.score);
     }
-  }, [status, currentPiece, grid]);
+  }, []);
 
   const rotate = useCallback(() => {
-    if (status !== "playing" || !currentPiece) return;
-    const rotated = rotateCW(currentPiece);
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
+    const rotated = rotateCW(s.currentPiece);
     // Try normal rotation
-    if (isValidPosition(grid, rotated)) {
+    if (isValidPosition(s.grid, rotated)) {
+      s.currentPiece = rotated;
       setCurrentPiece(rotated);
       return;
     }
-    // Wall kick: try 1 cell left, then 1 cell right
-    const kickLeft = { ...rotated, col: rotated.col - 1 };
-    if (isValidPosition(grid, kickLeft)) {
-      setCurrentPiece(kickLeft);
-      return;
+    // Wall kicks: left, right, 2-left, 2-right
+    for (const offset of [-1, 1, -2, 2]) {
+      const kicked = { ...rotated, col: rotated.col + offset };
+      if (isValidPosition(s.grid, kicked)) {
+        s.currentPiece = kicked;
+        setCurrentPiece(kicked);
+        return;
+      }
     }
-    const kickRight = { ...rotated, col: rotated.col + 1 };
-    if (isValidPosition(grid, kickRight)) {
-      setCurrentPiece(kickRight);
-      return;
-    }
-  }, [status, currentPiece, grid]);
+  }, []);
 
   const hardDrop = useCallback(() => {
-    if (status !== "playing" || !currentPiece) return;
-    const ghostRow = getGhostRow(grid, currentPiece);
-    const dropDistance = ghostRow - currentPiece.row;
-    setScore(prev => prev + dropDistance * 2); // Hard drop score
-    setCurrentPiece({ ...currentPiece, row: ghostRow });
-    // Lock immediately
-    setTimeout(() => lockPiece(), 0);
-  }, [status, currentPiece, grid, lockPiece]);
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece) return;
+    const ghostR = getGhostRow(s.grid, s.currentPiece);
+    const dropDistance = ghostR - s.currentPiece.row;
+    s.score += dropDistance * 2;
+    s.currentPiece = { ...s.currentPiece, row: ghostR };
+    setScore(s.score);
+    setCurrentPiece(s.currentPiece);
+    // Immediately trigger lock via a tick
+    gameTick();
+  }, [gameTick]);
 
   const hold = useCallback(() => {
-    if (status !== "playing" || !currentPiece || !canHold) return;
+    const s = stateRef.current;
+    if (s.status !== "playing" || !s.currentPiece || !canHold) return;
     setCanHold(false);
 
     if (holdPiece) {
       // Swap current with hold
       const held = { ...holdPiece, row: 0, col: Math.floor((COLS - holdPiece.shape[0].length) / 2) };
-      setHoldPiece({ ...currentPiece, row: 0, col: 0 });
-      if (isValidPosition(grid, held)) {
+      if (isValidPosition(s.grid, held)) {
+        setHoldPiece({ ...s.currentPiece, row: 0, col: 0 });
+        s.currentPiece = held;
         setCurrentPiece(held);
       } else {
-        // Can't place held piece — keep current
         setCanHold(true);
-        setHoldPiece(holdPiece);
       }
     } else {
       // First hold — store current, spawn next
-      setHoldPiece({ ...currentPiece, row: 0, col: 0 });
-      spawnPiece();
+      setHoldPiece({ ...s.currentPiece, row: 0, col: 0 });
+      const next = s.nextPiece || getRandomPiece();
+      const newNext = getRandomPiece();
+
+      if (isGameOver(s.grid, next)) {
+        stopGameLoop();
+        stopTimer();
+        s.status = "finished";
+        setStatus("finished");
+        const won = s.score >= WIN_THRESHOLD;
+        setResult(won ? "win" : "lose");
+        finishGame(s.score, s.lines, s.level, won);
+        return;
+      }
+
+      s.currentPiece = next;
+      s.nextPiece = newNext;
+      setCurrentPiece(next);
+      setNextPiece(newNext);
     }
-  }, [status, currentPiece, canHold, holdPiece, grid, spawnPiece]);
+  }, [canHold, holdPiece, stopGameLoop, stopTimer, finishGame, gameTick]);
 
   // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (status !== "playing") return;
+      if (stateRef.current.status !== "playing") return;
 
       switch (e.key) {
         case "ArrowLeft":
@@ -469,13 +510,24 @@ export function useTetris() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [status, moveLeft, moveRight, moveDown, rotate, hardDrop, hold]);
+  }, [moveLeft, moveRight, moveDown, rotate, hardDrop, hold]);
 
   // Reset game
   const resetGame = useCallback(() => {
     stopGameLoop();
     stopTimer();
     resetBag();
+
+    stateRef.current = {
+      grid: createEmptyGrid(),
+      currentPiece: null,
+      nextPiece: null,
+      score: 0,
+      lines: 0,
+      level: 1,
+      status: "idle",
+    };
+
     setGrid(createEmptyGrid());
     setCurrentPiece(null);
     setNextPiece(null);

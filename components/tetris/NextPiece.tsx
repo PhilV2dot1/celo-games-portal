@@ -1,8 +1,18 @@
 "use client";
 
 import { memo } from "react";
-import { type Piece, PIECE_COLORS } from "@/lib/games/tetris-logic";
+import { type Piece, type TetrominoType } from "@/lib/games/tetris-logic";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+
+const BRICK_COLORS: Record<TetrominoType, { bg: string; light: string; dark: string }> = {
+  I: { bg: "#06b6d4", light: "#67e8f9", dark: "#0891b2" },
+  O: { bg: "#eab308", light: "#fde047", dark: "#ca8a04" },
+  T: { bg: "#a855f7", light: "#c084fc", dark: "#7c3aed" },
+  S: { bg: "#22c55e", light: "#86efac", dark: "#16a34a" },
+  Z: { bg: "#ef4444", light: "#fca5a5", dark: "#dc2626" },
+  J: { bg: "#3b82f6", light: "#93c5fd", dark: "#2563eb" },
+  L: { bg: "#f97316", light: "#fdba74", dark: "#ea580c" },
+};
 
 interface NextPieceProps {
   piece: Piece | null;
@@ -25,18 +35,33 @@ export const NextPiece = memo(function NextPiece({ piece }: NextPieceProps) {
             }}
           >
             {piece.shape.flatMap((row, r) =>
-              row.map((filled, c) => (
-                <div
-                  key={`${r}-${c}`}
-                  className={`w-4 h-4 rounded-[2px] ${
-                    filled ? PIECE_COLORS[piece.type] : "bg-transparent"
-                  }`}
-                />
-              ))
+              row.map((filled, c) => {
+                if (!filled) {
+                  return (
+                    <div
+                      key={`${r}-${c}`}
+                      style={{ width: 18, height: 18 }}
+                    />
+                  );
+                }
+                const colors = BRICK_COLORS[piece.type];
+                return (
+                  <div
+                    key={`${r}-${c}`}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: 3,
+                      background: colors.bg,
+                      boxShadow: `inset 2px 2px 0 ${colors.light}, inset -2px -2px 0 ${colors.dark}`,
+                    }}
+                  />
+                );
+              })
             )}
           </div>
         ) : (
-          <div className="w-16 h-16" />
+          <div className="w-[72px] h-[72px]" />
         )}
       </div>
     </div>

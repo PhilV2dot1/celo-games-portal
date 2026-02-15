@@ -92,7 +92,7 @@ export default function TetrisPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-200 to-gray-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
-      <div className="max-w-xl mx-auto space-y-4">
+      <div className="max-w-2xl mx-auto space-y-4">
         {/* Back to Portal Link */}
         <Link
           href="/"
@@ -177,10 +177,10 @@ export default function TetrisPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex gap-3 justify-center"
+            className="flex gap-3 justify-center items-start"
           >
             {/* Hold piece */}
-            <div className="flex-shrink-0 w-20">
+            <div className="flex-shrink-0 w-24">
               <HoldPiece piece={game.holdPiece} canHold={game.canHold} />
             </div>
 
@@ -194,7 +194,7 @@ export default function TetrisPage() {
             </div>
 
             {/* Next piece */}
-            <div className="flex-shrink-0 w-20">
+            <div className="flex-shrink-0 w-24">
               <NextPiece piece={game.nextPiece} />
             </div>
           </motion.div>
