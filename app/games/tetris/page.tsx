@@ -177,24 +177,22 @@ export default function TetrisPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex gap-3 justify-center items-start"
+            className="relative flex justify-center"
           >
-            {/* Hold piece */}
-            <div className="flex-shrink-0 w-24">
+            {/* Hold piece — positioned top-left of board */}
+            <div className="absolute left-0 top-0 z-10">
               <HoldPiece piece={game.holdPiece} canHold={game.canHold} />
             </div>
 
             {/* Board */}
-            <div className="flex-shrink-0">
-              <TetrisBoard
-                grid={game.grid}
-                currentPiece={game.currentPiece}
-                ghostRow={game.ghostRow}
-              />
-            </div>
+            <TetrisBoard
+              grid={game.grid}
+              currentPiece={game.currentPiece}
+              ghostRow={game.ghostRow}
+            />
 
-            {/* Next piece */}
-            <div className="flex-shrink-0 w-24">
+            {/* Next piece — positioned top-right of board */}
+            <div className="absolute right-0 top-0 z-10">
               <NextPiece piece={game.nextPiece} />
             </div>
           </motion.div>

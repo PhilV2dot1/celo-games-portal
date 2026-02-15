@@ -78,8 +78,9 @@ export function useTetris() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
 
-  // Game loop ref
-  const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Game loop ref — uses requestAnimationFrame for smooth rendering
+  const gameLoopRef = useRef<number | null>(null);
+  const lastDropRef = useRef<number>(0);
   const speedRef = useRef(getSpeed(1));
 
   // Mutable game state refs — the game loop reads from these to avoid stale closures
@@ -157,7 +158,7 @@ export function useTetris() {
   // Stop game loop
   const stopGameLoop = useCallback(() => {
     if (gameLoopRef.current) {
-      clearInterval(gameLoopRef.current);
+      cancelAnimationFrame(gameLoopRef.current);
       gameLoopRef.current = null;
     }
   }, []);
@@ -166,7 +167,7 @@ export function useTetris() {
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+      if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
   }, []);
 
@@ -252,14 +253,9 @@ export function useTetris() {
         setLevel(newLevel);
         setScore(s.score);
 
-        // Restart loop at new speed if level changed
-        if (newLevel !== speedRef.current) {
-          const newSpeed = getSpeed(newLevel);
-          speedRef.current = newLevel;
-          if (gameLoopRef.current) {
-            clearInterval(gameLoopRef.current);
-          }
-          gameLoopRef.current = setInterval(gameTick, newSpeed);
+        // Update speed if level changed (rAF loop reads speedRef automatically)
+        if (newLevel !== level) {
+          speedRef.current = getSpeed(newLevel);
         }
       }
 
@@ -270,7 +266,7 @@ export function useTetris() {
       if (isGameOver(s.grid, next)) {
         // Game over
         if (gameLoopRef.current) {
-          clearInterval(gameLoopRef.current);
+          cancelAnimationFrame(gameLoopRef.current);
           gameLoopRef.current = null;
         }
         if (timerRef.current) {
@@ -295,11 +291,23 @@ export function useTetris() {
     }
   }, [finishGame]);
 
-  // Start game loop
+  // Start game loop — requestAnimationFrame with timestamp-based dropping
   const startGameLoop = useCallback((speed: number) => {
     stopGameLoop();
-    speedRef.current = 1;
-    gameLoopRef.current = setInterval(gameTick, speed);
+    speedRef.current = speed;
+    lastDropRef.current = performance.now();
+
+    const loop = (now: number) => {
+      if (stateRef.current.status !== "playing") return;
+
+      const elapsed = now - lastDropRef.current;
+      if (elapsed >= speedRef.current) {
+        lastDropRef.current = now - (elapsed % speedRef.current);
+        gameTick();
+      }
+      gameLoopRef.current = requestAnimationFrame(loop);
+    };
+    gameLoopRef.current = requestAnimationFrame(loop);
   }, [stopGameLoop, gameTick]);
 
   // Start game
