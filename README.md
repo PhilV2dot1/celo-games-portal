@@ -4,8 +4,8 @@ A comprehensive gaming platform built on Celo blockchain featuring multiple game
 
 ## 🌟 Features
 
-- **8 Blockchain Games**: Blackjack, Rock-Paper-Scissors, TicTacToe, Jackpot, 2048, Mastermind, Connect 4, Snake
-- **Dual Mode Gaming**: Free play (off-chain) and On-chain modes with real CELO
+- **15 Blockchain Games**: Blackjack, Rock-Paper-Scissors, TicTacToe, Jackpot, 2048, Mastermind, Connect 4, Snake, Solitaire, démineur, Sudoku, Yahtzee, Memoire, Labyrinthe et Tetris
+- **Dual Mode Gaming**: Free play (off-chain) and On-chain modes on Celo, Base and MegaETH
 - **User Profiles**: Customizable profiles with themes, avatars, and social links
 - **Badge System**: Earn badges by playing games and achieving milestones
 - **Leaderboard**: Global and game-specific rankings
