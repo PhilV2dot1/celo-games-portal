@@ -132,6 +132,17 @@ export const GAME_SOUNDS = {
     lose: { path: '/audio/mastermind/lose.mp3', category: 'lose' as const },
   },
 
+  // Tetris
+  tetris: {
+    move: { path: '/audio/tetris/move.mp3', category: 'action' as const, volume: 0.3 },
+    rotate: { path: '/audio/tetris/rotate.mp3', category: 'action' as const, volume: 0.4 },
+    drop: { path: '/audio/tetris/drop.mp3', category: 'action' as const },
+    lineClear: { path: '/audio/tetris/lineclear.mp3', category: 'win' as const },
+    tetris: { path: '/audio/tetris/tetris.mp3', category: 'win' as const },
+    levelUp: { path: '/audio/tetris/levelup.mp3', category: 'win' as const },
+    gameOver: { path: '/audio/tetris/gameover.mp3', category: 'lose' as const },
+  },
+
   // Jackpot
   jackpot: {
     spin: { path: '/audio/jackpot/spin.mp3', category: 'action' as const },

@@ -24,7 +24,8 @@ export type GameId =
   | 'solitaire'
   | 'snake'
   | 'memory'
-  | 'maze';
+  | 'maze'
+  | 'tetris';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -104,6 +105,11 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
     celo: '0x15110ed1bff11b2522234a44665bc689c500a285',
     base: '0xed8ae4652ade0aa830f0018d0d458dbcbc42f664',
     megaeth: '0x1dA094416D76501ceF306CF08C2Ea935E12039C3',
+  },
+  tetris: {
+    celo: '0x1d24cca8b0c15fef23b37978a3f696a52c0e9116',
+    base: '0x3c0022C1e766D20C3e57D273BdcF243d4B5c73C5',
+    megaeth: '0x67a9e20aBCbe387e3e228D970fd4A50928972eAB',
   },
 };
 

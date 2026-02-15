@@ -38,6 +38,7 @@ const DEFAULT_PROFILE: UserProfile = {
     sudoku: { ...DEFAULT_GAME_STATS },
     memory: { ...DEFAULT_GAME_STATS },
     maze: { ...DEFAULT_GAME_STATS },
+    tetris: { ...DEFAULT_GAME_STATS },
   },
 };
 
