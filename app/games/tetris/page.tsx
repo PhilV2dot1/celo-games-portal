@@ -14,7 +14,6 @@ import { ModeToggle } from "@/components/shared/ModeToggle";
 import { WalletConnect } from "@/components/shared/WalletConnect";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { useTheme } from "@/lib/theme/ThemeContext";
 import { useAccount } from "wagmi";
 import {
   getContractAddress,
@@ -29,21 +28,7 @@ export default function TetrisPage() {
   const contractAddress = getContractAddress("tetris", chain?.id);
   const { recordGame } = useLocalStats();
   const { t } = useLanguage();
-  const { setTheme, theme: currentTheme } = useTheme();
   const { play } = useGameAudio("tetris");
-  const prevThemeRef = useRef(currentTheme);
-
-  // Force dark mode on Tetris page, restore previous theme on unmount
-  useEffect(() => {
-    prevThemeRef.current = currentTheme;
-    if (currentTheme !== "dark") {
-      setTheme("dark");
-    }
-    return () => {
-      setTheme(prevThemeRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Translate messages
   const translateMessage = useCallback(
