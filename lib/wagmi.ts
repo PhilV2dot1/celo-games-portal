@@ -1,6 +1,5 @@
 import { createConfig, http, cookieStorage, createStorage } from "wagmi";
-import { celo, base } from "wagmi/chains";
-import { defineChain } from "viem";
+import { celo } from "wagmi/chains";
 import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
@@ -15,21 +14,6 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 
 const celoRpcUrl = "https://forno.celo.org";
-const baseRpcUrl = "https://mainnet.base.org";
-const megaethRpcUrl = "https://mainnet.megaeth.com/rpc";
-
-export const megaeth = defineChain({
-  id: 4326,
-  name: "MegaETH",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  rpcUrls: {
-    default: { http: [megaethRpcUrl] },
-  },
-  blockExplorers: {
-    default: { name: "MegaETH Explorer", url: "https://megaeth.blockscout.com" },
-  },
-  iconUrl: "/icons/megaeth.png",
-}) as typeof celo;
 
 function getAppUrl() {
   if (typeof window !== 'undefined') {
@@ -63,16 +47,17 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: "Mini Games Portal",
+    appName: "Celo Games Portal",
     projectId: walletConnectProjectId,
-    appDescription: "Play 14 mini-games on Celo, Base & MegaETH! Blackjack, RPS, TicTacToe, Solitaire, and more.",
+    appDescription: "Play 15 mini-games on Celo blockchain! Blackjack, RPS, TicTacToe, Solitaire, and more.",
     appUrl: getAppUrl(),
     appIcon: `${getAppUrl()}/icon.png`,
   }
 );
 
 export const config = createConfig({
-  chains: [celo, base, megaeth],
+  chains: [celo],
+  multiInjectedProviderDiscovery: false,
   connectors: [
     // Farcaster Mini App connector (only active inside Farcaster/Warpcast)
     farcasterMiniApp(),
@@ -85,21 +70,10 @@ export const config = createConfig({
       retryDelay: 1000,
       timeout: 10_000,
     }),
-    [base.id]: http(baseRpcUrl, {
-      batch: true,
-      retryCount: 3,
-      retryDelay: 1000,
-      timeout: 10_000,
-    }),
-    [megaeth.id]: http(megaethRpcUrl, {
-      batch: true,
-      retryCount: 3,
-      retryDelay: 1000,
-      timeout: 10_000,
-    }),
   },
   ssr: true,
   storage: createStorage({
     storage: cookieStorage,
+    key: 'celo-games-portal',
   }),
 });

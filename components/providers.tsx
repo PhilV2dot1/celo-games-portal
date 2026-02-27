@@ -5,6 +5,7 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { config } from "@/lib/wagmi";
+import { celo } from 'wagmi/chains';
 import { initializeFarcaster } from "@/lib/farcaster";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
@@ -96,6 +97,7 @@ export function Providers({ children }: { children: ReactNode }) {
           <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <RainbowKitProvider
+              initialChain={celo}
               modalSize="wide"
               theme={lightTheme({
                 accentColor: '#4B5563',
