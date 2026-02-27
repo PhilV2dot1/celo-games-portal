@@ -6,18 +6,12 @@ pragma solidity ^0.8.20;
  * @dev Texas Hold'em solo game (player vs dealer AI) on-chain.
  * @notice The contract generates a shuffled deck using block-based randomness,
  *         deals hole cards and community cards, evaluates both hands server-side,
- *         and returns the outcome. A small fee is collected per hand.
+ *         and returns the outcome. Free to play — no fee required.
  *
  * IMPORTANT: block-based randomness (blockhash + timestamp) is not cryptographically
  * secure against miner manipulation. For a production deployment, use Chainlink VRF.
  */
 contract Poker {
-
-    // ========================================
-    // CONSTANTS
-    // ========================================
-
-    uint256 public constant HAND_FEE = 0.001 ether;   // Fee per hand (adjustable)
 
     // Hand ranks (0 = high card ... 9 = royal flush)
     uint8 constant HIGH_CARD       = 0;
@@ -38,7 +32,6 @@ contract Poker {
     struct PlayerStats {
         uint256 handsPlayed;
         uint256 handsWon;
-        uint256 biggestPot;
     }
 
     mapping(address => PlayerStats) public playerStats;
@@ -57,7 +50,6 @@ contract Poker {
         string outcome
     );
 
-    event FeeWithdrawn(address indexed to, uint256 amount);
 
     // ========================================
     // CONSTRUCTOR
@@ -81,16 +73,14 @@ contract Poker {
     // ========================================
 
     /**
-     * @dev Play a hand of Texas Hold'em against the dealer.
-     * @notice Requires payment of HAND_FEE. Returns the dealt cards and outcome.
-     * @return holeCards     Player's 2 hole cards (uint8 encoded: 1–52)
+     * @dev Play a hand of Texas Hold'em against the dealer. Free to call.
+     * @return holeCards      Player's 2 hole cards (uint8 encoded: 1–52)
      * @return communityCards 5 community cards
-     * @return handRank      Best hand rank achieved by the player (0–9)
-     * @return outcome       "win", "lose", or "split"
+     * @return handRank       Best hand rank achieved by the player (0–9)
+     * @return outcome        "win", "lose", or "split"
      */
     function playHand()
         external
-        payable
         returns (
             uint8[] memory holeCards,
             uint8[] memory communityCards,
@@ -98,7 +88,6 @@ contract Poker {
             string memory outcome
         )
     {
-        require(msg.value >= HAND_FEE, "Insufficient fee");
 
         // ── Generate pseudo-random deck ────────────────────────────────────────
         uint256 seed = uint256(
@@ -162,9 +151,6 @@ contract Poker {
         if (keccak256(bytes(outcome)) == keccak256(bytes("win"))) {
             stats.handsWon++;
         }
-        if (msg.value > stats.biggestPot) {
-            stats.biggestPot = msg.value;
-        }
         totalHandsPlayed++;
 
         emit HandPlayed(msg.sender, holeCards, communityCards, handRank, outcome);
@@ -178,7 +164,7 @@ contract Poker {
      * @dev Get statistics for the calling player.
      * @return handsPlayed  Total hands played
      * @return handsWon     Total hands won
-     * @return biggestPot   Biggest bet placed
+     * @return biggestPot   Always 0 (no fees collected)
      * @return winRate      Win rate in basis points (0–10000, divide by 100 for %)
      */
     function getStats()
@@ -194,24 +180,13 @@ contract Poker {
         PlayerStats memory s = playerStats[msg.sender];
         handsPlayed = s.handsPlayed;
         handsWon = s.handsWon;
-        biggestPot = s.biggestPot;
+        biggestPot = 0;
         winRate = s.handsPlayed > 0 ? (s.handsWon * 10000) / s.handsPlayed : 0;
     }
 
     // ========================================
     // OWNER FUNCTIONS
     // ========================================
-
-    /**
-     * @dev Withdraw accumulated fees to owner.
-     */
-    function withdraw() external onlyOwner {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "Nothing to withdraw");
-        (bool ok, ) = owner.call{value: balance}("");
-        require(ok, "Transfer failed");
-        emit FeeWithdrawn(owner, balance);
-    }
 
     /**
      * @dev Transfer ownership.
@@ -463,9 +438,4 @@ contract Poker {
         }
     }
 
-    // ========================================
-    // FALLBACK
-    // ========================================
-
-    receive() external payable {}
 }
