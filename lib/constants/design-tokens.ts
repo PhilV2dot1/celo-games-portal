@@ -377,7 +377,7 @@ export function getCeloShadow(size: 'sm' | 'md' | 'lg' | 'xl' = 'md'): string {
 // CHAIN THEMES
 // ========================================
 
-export type ChainThemeName = 'celo' | 'base' | 'megaeth';
+export type ChainThemeName = 'celo';
 
 export interface ChainTheme {
   primary: string;
@@ -386,12 +386,6 @@ export interface ChainTheme {
   dark: string;
   /** Text color that contrasts with the primary color */
   contrastText: string;
-  /** Optional background color override for light mode */
-  bgDay?: string;
-  /** Optional background color override for dark mode */
-  bgNight?: string;
-  /** Optional font family override */
-  fontFamily?: string;
 }
 
 export const chainThemes: Record<ChainThemeName, ChainTheme> = {
@@ -401,23 +395,6 @@ export const chainThemes: Record<ChainThemeName, ChainTheme> = {
     light: colors.celoLight,
     dark: colors.celoDark,
     contrastText: '#111827', // dark text on yellow
-  },
-  base: {
-    primary: colors.base,
-    hover: colors.baseHover,
-    light: colors.baseLight,
-    dark: colors.baseDark,
-    contrastText: '#ffffff', // white text on blue
-  },
-  megaeth: {
-    primary: colors.megaeth,
-    hover: colors.megaethHover,
-    light: colors.megaethLight,
-    dark: colors.megaethDark,
-    contrastText: '#19191A', // Night Sky - dark text on rose
-    bgDay: colors.megaethBgDay,       // Full Moon #DFD9D9
-    bgNight: colors.megaethBgNight,   // Night Sky #19191A
-    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
   },
 } as const;
 

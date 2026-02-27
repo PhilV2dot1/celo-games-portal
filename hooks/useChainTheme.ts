@@ -12,17 +12,15 @@ import { chainThemes, type ChainThemeName, type ChainTheme } from '@/lib/constan
  *   // theme.primary, theme.hover, theme.contrastText, etc.
  */
 export function useChainTheme() {
-  const { isOnBase, isOnCelo, isOnMegaeth, isSupportedChain, isConnected } = useChainSelector();
+  const { isOnCelo, isSupportedChain, isConnected } = useChainSelector();
 
-  const activeChain: ChainThemeName = isOnMegaeth ? 'megaeth' : isOnBase ? 'base' : 'celo';
+  const activeChain: ChainThemeName = 'celo';
   const theme: ChainTheme = chainThemes[activeChain];
 
   return {
     activeChain,
     theme,
-    isOnBase,
     isOnCelo,
-    isOnMegaeth,
     isSupportedChain,
     isConnected,
   };

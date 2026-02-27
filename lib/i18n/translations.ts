@@ -1138,8 +1138,6 @@ export const translations = {
     chain: {
       network: 'Network',
       celo: 'Celo',
-      base: 'Base',
-      megaeth: 'MegaETH',
       switchTo: 'Switch to',
       notAvailable: 'Not available on this network',
       comingSoon: 'Coming soon on this network',
@@ -2279,8 +2277,6 @@ export const translations = {
     chain: {
       network: 'Réseau',
       celo: 'Celo',
-      base: 'Base',
-      megaeth: 'MegaETH',
       switchTo: 'Basculer vers',
       notAvailable: 'Non disponible sur ce réseau',
       comingSoon: 'Bientôt disponible sur ce réseau',

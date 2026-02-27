@@ -2,18 +2,15 @@
 
 import { motion } from 'framer-motion';
 import { useChainSelector } from '@/hooks/useChainSelector';
-import { CHAIN_CONFIG } from '@/lib/contracts/addresses';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { CeloIcon } from './CeloIcon';
-import { BaseIcon } from './BaseIcon';
-import { MegaEthIcon } from './MegaEthIcon';
 
 interface ChainWarningProps {
   className?: string;
 }
 
 export function ChainWarning({ className = '' }: ChainWarningProps) {
-  const { isConnected, isSupportedChain: isSupported, currentChain, switchToCelo, switchToBase, switchToMegaeth } = useChainSelector();
+  const { isConnected, isSupportedChain: isSupported, currentChain, switchToCelo } = useChainSelector();
   const { t } = useLanguage();
 
   if (!isConnected || isSupported) return null;
@@ -30,29 +27,13 @@ export function ChainWarning({ className = '' }: ChainWarningProps) {
       <p className="text-xs text-orange-600 dark:text-orange-300 mb-3">
         {currentChain?.name || 'Unknown'} {t('chain.switchToPlay')}
       </p>
-      <div className="flex gap-2">
-        <button
-          onClick={switchToCelo}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-medium transition-colors"
-        >
-          <CeloIcon size={16} />
-          <span>{CHAIN_CONFIG.celo.shortName}</span>
-        </button>
-        <button
-          onClick={switchToBase}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
-        >
-          <BaseIcon size={16} />
-          <span>{CHAIN_CONFIG.base.shortName}</span>
-        </button>
-        <button
-          onClick={switchToMegaeth}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-pink-400 hover:bg-pink-500 text-gray-900 rounded-lg text-sm font-medium transition-colors"
-        >
-          <MegaEthIcon size={16} />
-          <span>{CHAIN_CONFIG.megaeth.shortName}</span>
-        </button>
-      </div>
+      <button
+        onClick={switchToCelo}
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-medium transition-colors"
+      >
+        <CeloIcon size={16} />
+        <span>Switch to Celo</span>
+      </button>
     </motion.div>
   );
 }

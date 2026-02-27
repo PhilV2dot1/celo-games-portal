@@ -9,7 +9,6 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { AudioControls } from "@/components/shared/AudioControls";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
-import { ChainSelector } from "@/components/shared/ChainSelector";
 import { ChainWarning } from "@/components/shared/ChainWarning";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -56,19 +55,19 @@ export function Header() {
       <div className="bg-white/90 dark:bg-gray-900/95 rounded-xl shadow-md mb-6 dark:shadow-gray-900/50" style={{ borderBottom: '3px solid var(--chain-primary)' }}>
         <div className="flex items-center justify-between p-4">
           {/* Logo/Brand */}
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
               <span className="text-xl sm:text-2xl">🎮</span>
             </div>
             <div>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white">
-                Mini Games Portal
+                Celo Games Portal
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
                 {t('header.subtitle')}
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
@@ -208,24 +207,21 @@ export function Header() {
               </Link>
             </div>
 
-            {/* Chain Selector + Stats */}
-            <div className="hidden md:flex items-center gap-4">
-              <ChainSelector />
-              {profile.gamesPlayed > 0 && (
-                <div className="flex items-center gap-4 text-xs">
-                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-gray-600 dark:text-gray-400">Points:</span>
-                    <span className="font-bold text-gray-900 dark:text-white">{profile.totalPoints}</span>
-                  </div>
-                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-gray-600 dark:text-gray-400">Games:</span>
-                    <span className="font-bold text-gray-900 dark:text-white">{profile.gamesPlayed}</span>
-                  </div>
+            {/* Local stats */}
+            {profile.gamesPlayed > 0 && (
+              <div className="flex items-center gap-4 text-xs">
+                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-600 dark:text-gray-400">Points:</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{profile.totalPoints}</span>
                 </div>
-              )}
-            </div>
+                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-600 dark:text-gray-400">Games:</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{profile.gamesPlayed}</span>
+                </div>
+              </div>
+            )}
           </div>
         </nav>
       </div>

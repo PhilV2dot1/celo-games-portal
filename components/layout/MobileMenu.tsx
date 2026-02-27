@@ -10,7 +10,6 @@ import type { UserProfile } from "@/lib/types";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { AudioControls } from "@/components/shared/AudioControls";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { ChainSelector } from "@/components/shared/ChainSelector";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -172,9 +171,8 @@ export function MobileMenu({
             {/* Separator */}
             <div className="mx-4 border-t border-gray-200 dark:border-gray-700" />
 
-            {/* Chain Selector & Wallet */}
-            <div className="p-4 space-y-3">
-              <ChainSelector className="w-full" />
+            {/* Wallet */}
+            <div className="p-4">
               <ConnectButton showBalance={false} chainStatus="icon" />
             </div>
 
