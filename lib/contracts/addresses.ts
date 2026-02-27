@@ -114,8 +114,8 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   },
   poker: {
     celo: '0xe446ee939ba9f508e4f4fcbf10c10172ac4df267',
-    base: null,
-    megaeth: null,
+    base: '0x901617E83B9C3DdDE729b5C1A68743EfF3538Aa9',
+    megaeth: '0x72cA73D209dC23B406762b7230F3cF8Cf001658A',
   },
 };
 
