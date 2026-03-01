@@ -1,5 +1,5 @@
 export type GameMode = "free" | "onchain";
-export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku" | "memory" | "maze" | "tetris";
+export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku" | "memory" | "maze" | "tetris" | "poker";
 
 export interface GameMetadata {
   id: GameId;
@@ -158,6 +158,16 @@ export const GAMES: Record<GameId, GameMetadata> = {
     icon: "/icons/tetris.png",
     route: "/games/tetris",
     color: "from-cyan-500 to-blue-600",
+    hasFee: false,
+  },
+  poker: {
+    id: "poker",
+    name: "Poker",
+    description: "Texas Hold'em vs the dealer!",
+    icon: "/icons/poker.svg",
+    route: "/games/poker",
+    contractAddress: "0xe446ee939ba9f508e4f4fcbf10c10172ac4df267",
+    color: "from-emerald-700 to-green-900",
     hasFee: false,
   },
 };
