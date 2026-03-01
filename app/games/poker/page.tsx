@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { usePoker } from "@/hooks/usePoker";
 import { usePokerMultiplayer } from "@/hooks/usePokerMultiplayer";
-import { useLocalStats } from "@/hooks/useLocalStats";
-import { useGameAudio } from "@/lib/audio/AudioContext";
+import type { PokerPhase } from "@/hooks/usePoker";
+import type { Card } from "@/lib/games/poker-cards";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useChainTheme } from "@/hooks/useChainTheme";
 import { useAccount } from "wagmi";
@@ -27,37 +27,10 @@ export default function PokerPage() {
 
   const solo = usePoker();
   const mp = usePokerMultiplayer();
-  const { recordGame } = useLocalStats();
   const { t } = useLanguage();
   const { chain } = useAccount();
   const { theme } = useChainTheme();
-  const { play } = useGameAudio('poker');
   const contractAddress = getContractAddress('poker', chain?.id);
-
-  // Record completed solo hands
-  useEffect(() => {
-    if (solo.phase === 'showdown' && solo.outcome) {
-      const result = solo.outcome === 'win' ? 'win' : solo.outcome === 'split' ? 'draw' : 'lose';
-      recordGame('poker', solo.mode, result);
-    }
-  }, [solo.phase, solo.outcome, solo.mode, recordGame]);
-
-  // Audio effects
-  useEffect(() => {
-    if (solo.phase === 'preflop') play('deal');
-  }, [solo.phase, play]);
-
-  useEffect(() => {
-    if (solo.outcome === 'win') play('win');
-    else if (solo.outcome === 'lose') play('lose');
-  }, [solo.outcome, play]);
-
-  // Record multiplayer result
-  useEffect(() => {
-    if (mp.status === 'finished' && mp.matchResult) {
-      recordGame('poker', 'free', mp.matchResult);
-    }
-  }, [mp.status, mp.matchResult, recordGame]);
 
   const handleModeChange = useCallback((newMode: GameMode) => {
     if (newMode === 'multiplayer') {
@@ -344,12 +317,11 @@ export default function PokerPage() {
 
             {mpIdle && !showJoinCode && (
               <MatchmakingButton
-                gameId="poker"
                 onFindMatch={mp.findMatch}
-                onCreatePrivateRoom={mp.createPrivateRoom}
+                onCreatePrivate={mp.createPrivateRoom}
                 onJoinByCode={() => setShowJoinCode(true)}
                 isSearching={mp.status === 'searching'}
-                onCancelSearch={mp.cancelSearch}
+                onCancel={mp.cancelSearch}
               />
             )}
 
@@ -360,7 +332,7 @@ export default function PokerPage() {
                   try { await mp.joinByCode(code); }
                   catch (e) { setJoinError((e as Error).message || 'Failed to join'); }
                 }}
-                onBack={() => setShowJoinCode(false)}
+                onCancel={() => setShowJoinCode(false)}
                 error={joinError}
               />
             )}
@@ -387,8 +359,8 @@ export default function PokerPage() {
                 </div>
 
                 <PokerTable
-                  phase={mp.gameState.phase}
-                  communityCards={mp.gameState.communityCards}
+                  phase={mp.gameState.phase as PokerPhase}
+                  communityCards={mp.gameState.communityCards as unknown as Card[]}
                   pot={mp.gameState.pot}
                   currentBet={mp.gameState.currentBet}
                   player={{
@@ -396,7 +368,7 @@ export default function PokerPage() {
                     holeCards: mp.myHoleCards,
                     stack: mp.myStack,
                     bet: mp.myBet,
-                    status: mp.myStatus,
+                    status: mp.myStatus as 'active' | 'folded' | 'all_in' | 'allin' | 'out',
                     isDealer: mp.isDealer,
                     showCards: true,
                     isCurrentTurn: mp.isMyTurn,
@@ -406,7 +378,7 @@ export default function PokerPage() {
                     holeCards: mp.opponentHoleCards,
                     stack: mp.opponentStack,
                     bet: mp.opponentBet,
-                    status: mp.opponentStatus,
+                    status: mp.opponentStatus as 'active' | 'folded' | 'all_in' | 'allin' | 'out',
                     isDealer: !mp.isDealer,
                     showCards: mp.gameState.phase === 'showdown',
                     handResult: mp.gameState.phase === 'showdown' ? mp.opponentHandResult : undefined,
@@ -415,7 +387,7 @@ export default function PokerPage() {
 
                 {mp.isMyTurn && (
                   <PokerActions
-                    phase={mp.gameState.phase}
+                    phase={mp.gameState.phase as PokerPhase}
                     currentBet={mp.gameState.currentBet}
                     playerBet={mp.myBet}
                     playerStack={mp.myStack}
@@ -441,8 +413,8 @@ export default function PokerPage() {
 
             {mpFinished && (
               <GameResult
-                winner={mp.winner || null}
-                loser={mp.loser || null}
+                winner={mp.players?.find(p => p.player_number === (mp.matchResult === 'win' ? mp.myPlayerNumber : (mp.myPlayerNumber === 1 ? 2 : 1))) || null}
+                loser={mp.players?.find(p => p.player_number === (mp.matchResult === 'lose' ? mp.myPlayerNumber : (mp.myPlayerNumber === 1 ? 2 : 1))) || null}
                 isDraw={mp.matchResult === 'draw'}
                 isWinner={mp.matchResult === 'win'}
                 myStats={mp.myStats}
