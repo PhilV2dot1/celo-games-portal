@@ -97,6 +97,8 @@ export function usePoker() {
 
   // Pending endGame result to submit (set when outcome is known, cleared after tx)
   const [pendingEnd, setPendingEnd] = useState<{ outcome: 'win'|'lose'|'split'; rank: string } | null>(null);
+  // Flag: true after startGame confirms, false after endGame confirms or mode reset
+  const [gameStartedOnChain, setGameStartedOnChain] = useState(false);
 
   // Only block game actions during startGame tx — endGame tx happens after showdown
   const isPending = isStartPending;
@@ -293,8 +295,10 @@ export function usePoker() {
         biggestPot: Math.max(prev.biggestPot, currentPot),
         currentStreak: streak,
         bestStreak: Math.max(prev.bestStreak, streak),
-        bestHand: isWin && HAND_RANK_ORDER.indexOf(pResult.rank) < HAND_RANK_ORDER.indexOf(prev.bestHand as HandRank)
-          ? pResult.rank : prev.bestHand,
+        bestHand: isWin && (
+          !prev.bestHand ||
+          HAND_RANK_ORDER.indexOf(pResult.rank) < HAND_RANK_ORDER.indexOf(prev.bestHand as HandRank)
+        ) ? pResult.rank : prev.bestHand,
       };
     });
   }, []);
@@ -470,13 +474,14 @@ export function usePoker() {
   // startGame confirmed → deal the hand client-side
   useEffect(() => {
     if (startReceipt && mode === 'onchain') {
+      setGameStartedOnChain(true);
       startHand();
     }
   }, [startReceipt, mode, startHand]);
 
   // When outcome is set in onchain mode, stash it for submission (don't submit yet)
   useEffect(() => {
-    if (mode !== 'onchain' || !outcome || !startReceipt) return;
+    if (mode !== 'onchain' || !outcome || !gameStartedOnChain) return;
     const rank = playerHand?.rank ?? 'high_card';
     setPendingEnd({ outcome, rank });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -503,6 +508,7 @@ export function usePoker() {
   useEffect(() => {
     if (endReceipt && mode === 'onchain') {
       setPendingEnd(null);
+      setGameStartedOnChain(false);
       setRoundNumber(prev => prev + 1);
       setPhase('betting');
       setMessage('');
@@ -547,6 +553,7 @@ export function usePoker() {
         ? '⚠️ Transaction timeout — check explorer'
         : '❌ Transaction error — try again');
       setPhase('betting');
+      setGameStartedOnChain(false);
       resetStart?.();
     }
   }, [startReceiptError, mode, resetStart]);
@@ -603,6 +610,8 @@ export function usePoker() {
     setDealer(prev => ({ ...prev, holeCards: [], bet: 0, status: 'active', stack: STARTING_STACK }));
     setPot(0);
     setCurrentBet(0);
+    setPendingEnd(null);
+    setGameStartedOnChain(false);
   }, []);
 
   return {
