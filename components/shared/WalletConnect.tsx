@@ -43,7 +43,6 @@ export function WalletConnect() {
     }
   };
 
-  // Multichain support - accept both Celo and Base
   const { isSupportedChain: isOnSupportedChain } = useChainSelector();
   const isSwitching = isConnected && !isOnSupportedChain;
 

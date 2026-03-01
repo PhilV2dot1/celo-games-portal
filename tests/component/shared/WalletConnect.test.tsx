@@ -100,13 +100,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isOnBase: false,
       isSupportedChain: true,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
   });
 
@@ -460,13 +456,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isOnBase: false,
       isSupportedChain: true,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -484,13 +476,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isOnBase: false,
       isSupportedChain: false,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -508,13 +496,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isOnBase: false,
       isSupportedChain: false,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
 
     render(<WalletConnect />);
@@ -531,13 +515,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: false,
-      isOnBase: false,
       isSupportedChain: false,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
 
     const { container } = render(<WalletConnect />);
@@ -556,13 +536,9 @@ describe('WalletConnect', () => {
 
     vi.mocked(useChainSelector).mockReturnValue({
       isOnCelo: true,
-      isOnBase: false,
       isSupportedChain: true,
       activeChain: 'celo',
       switchToCelo: vi.fn(),
-      switchToBase: vi.fn(),
-      isOnMegaeth: false,
-      switchToMegaeth: vi.fn(),
     } as any);
 
     render(<WalletConnect />);

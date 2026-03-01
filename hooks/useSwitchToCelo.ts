@@ -5,16 +5,15 @@ import { isSupportedChain } from '@/lib/contracts/addresses';
 
 /**
  * Hook to automatically switch to Celo network when connected on an unsupported chain.
- * Celo, Base, and MegaETH are all supported — only truly unsupported chains trigger a switch.
  */
 export function useSwitchToCelo() {
   const { chain, isConnected } = useAccount();
   const { switchChain } = useSwitchChain();
 
   useEffect(() => {
-    // Only switch if on an unsupported chain (not Celo, Base, or MegaETH)
+    // Only switch if not on Celo
     if (isConnected && chain && !isSupportedChain(chain.id) && switchChain) {
-      console.log(`Unsupported network detected: ${chain.name} (${chain.id}). Switching to Celo...`);
+      console.log(`Wrong network detected: ${chain.name} (${chain.id}). Switching to Celo...`);
 
       switchChain(
         { chainId: celo.id },

@@ -14,21 +14,6 @@ export const colors = {
   celoLight: '#feff7a',
   celoDark: '#d4d600',
 
-  // Brand Colors - Base
-  base: '#0052FF',
-  baseHover: '#0040CC',
-  baseLight: '#3378FF',
-  baseDark: '#003DB8',
-
-  // Brand Colors - MegaETH (official brand kit)
-  megaeth: '#FF8AA8',
-  megaethHover: '#F5949D',
-  megaethLight: '#F786C6',
-  megaethDark: '#F5AF94',
-  megaethBgDay: '#DFD9D9',     // Full Moon
-  megaethBgNight: '#19191A',   // Night Sky
-  megaethMoonWhite: '#ECE8E8', // Moon White
-
   // Semantic Colors
   success: '#10b981',
   successHover: '#059669',

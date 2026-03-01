@@ -15,7 +15,7 @@ test.describe('Chain Switching UI', () => {
     await page.waitForLoadState('networkidle');
 
     // Should show either contract address or chain info
-    const chainInfo = page.locator('text=Contract, text=contract, text=Coming soon, text=Base, text=MegaETH');
+    const chainInfo = page.locator('text=Contract, text=contract, text=Coming soon, text=Celoscan');
     await expect(chainInfo.first()).toBeVisible({ timeout: 5000 });
   });
 
@@ -67,18 +67,12 @@ test.describe('Chain Switching UI', () => {
     });
   });
 
-  test('chain selector shows all 3 chains (Celo, Base, MegaETH)', async ({ page }) => {
+  test('header shows Celo Games Portal branding', async ({ page }) => {
     await page.goto('/blackjack');
     await page.waitForLoadState('networkidle');
 
-    // Chain selector should display all 3 chain buttons
-    const celoButton = page.locator('button[title*="Celo"]');
-    const baseButton = page.locator('button[title*="Base"]');
-    const megaethButton = page.locator('button[title*="MegaETH"]');
-
-    await expect(celoButton).toBeVisible({ timeout: 5000 });
-    await expect(baseButton).toBeVisible({ timeout: 5000 });
-    await expect(megaethButton).toBeVisible({ timeout: 5000 });
+    const title = page.locator('text=Celo Games Portal');
+    await expect(title.first()).toBeVisible({ timeout: 5000 });
   });
 
   test('multiple games show contract info in footer', async ({ page }) => {
@@ -89,7 +83,7 @@ test.describe('Chain Switching UI', () => {
       await page.waitForLoadState('networkidle');
 
       // Each game should have some contract or chain info in footer
-      const footer = page.locator('text=Contract, text=contract, text=Coming soon, text=Celoscan, text=Basescan, text=MegaETH Explorer');
+      const footer = page.locator('text=Contract, text=contract, text=Coming soon, text=Celoscan');
       const hasChainInfo = await footer.first().isVisible({ timeout: 3000 }).catch(() => false);
       expect(hasChainInfo).toBe(true);
     }

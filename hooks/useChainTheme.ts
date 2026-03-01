@@ -8,7 +8,7 @@ import { chainThemes, type ChainThemeName, type ChainTheme } from '@/lib/constan
  * Wraps useChainSelector and maps the active chain to its theme.
  *
  * Usage:
- *   const { theme, activeChain, isOnBase, isOnCelo } = useChainTheme();
+ *   const { theme, activeChain, isOnCelo } = useChainTheme();
  *   // theme.primary, theme.hover, theme.contrastText, etc.
  */
 export function useChainTheme() {

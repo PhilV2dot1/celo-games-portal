@@ -134,6 +134,7 @@ describe('useSwitchToCelo', () => {
         'Wrong network detected: Polygon (137). Switching to Celo...'
       );
 
+
       consoleLogSpy.mockRestore();
     });
 

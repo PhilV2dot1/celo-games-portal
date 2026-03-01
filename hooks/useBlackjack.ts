@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEventLogs } from "viem";
 import { Card, createShuffledDeck, convertToCard, determineWinner, Outcome } from "@/lib/games/blackjack-cards";
 import { CONTRACT_ABI } from "@/lib/contracts/blackjack-abi";
@@ -45,7 +45,6 @@ export function useBlackjack() {
     timeout: 120_000, // 2 minute timeout for better reliability on Celo
     confirmations: 1, // Wait for 1 confirmation
   });
-  const { switchChain } = useSwitchChain();
 
   const contractAddress = getContractAddress('blackjack', chain?.id);
   const gameAvailable = isGameAvailableOnChain('blackjack', chain?.id);
@@ -366,7 +365,7 @@ export function useBlackjack() {
       setMessage('❌ Transaction failed - Please try again');
       setGamePhase('betting');
     }
-  }, [isConnected, address, chain, switchChain, writeContract, resetWrite]);
+  }, [isConnected, address, chain, writeContract, resetWrite]);
 
   // New game
   const newGame = useCallback(() => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain } from "wagmi";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
 import {
   Code,
   Guess,
@@ -56,7 +56,6 @@ export function useMastermind() {
   const { address, isConnected, chain } = useAccount();
   const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
   const { data: receipt, isLoading: isConfirming } = useWaitForTransactionReceipt({ hash });
-  const { switchChain } = useSwitchChain();
 
   const contractAddress = getContractAddress('mastermind', chain?.id);
   const gameAvailable = isGameAvailableOnChain('mastermind', chain?.id);
@@ -353,7 +352,7 @@ export function useMastermind() {
       console.error('❌ Transaction error:', error);
       setMessage('❌ Transaction failed - Please try again');
     }
-  }, [isConnected, address, chain, switchChain, writeContract, resetWrite]);
+  }, [isConnected, address, chain, writeContract, resetWrite]);
 
   // Submit score on-chain
   const submitScoreOnChain = useCallback(async () => {
