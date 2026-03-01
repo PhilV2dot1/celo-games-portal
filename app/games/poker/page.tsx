@@ -212,6 +212,26 @@ export default function PokerPage() {
               </motion.div>
             )}
 
+            {/* Unfinished on-chain game warning */}
+            {mode === 'onchain' && solo.phase === 'betting' && solo.hasActiveOnChainGame && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center gap-3 bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-400 rounded-xl p-4 text-center"
+              >
+                <p className="text-orange-800 dark:text-orange-300 font-semibold text-sm">
+                  ⚠️ You have an unfinished game on-chain. Abandon it to start a new hand.
+                </p>
+                <button
+                  onClick={solo.abandonGame}
+                  disabled={solo.isPending || solo.isConfirming}
+                  className="px-6 py-2 rounded-xl font-bold text-sm bg-orange-500 hover:bg-orange-600 active:scale-95 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {solo.isPending || solo.isConfirming ? '⏳ Abandoning...' : '🗑️ Abandon & New Game'}
+                </button>
+              </motion.div>
+            )}
+
             {/* Deal / New Hand buttons */}
             <div className="flex justify-center">
               {solo.phase === 'betting' && (
@@ -219,9 +239,9 @@ export default function PokerPage() {
                   <motion.button
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: solo.hasActiveOnChainGame ? 1 : 1.05 }}
                     onClick={solo.playOnChain}
-                    disabled={!solo.isConnected || !solo.gameAvailable || solo.isPending || solo.isConfirming}
+                    disabled={!solo.isConnected || !solo.gameAvailable || solo.isPending || solo.isConfirming || solo.hasActiveOnChainGame}
                     className="px-8 py-3 rounded-xl font-black shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: theme.primary, color: theme.contrastText }}
                   >
