@@ -371,6 +371,12 @@ export interface ChainTheme {
   dark: string;
   /** Text color that contrasts with the primary color */
   contrastText: string;
+  /** Optional background color for light mode */
+  bgDay?: string;
+  /** Optional background color for dark mode */
+  bgNight?: string;
+  /** Optional font family override */
+  fontFamily?: string;
 }
 
 export const chainThemes: Record<ChainThemeName, ChainTheme> = {

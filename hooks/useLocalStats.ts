@@ -39,6 +39,7 @@ const DEFAULT_PROFILE: UserProfile = {
     memory: { ...DEFAULT_GAME_STATS },
     maze: { ...DEFAULT_GAME_STATS },
     tetris: { ...DEFAULT_GAME_STATS },
+    poker: { ...DEFAULT_GAME_STATS },
   },
 };
 
