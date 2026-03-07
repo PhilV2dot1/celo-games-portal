@@ -207,7 +207,7 @@ export default function JackpotPage() {
               transition={{ duration: 0.15 }}
               onClick={submitScore}
               disabled={isSpinning}
-              className="px-8 py-3 bg-white bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isSpinning ? t('games.jackpot.submitting') : t('games.jackpot.submitScore')}
             </motion.button>
