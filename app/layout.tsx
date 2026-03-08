@@ -58,6 +58,22 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
   },
+  other: {
+    'fc:frame': JSON.stringify({
+      version: 'next',
+      imageUrl: `${siteUrl}/icon-512.png`,
+      button: {
+        title: '🎮 Play Now',
+        action: {
+          type: 'launch_frame',
+          name: 'Celo Games Portal',
+          url: siteUrl,
+          splashImageUrl: `${siteUrl}/icon-192.png`,
+          splashBackgroundColor: '#FCFF52',
+        },
+      },
+    }),
+  },
 };
 
 export default function RootLayout({
