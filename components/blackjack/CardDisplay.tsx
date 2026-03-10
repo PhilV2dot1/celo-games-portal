@@ -29,13 +29,13 @@ export function CardDisplay({ card, faceDown }: CardDisplayProps) {
 
   return (
     <div
-      className="w-16 h-24 bg-white rounded-lg border-2 border-gray-300 p-1 flex flex-col items-center justify-between shadow-lg relative"
+      className="w-16 h-24 bg-white dark:bg-white rounded-lg border-2 border-gray-300 dark:border-gray-400 p-1 flex flex-col items-center justify-between shadow-lg relative"
       style={{
         boxShadow: "0 0 0 0.5px rgba(252, 255, 82, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.2)"
       }}
     >
       {/* Inner border for polish */}
-      <div className="absolute inset-1 rounded-md border border-gray-100/50 pointer-events-none" />
+      <div className="absolute inset-1 rounded-md border border-gray-200/50 pointer-events-none" />
 
       <div className={`text-lg font-bold relative z-10 ${isRed ? 'text-red-600' : 'text-black'}`}>
         {card.display}
