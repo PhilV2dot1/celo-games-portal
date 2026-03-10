@@ -595,7 +595,7 @@ export const translations = {
 
     // Home Page
     home: {
-      welcome: 'Welcome to Mini Games Portal',
+      welcome: 'Welcome to Celo Games Portal',
       subtitle: 'Play, earn points and unlock badges!',
       howToPlay: 'How to Play',
       yourProfile: 'Your Profile',
@@ -740,7 +740,7 @@ export const translations = {
 
     // Profile Setup
     profileSetup: {
-      welcome: 'Welcome to Mini Games Portal!',
+      welcome: 'Welcome to Celo Games Portal!',
       subtitle: 'Set up your profile to start playing',
       chooseAvatar: 'Choose your avatar',
       chooseUsername: 'Choose your username',
@@ -892,7 +892,7 @@ export const translations = {
     // Profile Edit
     profileEdit: {
       title: 'Edit my profile',
-      subtitle: 'Customize your Mini Games Portal profile',
+      subtitle: 'Customize your Celo Games Portal profile',
       loadingProfile: 'Loading profile',
       profileSaved: 'Profile saved successfully! Redirecting...',
       errorSaving: 'Please correct the errors before saving',
@@ -929,7 +929,7 @@ export const translations = {
     // Leaderboard
     leaderboard: {
       title: 'Leaderboard',
-      subtitle: 'Top players across all games on Mini Games Portal',
+      subtitle: 'Top players across all games on Celo Games Portal',
       globalRanking: 'Global Ranking',
       rank: 'Rank',
       player: 'Player',
@@ -1778,7 +1778,7 @@ export const translations = {
 
     // Home Page
     home: {
-      welcome: 'Bienvenue sur Mini Games Portal',
+      welcome: 'Bienvenue sur Celo Games Portal',
       subtitle: 'Jouez, gagnez des points et débloquez des badges !',
       howToPlay: 'Comment Jouer',
       yourProfile: 'Votre Profil',
@@ -1923,7 +1923,7 @@ export const translations = {
 
     // Profile Setup
     profileSetup: {
-      welcome: 'Bienvenue sur Mini Games Portal !',
+      welcome: 'Bienvenue sur Celo Games Portal !',
       subtitle: 'Configurez votre profil pour commencer à jouer',
       chooseAvatar: 'Choisissez votre avatar',
       chooseUsername: 'Choisissez votre nom d\'utilisateur',
@@ -2075,7 +2075,7 @@ export const translations = {
     // Profile Edit
     profileEdit: {
       title: 'Éditer mon profil',
-      subtitle: 'Personnalisez votre profil Mini Games Portal',
+      subtitle: 'Personnalisez votre profil Celo Games Portal',
       loadingProfile: 'Chargement du profil',
       profileSaved: 'Profil sauvegardé avec succès ! Redirection...',
       errorSaving: 'Veuillez corriger les erreurs avant de sauvegarder',
@@ -2112,7 +2112,7 @@ export const translations = {
     // Leaderboard
     leaderboard: {
       title: 'Classement',
-      subtitle: 'Meilleurs joueurs de tous les jeux sur Mini Games Portal',
+      subtitle: 'Meilleurs joueurs de tous les jeux sur Celo Games Portal',
       globalRanking: 'Classement Global',
       rank: 'Rang',
       player: 'Joueur',

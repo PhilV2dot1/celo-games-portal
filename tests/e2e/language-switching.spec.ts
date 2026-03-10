@@ -115,7 +115,7 @@ test.describe('Language Switching', () => {
     await page.waitForTimeout(500);
 
     // Verify English is restored
-    const englishText = page.locator('text=/Welcome to Mini Games Portal|Available Games/i');
+    const englishText = page.locator('text=/Welcome to Celo Games Portal|Available Games/i');
     await expect(englishText.first()).toBeVisible({ timeout: 5000 });
   });
 
