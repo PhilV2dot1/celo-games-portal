@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePoker } from "@/hooks/usePoker";
 import { usePokerMultiplayer } from "@/hooks/usePokerMultiplayer";
@@ -34,14 +34,19 @@ export default function PokerPage() {
   const { theme } = useChainTheme();
   const { recordGame } = useLocalStats();
   const contractAddress = getContractAddress('poker', chain?.id);
+  const recordedHandRef = useRef<string | null>(null);
 
-  // Record each completed hand to portal stats
+  // Record each completed hand to portal stats — guard against duplicate triggers
   useEffect(() => {
     if (solo.phase === 'showdown' && solo.outcome) {
+      if (recordedHandRef.current === solo.outcome + solo.pot) return;
+      recordedHandRef.current = solo.outcome + solo.pot;
       const result = solo.outcome === 'win' ? 'win' : solo.outcome === 'split' ? 'draw' : 'lose';
       recordGame('poker', solo.mode, result);
+    } else if (solo.phase === 'betting') {
+      recordedHandRef.current = null;
     }
-  }, [solo.phase, solo.outcome, solo.mode, recordGame]);
+  }, [solo.phase, solo.outcome, solo.pot, solo.mode, recordGame]);
 
   const handleModeChange = useCallback((newMode: GameMode) => {
     if (newMode === 'multiplayer') {
