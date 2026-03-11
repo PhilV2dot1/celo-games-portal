@@ -8,13 +8,9 @@ import { POKER_ABI } from "@/lib/contracts/poker-abi";
 import { POKER_SESSION_ABI } from "@/lib/contracts/poker-session-abi";
 import { getContractAddress, isGameAvailableOnChain, getExplorerTxUrl } from "@/lib/contracts/addresses";
 
-// PokerSession contract address per chain (deploy and replace null)
-// TODO: replace null with deployed address after `npx hardhat run scripts/deploy-poker-session.js --network celo`
 const POKER_SESSION_ADDRESSES: Record<number, `0x${string}` | null> = {
-  // Celo mainnet (chain id 42220)
-  42220: null,
-  // Celo Alfajores testnet (chain id 44787) — for testing
-  44787: null,
+  42220: '0x26d77dc1163db63854e481a3893aee3145291dd1', // Celo mainnet
+  44787: null, // Celo Alfajores testnet
 };
 
 export type PokerPhase = 'betting' | 'preflop' | 'flop' | 'turn' | 'river' | 'showdown' | 'finished';
