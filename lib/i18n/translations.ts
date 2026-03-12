@@ -29,6 +29,17 @@ export const translations = {
       closeNotification: 'Close notification',
     },
 
+    // Notifications
+    notifications: {
+      title: 'Notifications',
+      empty: 'No notifications yet',
+      clearAll: 'Clear all',
+      justNow: 'just now',
+      minAgo: 'm ago',
+      hAgo: 'h ago',
+      dAgo: 'd ago',
+    },
+
     // Game Common
     games: {
       // Game modes
@@ -1108,6 +1119,28 @@ export const translations = {
       replayFinished: 'Replay finished',
     },
 
+    // Daily Challenge
+    daily: {
+      title: 'Daily Challenge',
+      progress: 'Progress',
+      completed: '✅ Completed',
+      playNow: 'Play Now →',
+      challengeComplete: 'Challenge Complete!',
+      newChallengeTomorrow: 'New challenge tomorrow!',
+    },
+
+    // Login Streak
+    streak: {
+      title: 'Login Streak',
+      day: 'day',
+      days: 'days',
+      loginBonus: 'Daily login bonus',
+      nextReward: 'Next reward',
+      tomorrowReach: 'Tomorrow!',
+      inDays: 'in',
+      best: 'Best',
+    },
+
     // Friends
     friends: {
       title: 'Friends',
@@ -1219,6 +1252,17 @@ export const translations = {
     toast: {
       badgeUnlocked: 'Badge Débloqué !',
       closeNotification: 'Fermer la notification',
+    },
+
+    // Notifications
+    notifications: {
+      title: 'Notifications',
+      empty: 'Aucune notification',
+      clearAll: 'Tout effacer',
+      justNow: 'à l\'instant',
+      minAgo: 'min',
+      hAgo: 'h',
+      dAgo: 'j',
     },
 
     // Game Common
@@ -2298,6 +2342,28 @@ export const translations = {
       stepForward: 'Avancer',
       exit: 'Quitter le Replay',
       replayFinished: 'Replay terminé',
+    },
+
+    // Daily Challenge
+    daily: {
+      title: 'Défi du Jour',
+      progress: 'Progression',
+      completed: '✅ Complété',
+      playNow: 'Jouer →',
+      challengeComplete: 'Défi Complété !',
+      newChallengeTomorrow: 'Nouveau défi demain !',
+    },
+
+    // Login Streak
+    streak: {
+      title: 'Série de Connexion',
+      day: 'jour',
+      days: 'jours',
+      loginBonus: 'Bonus de connexion quotidien',
+      nextReward: 'Prochain bonus',
+      tomorrowReach: 'Demain !',
+      inDays: 'dans',
+      best: 'Meilleur',
     },
 
     // Friends

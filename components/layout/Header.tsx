@@ -14,6 +14,7 @@ import { MobileMenu } from "@/components/layout/MobileMenu";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { CreateAccountModal } from "@/components/auth/CreateAccountModal";
+import { NotificationCenter } from "@/components/shared/NotificationCenter";
 import Link from "next/link";
 
 export function Header() {
@@ -78,6 +79,7 @@ export function Header() {
               <ThemeToggle size="sm" />
               <AudioControls size="sm" />
               <LanguageSwitcher />
+              <NotificationCenter />
               {isInstallable && (
                 <button
                   onClick={installApp}
