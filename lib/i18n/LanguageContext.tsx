@@ -2,7 +2,7 @@
 
 /**
  * Language Context Provider
- * Manages language state (en/fr) and provides translation function
+ * Manages language state (en/fr/es/pt) and provides translation function
  */
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -23,7 +23,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Load language from localStorage on mount
   useEffect(() => {
     const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
+    if (savedLang && (['en', 'fr', 'es', 'pt'] as string[]).includes(savedLang)) {
       setLanguageState(savedLang);
     }
   }, []);
