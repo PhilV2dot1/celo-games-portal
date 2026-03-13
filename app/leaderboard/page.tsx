@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { GAMES } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PlayerLevelBadge } from "@/components/shared/PlayerLevelBadge";
+import { useSeasonLeaderboard } from "@/hooks/useSeason";
 
 interface LeaderboardEntry {
   rank: number;
@@ -27,10 +29,14 @@ type GameId = 'all' | string;
 
 export default function LeaderboardPage() {
   const { t } = useLanguage();
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') === 'season' ? 'season' : 'scores';
+  const [activeTab, setActiveTab] = useState<'scores' | 'season'>(initialTab);
   const [selectedGame, setSelectedGame] = useState<GameId>('all');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { leaderboard: seasonLeaderboard, loading: seasonLoading } = useSeasonLeaderboard();
 
   const games = Object.values(GAMES);
 
@@ -88,6 +94,116 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
+        {/* Main Tab Switcher */}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-2 mb-4 shadow-lg flex gap-2">
+          <button
+            onClick={() => setActiveTab('scores')}
+            className={`flex-1 py-2.5 rounded-lg font-black text-sm transition-all ${
+              activeTab === 'scores'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            🏆 {t('leaderboard.title') || 'Scores'}
+          </button>
+          <button
+            onClick={() => setActiveTab('season')}
+            className={`flex-1 py-2.5 rounded-lg font-black text-sm transition-all ${
+              activeTab === 'season'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            🏅 {t('seasons.tab') || 'Season'}
+          </button>
+        </div>
+
+        {activeTab === 'season' ? (
+          /* Season Leaderboard */
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-black text-gray-900 dark:text-white">
+                🏅 {t('seasons.seasonLeaderboard') || 'Season Leaderboard'}
+              </h2>
+            </div>
+            {seasonLoading ? (
+              <div className="p-12 text-center">
+                <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-300 dark:border-gray-600 border-t-violet-600"></div>
+              </div>
+            ) : seasonLeaderboard.length === 0 ? (
+              <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+                {t('seasons.noSeasonData') || 'No season data yet.'}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-100 dark:bg-gray-700 border-b-2 border-gray-300 dark:border-gray-600">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                        {t('leaderboard.rank') || 'Rank'}
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                        {t('leaderboard.player') || 'Player'}
+                      </th>
+                      <th className="px-6 py-4 text-right text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                        {t('seasons.points') || 'Pts'}
+                      </th>
+                      <th className="px-6 py-4 text-right text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                        {t('seasons.gamesPlayed') || 'Games'}
+                      </th>
+                      <th className="px-6 py-4 text-right text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                        {t('seasons.wins') || 'Wins'}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {seasonLeaderboard.map((entry) => (
+                      <tr key={entry.user_id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            {entry.rank === 1 && <span className="text-2xl mr-2">🥇</span>}
+                            {entry.rank === 2 && <span className="text-2xl mr-2">🥈</span>}
+                            {entry.rank === 3 && <span className="text-2xl mr-2">🥉</span>}
+                            <span className="text-lg font-black text-gray-900 dark:text-white">#{entry.rank}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-10 h-10 flex-shrink-0 rounded-full overflow-hidden border-2 border-violet-400">
+                              <Image
+                                src={entry.avatar_url || '/avatars/predefined/default-player.svg'}
+                                alt={entry.username}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div>
+                              <div className="text-sm font-bold text-gray-900 dark:text-white">
+                                {entry.display_name || entry.username}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <span className="text-lg font-black text-violet-600 dark:text-violet-400">
+                            {entry.points.toLocaleString()}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{entry.games_played}</span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <span className="text-sm font-semibold text-green-600 dark:text-green-400">{entry.wins}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
         {/* Game Filter Tabs */}
         <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl p-4 mb-6 shadow-lg">
           <div className="flex flex-wrap gap-2 justify-center">
@@ -117,7 +233,7 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Loading / Error States */}
+        {/* Scores Content */}
         {loading ? (
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-xl shadow-lg p-12 text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 dark:border-gray-600 border-t-gray-900 dark:border-t-white"></div>
@@ -355,6 +471,8 @@ export default function LeaderboardPage() {
               </table>
               </div>
             </div>
+          </>
+        )}
           </>
         )}
 
