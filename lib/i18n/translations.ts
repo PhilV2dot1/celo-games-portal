@@ -279,6 +279,9 @@ export const translations = {
         txTimeout: 'Transaction taking longer than expected. Check explorer for status.',
         txError: 'Transaction error - Please try again',
         noGameData: 'Transaction successful but no game data received',
+        recording: 'Recording...',
+        recorded: 'Result recorded on blockchain!',
+        clickDealCards: 'Click "DEAL CARDS" to start',
       },
 
       // Connect Five specific
@@ -1588,6 +1591,9 @@ export const translations = {
         txTimeout: 'La transaction prend plus de temps que prévu. Vérifiez l\'explorateur.',
         txError: 'Erreur de transaction - Veuillez réessayer',
         noGameData: 'Transaction réussie mais aucune donnée de jeu reçue',
+        recording: 'Enregistrement...',
+        recorded: 'Résultat enregistré sur la blockchain !',
+        clickDealCards: 'Cliquez sur "DISTRIBUER" pour commencer',
       },
 
       // Connect Five specific
