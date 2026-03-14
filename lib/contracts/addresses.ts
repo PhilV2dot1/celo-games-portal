@@ -51,7 +51,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   maze:        { celo: '0x15110ed1bff11b2522234a44665bc689c500a285' },
   tetris:      { celo: '0x1d24cca8b0c15fef23b37978a3f696a52c0e9116' },
   poker:       { celo: '0xe446ee939ba9f508e4f4fcbf10c10172ac4df267' },
-  wordle:      { celo: null }, // contract to be deployed
+  wordle:      { celo: '0x3Be204FcE03b7ec24e85C1d4320A81Df59cF34f0' },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
