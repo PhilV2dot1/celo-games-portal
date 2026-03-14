@@ -1,5 +1,5 @@
 export type GameMode = "free" | "onchain";
-export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku" | "memory" | "maze" | "tetris" | "poker";
+export type GameId = "blackjack" | "rps" | "tictactoe" | "jackpot" | "2048" | "mastermind" | "connectfive" | "snake" | "solitaire" | "minesweeper" | "yahtzee" | "sudoku" | "memory" | "maze" | "tetris" | "poker" | "wordle";
 
 export interface GameMetadata {
   id: GameId;
@@ -168,6 +168,15 @@ export const GAMES: Record<GameId, GameMetadata> = {
     route: "/games/poker",
     contractAddress: "0xe446ee939ba9f508e4f4fcbf10c10172ac4df267",
     color: "from-emerald-700 to-green-900",
+    hasFee: false,
+  },
+  wordle: {
+    id: "wordle",
+    name: "Wordle",
+    description: "Guess the 5-letter word in 6 tries!",
+    icon: "/icons/wordle.png",
+    route: "/games/wordle",
+    color: "from-green-400 to-emerald-600",
     hasFee: false,
   },
 };
