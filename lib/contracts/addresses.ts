@@ -56,7 +56,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   poker:       { celo: '0xe446ee939ba9f508e4f4fcbf10c10172ac4df267' },
   wordle:      { celo: '0x3Be204FcE03b7ec24e85C1d4320A81Df59cF34f0' },
   brickbreaker: { celo: '0xde31f2cfcf6b351cb5eefb951889d12206616008' },
-  flappybird:   { celo: null },
+  flappybird:   { celo: '0x6b0f0a8dfcd4faa3166261e026a4bcaae8f28057' },
   plinko:       { celo: null },
 };
 
