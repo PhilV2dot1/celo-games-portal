@@ -164,7 +164,7 @@ export const GAMES: Record<GameId, GameMetadata> = {
     id: "poker",
     name: "Poker",
     description: "Texas Hold'em vs the dealer!",
-    icon: "/icons/poker.svg",
+    icon: "/icons/poker.png",
     route: "/games/poker",
     contractAddress: "0xe446ee939ba9f508e4f4fcbf10c10172ac4df267",
     color: "from-emerald-700 to-green-900",
