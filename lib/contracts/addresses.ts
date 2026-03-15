@@ -28,7 +28,8 @@ export type GameId =
   | 'poker'
   | 'wordle'
   | 'brickbreaker'
-  | 'flappybird';
+  | 'flappybird'
+  | 'plinko';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -56,6 +57,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   wordle:      { celo: '0x3Be204FcE03b7ec24e85C1d4320A81Df59cF34f0' },
   brickbreaker: { celo: '0xde31f2cfcf6b351cb5eefb951889d12206616008' },
   flappybird:   { celo: null },
+  plinko:       { celo: null },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
