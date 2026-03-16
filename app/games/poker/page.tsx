@@ -87,7 +87,7 @@ export default function PokerPage() {
           className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border-2 text-center space-y-1"
           style={{ borderColor: theme.primary }}
         >
-          <div className="text-5xl mb-2">🃏</div>
+          <img src="/icons/poker.png" alt="Poker" className="w-14 h-14 mx-auto object-contain mb-2" />
           <h1 className="text-4xl font-black text-gray-900 dark:text-white">
             {t('games.poker.title') || 'Poker'}
           </h1>
