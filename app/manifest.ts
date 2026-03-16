@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Celo Games Portal',
     short_name: 'CeloGames',
-    description: 'Play 16 mini-games on Celo blockchain. Free mode, on-chain, and multiplayer.',
+    description: 'Play 20 mini-games on Celo blockchain. Free mode, on-chain, and multiplayer.',
     start_url: '/',
     scope: '/',
     display: 'standalone',

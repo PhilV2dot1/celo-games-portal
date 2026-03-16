@@ -16,7 +16,7 @@ const geistMono = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://celo-games-portal.vercel.app';
 const siteTitle = 'Celo Games Portal - Play Mini-Games on Celo Blockchain';
-const siteDescription = 'Play 16 mini-games on Celo! Blackjack, RPS, Tic-Tac-Toe, Jackpot, 2048, Mastermind, Snake, Minesweeper, Solitaire, Connect Five, Yahtzee, Sudoku, Memory, Maze, Tetris & Poker. Free mode, on-chain or multiplayer!';
+const siteDescription = 'Play 20 mini-games on Celo! Blackjack, RPS, Tic-Tac-Toe, Jackpot, 2048, Mastermind, Snake, Minesweeper, Solitaire, Connect Five, Yahtzee, Sudoku, Memory, Maze, Tetris, Poker, Wordle, Flappy Bird, Plinko & Brick Breaker. Free mode, on-chain or multiplayer!';
 
 export const viewport: Viewport = {
   themeColor: [
