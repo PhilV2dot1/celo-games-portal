@@ -62,7 +62,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   flappybird:   { celo: '0x6b0f0a8dfcd4faa3166261e026a4bcaae8f28057' },
   plinko:       { celo: '0x2d65202f305e18672a56de2c499e7cb0be74ea94' },
   coinflip:     { celo: '0x57912445add80bbf98802ec7ebc281f554e91380' },
-  roulette:     { celo: null },
+  roulette:     { celo: '0xc90044f8c7c0fc8a07117d4e0f6ea33558f908e4' },
   watersort:    { celo: null },
 };
 
