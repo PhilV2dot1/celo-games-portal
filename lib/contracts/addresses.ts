@@ -30,7 +30,8 @@ export type GameId =
   | 'brickbreaker'
   | 'flappybird'
   | 'plinko'
-  | 'coinflip';
+  | 'coinflip'
+  | 'roulette';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -60,6 +61,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   flappybird:   { celo: '0x6b0f0a8dfcd4faa3166261e026a4bcaae8f28057' },
   plinko:       { celo: '0x2d65202f305e18672a56de2c499e7cb0be74ea94' },
   coinflip:     { celo: null },
+  roulette:     { celo: null },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
