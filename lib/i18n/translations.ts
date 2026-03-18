@@ -724,6 +724,8 @@ export const translations = {
         playAgain: 'Play Again',
         bestWin: 'Best Win',
         viewOnExplorer: 'View on Explorer →',
+        endSession: '⛓️ Save & End Session',
+        endingSession: '⏳ Saving...',
       },
       plinko: {
         title: 'Plinko Crypto',
@@ -2146,6 +2148,8 @@ export const translations = {
         playAgain: 'Rejouer',
         bestWin: 'Meilleur gain',
         viewOnExplorer: 'Voir sur l\'Explorer →',
+        endSession: '⛓️ Enregistrer & Terminer',
+        endingSession: '⏳ Enregistrement...',
       },
       plinko: {
         title: 'Plinko Crypto',
