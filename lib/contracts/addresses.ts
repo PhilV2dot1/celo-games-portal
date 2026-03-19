@@ -32,7 +32,8 @@ export type GameId =
   | 'plinko'
   | 'coinflip'
   | 'roulette'
-  | 'watersort';
+  | 'watersort'
+  | 'arrowescape';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -64,6 +65,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   coinflip:     { celo: '0x57912445add80bbf98802ec7ebc281f554e91380' },
   roulette:     { celo: '0xc90044f8c7c0fc8a07117d4e0f6ea33558f908e4' },
   watersort:    { celo: null },
+  arrowescape:  { celo: null },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
