@@ -33,7 +33,8 @@ export type GameId =
   | 'coinflip'
   | 'roulette'
   | 'watersort'
-  | 'arrowescape';
+  | 'arrowescape'
+  | 'spaceinvaders';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -66,6 +67,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   roulette:     { celo: '0xc90044f8c7c0fc8a07117d4e0f6ea33558f908e4' },
   watersort:    { celo: '0x99c097df31464fe6c5068e23d4f4fe355377373f' },
   arrowescape:  { celo: null },
+  spaceinvaders: { celo: null },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
