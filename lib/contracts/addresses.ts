@@ -66,7 +66,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   coinflip:     { celo: '0x57912445add80bbf98802ec7ebc281f554e91380' },
   roulette:     { celo: '0xc90044f8c7c0fc8a07117d4e0f6ea33558f908e4' },
   watersort:    { celo: '0x99c097df31464fe6c5068e23d4f4fe355377373f' },
-  arrowescape:  { celo: null },
+  arrowescape:  { celo: '0x572339a93287372325cf6da2099730fe65b06a2d' },
   spaceinvaders: { celo: '0x6b9c1178fb6fdd3f043bf88553fe53f42d4ab704' },
 };
 

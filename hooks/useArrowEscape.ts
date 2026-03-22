@@ -1,5 +1,22 @@
 "use client";
 import { useState, useCallback, useRef } from "react";
+import { useAccount, useWriteContract } from "wagmi";
+import { getContractAddress } from "@/lib/contracts/addresses";
+
+// ========================================
+// ON-CHAIN ABI
+// ========================================
+
+const ARROWESCAPE_ABI = [
+  { type: "function", name: "startSession",  inputs: [], outputs: [], stateMutability: "nonpayable" },
+  { type: "function", name: "endSession",    inputs: [
+    { name: "levelsPlayed",  type: "uint256" },
+    { name: "levelsCleared", type: "uint256" },
+    { name: "bestScore",     type: "uint256" },
+    { name: "bestLevel",     type: "uint256" },
+  ], outputs: [], stateMutability: "nonpayable" },
+  { type: "function", name: "abandonSession", inputs: [], outputs: [], stateMutability: "nonpayable" },
+] as const;
 
 // ========================================
 // TYPES
@@ -374,6 +391,277 @@ const RAW_LEVELS: { gridSize: number; optimalMoves: number; arrows: Omit<Arrow, 
       { direction: "down",  length: 2, headRow: 9,  headCol: 7  }, // (9,7)(8,7)
     ],
   },
+
+  // ── Level 11 — 15×15 — 35 arrows — ~120 moves ────────────────────────────
+  // Perimeter ring (RIGHT odd rows, DOWN odd cols, LEFT even rows, UP even cols)
+  // + interior RIGHT grid. Verified zero-overlap with tryBuild().
+  {
+    gridSize: 15,
+    optimalMoves: 120,
+    arrows: [
+      { direction: "right", length: 2, headRow: 1,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 14 },
+      { direction: "right", length: 3, headRow: 5,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 14 },
+      { direction: "right", length: 3, headRow: 9,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 11, headCol: 14 },
+      { direction: "down",  length: 2, headRow: 14, headCol: 1  },
+      { direction: "down",  length: 2, headRow: 14, headCol: 3  },
+      { direction: "down",  length: 3, headRow: 14, headCol: 5  },
+      { direction: "down",  length: 2, headRow: 14, headCol: 7  },
+      { direction: "down",  length: 3, headRow: 14, headCol: 9  },
+      { direction: "down",  length: 2, headRow: 14, headCol: 11 },
+      { direction: "left",  length: 3, headRow: 2,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 4,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 6,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 8,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 10, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 12, headCol: 0  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 2  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 4  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 6  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 8  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 10 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 8  },
+    ],
+  },
+
+  // ── Level 12 — 16×16 — 40 arrows — ~145 moves ────────────────────────────
+  // Perimeter ring + interior RIGHT grid (4 rows × 4 positions). Verified zero-overlap.
+  {
+    gridSize: 16,
+    optimalMoves: 145,
+    arrows: [
+      { direction: "right", length: 2, headRow: 1,  headCol: 15 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 15 },
+      { direction: "right", length: 3, headRow: 5,  headCol: 15 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 15 },
+      { direction: "right", length: 3, headRow: 9,  headCol: 15 },
+      { direction: "right", length: 2, headRow: 11, headCol: 15 },
+      { direction: "down",  length: 2, headRow: 15, headCol: 1  },
+      { direction: "down",  length: 2, headRow: 15, headCol: 3  },
+      { direction: "down",  length: 3, headRow: 15, headCol: 5  },
+      { direction: "down",  length: 2, headRow: 15, headCol: 7  },
+      { direction: "down",  length: 3, headRow: 15, headCol: 9  },
+      { direction: "down",  length: 2, headRow: 15, headCol: 11 },
+      { direction: "left",  length: 3, headRow: 2,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 4,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 6,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 8,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 10, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 12, headCol: 0  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 2  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 4  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 6  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 8  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 10 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 5  },
+    ],
+  },
+
+  // ── Level 13 — 17×17 — 45 arrows — ~170 moves ────────────────────────────
+  // Denser perimeter (7 per side) + interior RIGHT grid. Verified zero-overlap.
+  {
+    gridSize: 17,
+    optimalMoves: 170,
+    arrows: [
+      { direction: "right", length: 2, headRow: 1,  headCol: 16 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 16 },
+      { direction: "right", length: 3, headRow: 5,  headCol: 16 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 16 },
+      { direction: "right", length: 3, headRow: 9,  headCol: 16 },
+      { direction: "right", length: 2, headRow: 11, headCol: 16 },
+      { direction: "right", length: 3, headRow: 13, headCol: 16 },
+      { direction: "down",  length: 2, headRow: 16, headCol: 1  },
+      { direction: "down",  length: 2, headRow: 16, headCol: 3  },
+      { direction: "down",  length: 3, headRow: 16, headCol: 5  },
+      { direction: "down",  length: 2, headRow: 16, headCol: 7  },
+      { direction: "down",  length: 3, headRow: 16, headCol: 9  },
+      { direction: "down",  length: 2, headRow: 16, headCol: 11 },
+      { direction: "down",  length: 3, headRow: 16, headCol: 13 },
+      { direction: "left",  length: 3, headRow: 2,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 4,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 6,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 8,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 10, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 12, headCol: 0  },
+      { direction: "left",  length: 3, headRow: 14, headCol: 0  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 2  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 4  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 6  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 8  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 10 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 12 },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 11, headCol: 12 },
+    ],
+  },
+
+  // ── Level 14 — 18×18 — 50 arrows — ~200 moves ────────────────────────────
+  // Denser perimeter + expanded interior RIGHT grid. Verified zero-overlap.
+  {
+    gridSize: 18,
+    optimalMoves: 200,
+    arrows: [
+      { direction: "right", length: 2, headRow: 1,  headCol: 17 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 17 },
+      { direction: "right", length: 3, headRow: 5,  headCol: 17 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 17 },
+      { direction: "right", length: 3, headRow: 9,  headCol: 17 },
+      { direction: "right", length: 2, headRow: 11, headCol: 17 },
+      { direction: "right", length: 3, headRow: 13, headCol: 17 },
+      { direction: "down",  length: 2, headRow: 17, headCol: 1  },
+      { direction: "down",  length: 2, headRow: 17, headCol: 3  },
+      { direction: "down",  length: 3, headRow: 17, headCol: 5  },
+      { direction: "down",  length: 2, headRow: 17, headCol: 7  },
+      { direction: "down",  length: 3, headRow: 17, headCol: 9  },
+      { direction: "down",  length: 2, headRow: 17, headCol: 11 },
+      { direction: "down",  length: 3, headRow: 17, headCol: 13 },
+      { direction: "left",  length: 3, headRow: 2,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 4,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 6,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 8,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 10, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 12, headCol: 0  },
+      { direction: "left",  length: 3, headRow: 14, headCol: 0  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 2  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 4  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 6  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 8  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 10 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 12 },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 13 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 13 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 13 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 13 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 11 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 9  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 7  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 5  },
+      { direction: "right", length: 2, headRow: 11, headCol: 13 },
+      { direction: "right", length: 2, headRow: 11, headCol: 11 },
+    ],
+  },
+
+  // ── Level 15 — 19×19 — 55 arrows — ~240 moves ────────────────────────────
+  // Maximum perimeter (8 per side) + deep interior grid. Verified zero-overlap.
+  {
+    gridSize: 19,
+    optimalMoves: 240,
+    arrows: [
+      { direction: "right", length: 2, headRow: 1,  headCol: 18 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 18 },
+      { direction: "right", length: 3, headRow: 5,  headCol: 18 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 18 },
+      { direction: "right", length: 3, headRow: 9,  headCol: 18 },
+      { direction: "right", length: 2, headRow: 11, headCol: 18 },
+      { direction: "right", length: 3, headRow: 13, headCol: 18 },
+      { direction: "right", length: 2, headRow: 15, headCol: 18 },
+      { direction: "down",  length: 2, headRow: 18, headCol: 1  },
+      { direction: "down",  length: 2, headRow: 18, headCol: 3  },
+      { direction: "down",  length: 3, headRow: 18, headCol: 5  },
+      { direction: "down",  length: 2, headRow: 18, headCol: 7  },
+      { direction: "down",  length: 3, headRow: 18, headCol: 9  },
+      { direction: "down",  length: 2, headRow: 18, headCol: 11 },
+      { direction: "down",  length: 3, headRow: 18, headCol: 13 },
+      { direction: "down",  length: 2, headRow: 18, headCol: 15 },
+      { direction: "left",  length: 3, headRow: 2,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 4,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 6,  headCol: 0  },
+      { direction: "left",  length: 2, headRow: 8,  headCol: 0  },
+      { direction: "left",  length: 3, headRow: 10, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 12, headCol: 0  },
+      { direction: "left",  length: 3, headRow: 14, headCol: 0  },
+      { direction: "left",  length: 2, headRow: 16, headCol: 0  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 2  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 4  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 6  },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 8  },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 10 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 12 },
+      { direction: "up",    length: 3, headRow: 0,  headCol: 14 },
+      { direction: "up",    length: 2, headRow: 0,  headCol: 16 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 3,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 3,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 5,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 5,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 7,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 7,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 14 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 12 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 10 },
+      { direction: "right", length: 2, headRow: 9,  headCol: 8  },
+      { direction: "right", length: 2, headRow: 9,  headCol: 6  },
+      { direction: "right", length: 2, headRow: 11, headCol: 14 },
+      { direction: "right", length: 2, headRow: 11, headCol: 12 },
+      { direction: "right", length: 2, headRow: 11, headCol: 10 },
+    ],
+  },
 ];
 
 // ========================================
@@ -551,6 +839,9 @@ function calcStars(moves: number, optimalMoves: number): number {
 // ========================================
 
 export function useArrowEscape(): UseArrowEscapeReturn {
+  const { chainId } = useAccount();
+  const { writeContract } = useWriteContract();
+
   const [level, setLevel] = useState(1);
   const [arrows, setArrows] = useState<Arrow[]>(() => initArrows(LEVELS[0]));
   const [moves, setMoves] = useState(0);
@@ -570,6 +861,16 @@ export function useArrowEscape(): UseArrowEscapeReturn {
   const hintsUsedRef = useRef(0);
   const levelRef = useRef(level);
   levelRef.current = level;
+
+  // On-chain session tracking refs
+  const modeRef = useRef<GameMode>("free");
+  const chainIdRef = useRef<number | undefined>(undefined);
+  chainIdRef.current = chainId;
+  const sessionActiveRef = useRef(false);
+  const sessionLevelsPlayedRef = useRef(0);
+  const sessionLevelsClearedRef = useRef(0);
+  const sessionBestScoreRef = useRef(0);
+  const sessionBestLevelRef = useRef(0);
 
   const gridSize = LEVELS[level - 1].gridSize;
   const optimalMoves = LEVELS[level - 1].optimalMoves;
@@ -628,6 +929,13 @@ export function useArrowEscape(): UseArrowEscapeReturn {
                 stats.levelsCleared += 1;
                 if (s > stats.bestScore) stats.bestScore = s;
                 saveStats(stats);
+                // Accumulate on-chain session stats
+                if (modeRef.current === "onchain" && sessionActiveRef.current) {
+                  sessionLevelsPlayedRef.current += 1;
+                  sessionLevelsClearedRef.current += 1;
+                  if (s > sessionBestScoreRef.current) sessionBestScoreRef.current = s;
+                  if (levelRef.current > sessionBestLevelRef.current) sessionBestLevelRef.current = levelRef.current;
+                }
                 return m;
               });
             }
@@ -698,6 +1006,16 @@ export function useArrowEscape(): UseArrowEscapeReturn {
   const restartLevel = useCallback(() => {
     if (hintTimer.current) clearTimeout(hintTimer.current);
     animating.current = false;
+    // Abandon on-chain session on restart
+    if (modeRef.current === "onchain" && sessionActiveRef.current) {
+      const addr = getContractAddress("arrowescape", chainIdRef.current);
+      if (addr) writeContract({ address: addr, abi: ARROWESCAPE_ABI, functionName: "abandonSession" });
+      sessionActiveRef.current = false;
+      sessionLevelsPlayedRef.current = 0;
+      sessionLevelsClearedRef.current = 0;
+      sessionBestScoreRef.current = 0;
+      sessionBestLevelRef.current = 0;
+    }
     setArrows(initArrows(LEVELS[level - 1]));
     setMoves(0);
     setScore(0);
@@ -710,13 +1028,35 @@ export function useArrowEscape(): UseArrowEscapeReturn {
     setHistory([]);
     setStars(0);
     hintsUsedRef.current = 0;
-  }, [level]);
+  }, [level, writeContract]);
 
   // ── Next Level ────────────────────────────────────────────────────────
   const nextLevel = useCallback(() => {
     if (hintTimer.current) clearTimeout(hintTimer.current);
     animating.current = false;
     const nextLvl = level < LEVELS.length ? level + 1 : 1;
+
+    // On-chain: end session when completing the full cycle (back to level 1)
+    if (nextLvl === 1 && modeRef.current === "onchain" && sessionActiveRef.current) {
+      const addr = getContractAddress("arrowescape", chainIdRef.current);
+      if (addr && sessionLevelsPlayedRef.current > 0) {
+        writeContract({
+          address: addr, abi: ARROWESCAPE_ABI, functionName: "endSession",
+          args: [
+            BigInt(sessionLevelsPlayedRef.current),
+            BigInt(sessionLevelsClearedRef.current),
+            BigInt(sessionBestScoreRef.current),
+            BigInt(sessionBestLevelRef.current),
+          ],
+        });
+      }
+      sessionActiveRef.current = false;
+      sessionLevelsPlayedRef.current = 0;
+      sessionLevelsClearedRef.current = 0;
+      sessionBestScoreRef.current = 0;
+      sessionBestLevelRef.current = 0;
+    }
+
     setLevel(nextLvl);
     setArrows(initArrows(LEVELS[nextLvl - 1]));
     setMoves(0);
@@ -735,9 +1075,33 @@ export function useArrowEscape(): UseArrowEscapeReturn {
       stats.gamesPlayed += 1;
       saveStats(stats);
     }
-  }, [level]);
+  }, [level, writeContract]);
 
-  const setGameMode = useCallback((m: GameMode) => setMode(m), []);
+  const setGameMode = useCallback((m: GameMode) => {
+    const prev = modeRef.current;
+    modeRef.current = m;
+    setMode(m);
+    // Abandon on-chain session when switching away from onchain
+    if (prev === "onchain" && m !== "onchain" && sessionActiveRef.current) {
+      const addr = getContractAddress("arrowescape", chainIdRef.current);
+      if (addr) {
+        writeContract({ address: addr, abi: ARROWESCAPE_ABI, functionName: "abandonSession" });
+      }
+      sessionActiveRef.current = false;
+    }
+    // Start session when switching to onchain
+    if (m === "onchain" && !sessionActiveRef.current) {
+      const addr = getContractAddress("arrowescape", chainIdRef.current);
+      if (addr) {
+        writeContract({ address: addr, abi: ARROWESCAPE_ABI, functionName: "startSession" });
+        sessionActiveRef.current = true;
+        sessionLevelsPlayedRef.current = 0;
+        sessionLevelsClearedRef.current = 0;
+        sessionBestScoreRef.current = 0;
+        sessionBestLevelRef.current = 0;
+      }
+    }
+  }, [writeContract]);
 
   return {
     arrows,
