@@ -69,7 +69,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   watersort:    { celo: '0x99c097df31464fe6c5068e23d4f4fe355377373f' },
   arrowescape:  { celo: '0x572339a93287372325cf6da2099730fe65b06a2d' },
   spaceinvaders: { celo: '0x6b9c1178fb6fdd3f043bf88553fe53f42d4ab704' },
-  hilo:         { celo: null },
+  hilo:         { celo: '0x193976f5c644ad1bd9ac83f2ad159234c260b9fe' },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
