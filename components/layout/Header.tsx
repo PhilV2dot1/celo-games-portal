@@ -58,222 +58,116 @@ export function Header() {
     >
       {/* Top Bar */}
       <div className="bg-white/90 dark:bg-gray-900/95 rounded-xl shadow-md mb-6 dark:shadow-gray-900/50" style={{ borderBottom: '3px solid var(--chain-primary)' }}>
-        <div className="flex items-center justify-between p-4">
-          {/* Logo/Brand */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
-              <span className="text-xl sm:text-2xl">🎮</span>
+
+        {/* ── Line 1: Brand | Wallet + User ── */}
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Brand */}
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity shrink-0">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(to bottom right, var(--chain-primary), var(--chain-dark))' }}>
+              <span className="text-xl">🎮</span>
             </div>
-            <div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white">
-                Celo Games Portal
-              </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">
-                {t('header.subtitle')}
-              </p>
-            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight whitespace-nowrap">
+              Celo Games Portal
+            </h1>
           </Link>
 
-          {/* Right side actions */}
-          <div className="flex items-center gap-3">
-            {/* Desktop controls - hidden on mobile (available in MobileMenu) */}
-            <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle size="sm" />
-              <AudioControls size="sm" />
-              <LanguageSwitcher />
-              <NotificationCenter />
-              {isInstallable && (
-                <button
-                  onClick={installApp}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors"
-                  style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}
-                  title="Install app"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Install
+          {/* Right: Wallet + Auth (desktop) */}
+          <div className="hidden md:flex items-center gap-3">
+            <ConnectButton showBalance={false} chainStatus="icon" />
+            {!isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setShowLoginModal(true)} className="px-3 py-1.5 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white font-semibold text-sm rounded-lg transition-colors">
+                  {t('auth.login')}
                 </button>
-              )}
-            </div>
-
-            {/* Authentication - hidden on mobile (available in MobileMenu) */}
-            <div className="hidden md:flex items-center gap-3">
-              {!isAuthenticated ? (
-                <>
-                  <button
-                    onClick={() => setShowLoginModal(true)}
-                    className="px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white font-semibold text-sm rounded-lg transition-colors"
-                  >
-                    {t('auth.login')}
-                  </button>
-                  <button
-                    onClick={() => setShowSignupModal(true)}
-                    className="px-4 py-2 font-semibold text-sm rounded-lg transition-colors hover:opacity-90"
-                    style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}
-                  >
-                    {t('auth.createAccount')}
-                  </button>
-                  <ConnectButton
-                    showBalance={false}
-                    chainStatus="icon"
-                  />
-                </>
-              ) : (
-                <>
-                  <ConnectButton
-                    showBalance={true}
-                    chainStatus="icon"
-                  />
+                <button onClick={() => setShowSignupModal(true)} className="px-3 py-1.5 font-semibold text-sm rounded-lg transition-colors hover:opacity-90" style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }}>
+                  {t('auth.createAccount')}
+                </button>
+              </div>
+            ) : (
+              <div className="relative">
+                <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 hover:opacity-90 transition-opacity">
                   <div className="relative">
-                    <button
-                      onClick={() => setShowUserMenu(!showUserMenu)}
-                      className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-                    >
-                      {/* Avatar with Ethos score badge */}
-                      <div className="relative">
-                        <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-gray-600 bg-gray-700">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={user?.user_metadata?.ethos_picture || user?.user_metadata?.avatar_url || '/avatars/predefined/default-player.svg'}
-                            alt="avatar"
-                            className="object-cover w-full h-full"
-                            onError={(e) => { (e.target as HTMLImageElement).src = '/avatars/predefined/default-player.svg'; }}
-                          />
-                        </div>
-                        {user?.user_metadata?.ethos_score && (
-                          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-white border border-gray-300 rounded-full px-1.5 py-0.5 flex items-center gap-0.5 shadow-sm whitespace-nowrap">
-                            <EthosLogo className="w-2.5 h-2.5 text-indigo-500 flex-shrink-0" />
-                            <span className="text-[10px] font-bold text-gray-800 leading-none">{user.user_metadata.ethos_score}</span>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-white text-sm font-semibold hidden sm:inline">
-                        {(() => {
-                          const truncate = (s: string) => s.startsWith('0x') && s.length > 10
-                            ? `${s.slice(0, 6)}...${s.slice(-4)}` : s;
-                          if (displayName) return displayName;
-                          const ethosName = user?.user_metadata?.ethos_username;
-                          if (ethosName && !ethosName.startsWith('0x')) return ethosName;
-                          const emailPart = user?.email?.split('@')[0] || '';
-                          if (emailPart) return truncate(emailPart);
-                          return t('nav.profile');
-                        })()}
-                      </span>
-                      <svg className={`w-4 h-4 text-white transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-
-                    {showUserMenu && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-                        <Link
-                          href="/profile/me"
-                          className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
-                          onClick={() => setShowUserMenu(false)}
-                        >
-                          {t('nav.profile')}
-                        </Link>
-                        <Link
-                          href="/profile/edit"
-                          className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
-                          onClick={() => setShowUserMenu(false)}
-                        >
-                          {t('edit')}
-                        </Link>
-                        <button
-                          onClick={() => {
-                            signOut();
-                            setShowUserMenu(false);
-                          }}
-                          className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm border-t border-gray-100 dark:border-gray-700"
-                        >
-                          {t('nav.signOut')}
-                        </button>
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-gray-600 bg-gray-700">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={user?.user_metadata?.ethos_picture || user?.user_metadata?.avatar_url || '/avatars/predefined/default-player.svg'} alt="avatar" className="object-cover w-full h-full" onError={(e) => { (e.target as HTMLImageElement).src = '/avatars/predefined/default-player.svg'; }} />
+                    </div>
+                    {user?.user_metadata?.ethos_score && (
+                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-white border border-gray-300 rounded-full px-1.5 py-0.5 flex items-center gap-0.5 shadow-sm whitespace-nowrap">
+                        <EthosLogo className="w-2.5 h-2.5 text-indigo-500 flex-shrink-0" />
+                        <span className="text-[10px] font-bold text-gray-800 leading-none">{user.user_metadata.ethos_score}</span>
                       </div>
                     )}
                   </div>
-                </>
-              )}
-            </div>
+                  <span className="text-gray-900 dark:text-white text-sm font-semibold max-w-[120px] truncate">
+                    {(() => {
+                      const truncate = (s: string) => s.startsWith('0x') && s.length > 10 ? `${s.slice(0, 6)}...${s.slice(-4)}` : s;
+                      if (displayName) return displayName;
+                      const ethosName = user?.user_metadata?.ethos_username;
+                      if (ethosName && !ethosName.startsWith('0x')) return ethosName;
+                      const emailPart = user?.email?.split('@')[0] || '';
+                      return emailPart ? truncate(emailPart) : t('nav.profile');
+                    })()}
+                  </span>
+                  <svg className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                    <Link href="/profile/me" className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm" onClick={() => setShowUserMenu(false)}>{t('nav.profile')}</Link>
+                    <Link href="/profile/edit" className="block px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm border-t border-gray-100 dark:border-gray-700" onClick={() => setShowUserMenu(false)}>{t('edit')}</Link>
+                    <button onClick={() => { signOut(); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm border-t border-gray-100 dark:border-gray-700">{t('nav.signOut')}</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-            {/* Mobile: NotificationCenter + settings hamburger (auth/wallet/settings) */}
-            <div className="md:hidden flex items-center gap-1">
-              <NotificationCenter />
-              <button
-                onClick={() => setShowMobileMenu(true)}
-                className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label={t('nav.menu')}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </button>
-            </div>
+          {/* Mobile hamburger */}
+          <div className="md:hidden flex items-center gap-1">
+            <NotificationCenter />
+            <button onClick={() => setShowMobileMenu(true)} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label={t('nav.menu')}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        {/* Navigation - hidden on mobile (available in MobileMenu) */}
+        {/* ── Line 2: Nav links | Utilities ── */}
         <nav className="hidden md:block border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Link
-                href="/"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                {t('nav.home')}
-              </Link>
-              <Link
-                href="/leaderboard"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                {t('nav.leaderboard')}
-              </Link>
-              <Link
-                href="/profile/me"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                {t('nav.profile')}
-              </Link>
-              <Link
-                href="/friends"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                {t('nav.friends')}
-              </Link>
-              <Link
-                href="/tournaments"
-                className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                {t('nav.tournaments')}
-              </Link>
-              <Link
-                href="/about"
-                className="px-4 py-2 text-sm font-semibold rounded-lg transition-colors"
-                style={{ color: 'var(--chain-dark)' }}
+          <div className="flex items-center justify-between px-4 py-1.5">
+            <div className="flex items-center gap-0.5">
+              {[
+                { href: "/",            label: t('nav.home') },
+                { href: "/leaderboard", label: t('nav.leaderboard') },
+                { href: "/profile/me",  label: t('nav.profile') },
+                { href: "/friends",     label: t('nav.friends') },
+                { href: "/tournaments", label: t('nav.tournaments') },
+              ].map(({ href, label }) => (
+                <Link key={href} href={href} className="px-3 py-1.5 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                  {label}
+                </Link>
+              ))}
+              <Link href="/about" className="px-3 py-1.5 text-sm font-semibold rounded-lg transition-colors" style={{ color: 'var(--chain-dark)' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--chain-primary) 12%, transparent)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {t('nav.guide')}
               </Link>
             </div>
-
-            {/* Local stats */}
-            {profile.gamesPlayed > 0 && (
-              <div className="flex items-center gap-4 text-xs">
-                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-600 dark:text-gray-400">Points:</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{profile.totalPoints}</span>
-                </div>
-                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-600 dark:text-gray-400">Games:</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{profile.gamesPlayed}</span>
-                </div>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5">
+              <ThemeToggle size="sm" />
+              <AudioControls size="sm" />
+              <LanguageSwitcher />
+              <NotificationCenter />
+              {isInstallable && (
+                <button onClick={installApp} className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors" style={{ backgroundColor: 'var(--chain-primary)', color: 'var(--chain-contrast)' }} title="Install app">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  Install
+                </button>
+              )}
+            </div>
           </div>
         </nav>
       </div>

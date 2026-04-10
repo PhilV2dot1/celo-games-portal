@@ -30,6 +30,10 @@ async function proxy(request: NextRequest, params: { path: string[] }) {
     ? await request.text()
     : undefined;
 
+  if (body) {
+    console.log(`[ethos-proxy] ${request.method} ${url.pathname} BODY:`, body.substring(0, 1000));
+  }
+
   const upstream = await fetch(url.toString(), {
     method: request.method,
     headers,
@@ -37,6 +41,7 @@ async function proxy(request: NextRequest, params: { path: string[] }) {
   });
 
   const data = await upstream.text();
+  console.log(`[ethos-proxy] ${request.method} ${url.pathname} → ${upstream.status}: ${data.substring(0, 500)}`);
   return new NextResponse(data, {
     status: upstream.status,
     headers: {
