@@ -35,7 +35,8 @@ export type GameId =
   | 'watersort'
   | 'arrowescape'
   | 'spaceinvaders'
-  | 'hilo';
+  | 'hilo'
+  | 'cryptohigherlower';
 
 type AddressOrNull = `0x${string}` | null;
 
@@ -70,6 +71,7 @@ export const CONTRACT_ADDRESSES: Record<GameId, ChainAddresses> = {
   arrowescape:  { celo: '0x572339a93287372325cf6da2099730fe65b06a2d' },
   spaceinvaders: { celo: '0x6b9c1178fb6fdd3f043bf88553fe53f42d4ab704' },
   hilo:         { celo: '0x193976f5c644ad1bd9ac83f2ad159234c260b9fe' },
+  cryptohigherlower: { celo: null },
 };
 
 const CHAIN_ID_TO_NAME: Record<number, SupportedChain> = {
