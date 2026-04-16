@@ -18,7 +18,7 @@ const geistMono = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://celo-games-portal.vercel.app';
 const siteTitle = 'Celo Games Portal - Play Mini-Games on Celo Blockchain';
-const siteDescription = 'Play 20 mini-games on Celo! Blackjack, RPS, Tic-Tac-Toe, Jackpot, 2048, Mastermind, Snake, Minesweeper, Solitaire, Connect Five, Yahtzee, Sudoku, Memory, Maze, Tetris, Poker, Wordle, Flappy Bird, Plinko & Brick Breaker. Free mode, on-chain or multiplayer!';
+const siteDescription = 'Play 27 mini-games on Celo! Blackjack, Poker, Snake, Wordle, Tetris, Crypto Higher/Lower and more. Free mode, on-chain & multiplayer. MiniPay compatible.';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -54,27 +54,44 @@ export const metadata: Metadata = {
     siteName: 'Celo Games Portal',
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Celo Games Portal — 27 mini-games on Celo blockchain',
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: siteTitle,
     description: siteDescription,
+    images: [`${siteUrl}/og-image.png`],
   },
   other: {
+    // Farcaster Mini App frame
     'fc:frame': JSON.stringify({
       version: 'next',
-      imageUrl: `${siteUrl}/icon-512.png`,
+      imageUrl: `${siteUrl}/og-image.png`,
       button: {
         title: '🎮 Play Now',
         action: {
           type: 'launch_frame',
           name: 'Celo Games Portal',
           url: siteUrl,
-          splashImageUrl: `${siteUrl}/icon-192.png`,
-          splashBackgroundColor: '#FCFF52',
+          splashImageUrl: `${siteUrl}/icon-512.png`,
+          splashBackgroundColor: '#111827',
         },
       },
     }),
+    // MiniPay / Opera Mini hints
+    'dapp-name': 'Celo Games Portal',
+    'dapp-url': siteUrl,
+    'dapp-icon': `${siteUrl}/icon-512.png`,
+    'dapp-description': siteDescription,
+    'dapp-network': 'celo',
+    'mobile-web-app-capable': 'yes',
   },
 };
 
