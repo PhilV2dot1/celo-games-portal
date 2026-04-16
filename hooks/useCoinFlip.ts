@@ -10,7 +10,15 @@ import { useLocalStats } from "@/hooks/useLocalStats";
 // ========================================
 
 export type GameMode = "free" | "onchain";
-export type GameStatus = "idle" | "waiting_tx" | "flipping" | "result";
+export type GameStatus =
+  | "idle"
+  | "waiting_start"   // waiting for startSession tx
+  | "playing"         // series in progress (no tx needed per flip)
+  | "flipping"        // coin animation
+  | "result"          // showing flip result — still in series if win
+  | "waiting_end"     // waiting for endSession tx (on lose or cash out)
+  | "gameover"        // series ended with a loss
+  | "cashout";        // series ended with cash out
 export type CoinSide = "heads" | "tails";
 export type GameResult = "win" | "lose" | null;
 
@@ -37,6 +45,40 @@ const ETH_COLOR = "#627EEA";
 const BTC_LOGO_URL = "https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/btc.svg";
 const ETH_LOGO_URL = "https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/eth.svg";
 
+// Minimum streak to allow cash out
+const CASHOUT_MIN_STREAK = 3;
+
+// ========================================
+// ABI
+// ========================================
+
+const COINFLIP_ABI = [
+  {
+    name: "startSession",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+  {
+    name: "endSession",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "outcome", type: "uint8" },    // 0 = WIN (cashout), 1 = LOSE
+      { name: "streak",  type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "abandonSession",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+] as const;
+
 // ========================================
 // HELPERS
 // ========================================
@@ -56,7 +98,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => resolve(img);
-    img.onerror = () => resolve(img); // resolve anyway, draw will skip
+    img.onerror = () => resolve(img);
     img.src = src;
   });
 }
@@ -128,7 +170,6 @@ function drawCoin(
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Logo image (clipped to inner circle)
   ctx.shadowBlur = 0;
   const logo = isBTC ? btcImg : ethImg;
   const logoSize = R * 1.1;
@@ -140,7 +181,6 @@ function drawCoin(
     ctx.drawImage(logo, -logoSize / 2, -logoSize / 2, logoSize, logoSize);
     ctx.restore();
   } else {
-    // Fallback glyph
     ctx.fillStyle = "rgba(255,255,255,0.95)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -172,7 +212,6 @@ function drawFrame(
 
   ctx.clearRect(0, 0, W, H);
 
-  // Background — dark/light mode
   const bg = ctx.createLinearGradient(0, 0, 0, H);
   if (isDark) {
     bg.addColorStop(0, "#0f172a");
@@ -184,7 +223,6 @@ function drawFrame(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  // Stars (dark only)
   if (isDark) {
     const starSeed = [17, 43, 71, 97, 131, 163, 199, 229, 251, 277, 307, 337];
     ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -197,7 +235,6 @@ function drawFrame(
     }
   }
 
-  // Particles
   for (const p of particles) {
     ctx.save();
     ctx.globalAlpha = p.alpha;
@@ -271,9 +308,10 @@ export function useCoinFlip() {
   const labelHeadsRef = useRef<string>("Heads");
   const labelTailsRef = useRef<string>("Tails");
 
-  // Pending choice while waiting for tx confirmation
+  // Pending choice while waiting for tx
   const pendingChoiceRef = useRef<CoinSide | null>(null);
-  const pendingTxHashRef = useRef<`0x${string}` | undefined>(undefined);
+  // Streak accumulated during the current series (used for endSession)
+  const seriesStreakRef = useRef<number>(0);
 
   const [mode, setMode] = useState<GameMode>("free");
   const [status, setStatus] = useState<GameStatus>("idle");
@@ -283,7 +321,18 @@ export function useCoinFlip() {
   const [stats, setStats] = useState<PlayerStats>(DEFAULT_STATS);
   const [streak, setStreak] = useState(0);
   const [message, setMessage] = useState("");
-  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+
+  // On-chain tx hashes
+  const [startTxHash, setStartTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [endTxHash, setEndTxHash] = useState<`0x${string}` | undefined>(undefined);
+
+  // Pending end args
+  const pendingEndRef = useRef<{
+    outcome: 0 | 1;
+    finalStreak: number;
+    finalStatus: "gameover" | "cashout";
+    statsUpdate: PlayerStats;
+  } | null>(null);
 
   const { address, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
@@ -291,8 +340,8 @@ export function useCoinFlip() {
   const recordGameRef = useRef(recordGame);
   useEffect(() => { recordGameRef.current = recordGame; }, [recordGame]);
 
-  // Wait for on-chain tx confirmation
-  const { isSuccess: txConfirmed, isError: txFailed } = useWaitForTransactionReceipt({ hash: txHash });
+  const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });
+  const { isSuccess: endConfirmed, isError: endFailed } = useWaitForTransactionReceipt({ hash: endTxHash });
 
   // Load stats on mount
   useEffect(() => {
@@ -307,7 +356,7 @@ export function useCoinFlip() {
     loadImage(ETH_LOGO_URL).then(img => { ethImgRef.current = img; });
   }, []);
 
-  // Watch dark mode via <html class="dark">
+  // Watch dark mode
   useEffect(() => {
     const update = () => {
       isDarkRef.current = document.documentElement.classList.contains("dark");
@@ -318,13 +367,58 @@ export function useCoinFlip() {
     return () => observer.disconnect();
   }, []);
 
-  // Expose label setters so page can inject translated labels
   const setLabels = useCallback((heads: string, tails: string) => {
     labelHeadsRef.current = heads;
     labelTailsRef.current = tails;
   }, []);
 
-  // ── Start animation after tx confirmed (or on tx failure — still play) ──────
+  // ── startSession confirmed → start playing ──────────────────────────────────
+  useEffect(() => {
+    if (startConfirmed && status === "waiting_start" && pendingChoiceRef.current) {
+      const chosen = pendingChoiceRef.current;
+      pendingChoiceRef.current = null;
+      setStartTxHash(undefined);
+      startAnimation(chosen);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startConfirmed, status]);
+
+  useEffect(() => {
+    if (startFailed && status === "waiting_start" && pendingChoiceRef.current) {
+      const chosen = pendingChoiceRef.current;
+      pendingChoiceRef.current = null;
+      setStartTxHash(undefined);
+      startAnimation(chosen);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startFailed, status]);
+
+  // ── endSession confirmed / failed ───────────────────────────────────────────
+  useEffect(() => {
+    if (endConfirmed && status === "waiting_end" && pendingEndRef.current) {
+      const { finalStatus, statsUpdate, outcome } = pendingEndRef.current;
+      saveStats(statsUpdate);
+      setStats(statsUpdate);
+      recordGameRef.current("coinflip", "onchain", outcome === 0 ? "win" : "lose");
+      setStatus(finalStatus);
+      setEndTxHash(undefined);
+      pendingEndRef.current = null;
+    }
+  }, [endConfirmed, status]);
+
+  useEffect(() => {
+    if (endFailed && status === "waiting_end" && pendingEndRef.current) {
+      const { finalStatus, statsUpdate, outcome } = pendingEndRef.current;
+      saveStats(statsUpdate);
+      setStats(statsUpdate);
+      recordGameRef.current("coinflip", "onchain", outcome === 0 ? "win" : "lose");
+      setStatus(finalStatus);
+      setEndTxHash(undefined);
+      pendingEndRef.current = null;
+    }
+  }, [endFailed, status]);
+
+  // ── Animation helper ─────────────────────────────────────────────────────────
   const startAnimation = useCallback((chosen: CoinSide) => {
     s.current.choice = chosen;
     s.current.flipping = true;
@@ -336,24 +430,53 @@ export function useCoinFlip() {
     setStatus("flipping");
   }, []);
 
-  useEffect(() => {
-    if (txConfirmed && status === "waiting_tx" && pendingChoiceRef.current) {
-      const chosen = pendingChoiceRef.current;
-      pendingChoiceRef.current = null;
-      setTxHash(undefined);
-      startAnimation(chosen);
-    }
-  }, [txConfirmed, status, startAnimation]);
+  // ── End the series on-chain or free ─────────────────────────────────────────
+  const getOnChainAddress = useCallback((): `0x${string}` | null => {
+    if (mode !== "onchain" || !address || !chain) return null;
+    return getContractAddress("coinflip", chain.id);
+  }, [mode, address, chain]);
 
-  useEffect(() => {
-    if (txFailed && status === "waiting_tx" && pendingChoiceRef.current) {
-      // Tx failed — still play in free mode so user isn't stuck
-      const chosen = pendingChoiceRef.current;
-      pendingChoiceRef.current = null;
-      setTxHash(undefined);
-      startAnimation(chosen);
+  const _finishSeries = useCallback(async (
+    outcome: 0 | 1,
+    finalStreak: number,
+    finalStatus: "gameover" | "cashout",
+  ) => {
+    const saved = loadStats();
+    const newStreak = outcome === 0 ? saved.streak + 1 : 0;
+    const statsUpdate: PlayerStats = {
+      games: saved.games + 1,
+      wins:  outcome === 0 ? saved.wins + 1 : saved.wins,
+      streak: newStreak,
+      bestStreak: Math.max(saved.bestStreak, finalStreak),
+    };
+
+    const contractAddress = getOnChainAddress();
+    if (contractAddress) {
+      setStatus("waiting_end");
+      pendingEndRef.current = { outcome, finalStreak, finalStatus, statsUpdate };
+      try {
+        const hash = await writeContractAsync({
+          address: contractAddress,
+          abi: COINFLIP_ABI,
+          functionName: "endSession",
+          args: [outcome, BigInt(finalStreak)],
+        });
+        setEndTxHash(hash);
+      } catch {
+        // User rejected — still show result
+        saveStats(statsUpdate);
+        setStats(statsUpdate);
+        recordGameRef.current("coinflip", "onchain", outcome === 0 ? "win" : "lose");
+        setStatus(finalStatus);
+        pendingEndRef.current = null;
+      }
+    } else {
+      saveStats(statsUpdate);
+      setStats(statsUpdate);
+      recordGameRef.current("coinflip", "free", outcome === 0 ? "win" : "lose");
+      setStatus(finalStatus);
     }
-  }, [txFailed, status, startAnimation]);
+  }, [getOnChainAddress, writeContractAsync]);
 
   // Single persistent RAF loop
   useEffect(() => {
@@ -374,25 +497,28 @@ export function useCoinFlip() {
           st.lastWin = win;
           st.particles = spawnParticles(canvas.width / 2, canvas.height / 2 - 10, win);
 
-          const saved = loadStats();
-          const newStreak = win ? saved.streak + 1 : 0;
-          const updated: PlayerStats = {
-            games: saved.games + 1,
-            wins: win ? saved.wins + 1 : saved.wins,
-            streak: newStreak,
-            bestStreak: Math.max(saved.bestStreak, newStreak),
-          };
-          saveStats(updated);
-          // Record in global stats (for home page card)
-          recordGameRef.current("coinflip", pendingTxHashRef.current ? "onchain" : "free", win ? "win" : "lose");
-          pendingTxHashRef.current = undefined;
-
           setLandedSide(st.resolvedSide);
           setResult(win ? "win" : "lose");
-          setStatus("result");
-          setStats(updated);
-          setStreak(newStreak);
           setMessage(win ? "🎉" : "😔");
+
+          if (win) {
+            // Stay in series — update streak locally, status → result (then playing)
+            seriesStreakRef.current += 1;
+            setStreak(prev => {
+              const next = prev + 1;
+              seriesStreakRef.current = next;
+              return next;
+            });
+            setStatus("result");
+          } else {
+            // Series over — trigger endSession
+            const finalStreak = seriesStreakRef.current;
+            seriesStreakRef.current = 0;
+            // Delay slightly so the ✗ animation shows
+            setTimeout(() => {
+              _finishSeries(1, finalStreak, "gameover");
+            }, 900);
+          }
         }
       }
 
@@ -415,66 +541,101 @@ export function useCoinFlip() {
 
     s.current.animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(s.current.animId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ── flip ─────────────────────────────────────────────────────────────────────
   const flip = useCallback(async (chosen: CoinSide) => {
-    if (s.current.flipping || status === "waiting_tx") return;
+    if (s.current.flipping || status === "waiting_start" || status === "waiting_end") return;
 
     setChoice(chosen);
     setResult(null);
     setMessage("");
 
-    if (mode === "onchain" && address && chain) {
-      const contractAddress = getContractAddress("coinflip", chain.id);
-      if (contractAddress) {
-        setStatus("waiting_tx");
-        pendingChoiceRef.current = chosen;
-        try {
-          const hash = await writeContractAsync({
-            address: contractAddress as `0x${string}`,
-            abi: [{ name: "startGame", type: "function", stateMutability: "nonpayable", inputs: [], outputs: [] }],
-            functionName: "startGame",
-          });
-          pendingTxHashRef.current = hash;
-          setTxHash(hash);
-        } catch {
-          // User rejected — cancel
-          pendingChoiceRef.current = null;
-          setStatus("idle");
-          setChoice(null);
-        }
-        return;
+    // If a series is already in progress (status === "result" and win), continue without tx
+    if (status === "result") {
+      startAnimation(chosen);
+      return;
+    }
+
+    // Starting a new series
+    seriesStreakRef.current = 0;
+
+    const contractAddress = getOnChainAddress();
+    if (contractAddress) {
+      // On-chain: sign startSession once for the whole series
+      setStatus("waiting_start");
+      pendingChoiceRef.current = chosen;
+      try {
+        const hash = await writeContractAsync({
+          address: contractAddress,
+          abi: COINFLIP_ABI,
+          functionName: "startSession",
+        });
+        setStartTxHash(hash);
+      } catch {
+        pendingChoiceRef.current = null;
+        setStatus("idle");
+        setChoice(null);
       }
+      return;
     }
 
     // Free mode — start animation immediately
     startAnimation(chosen);
-  }, [mode, address, chain, writeContractAsync, status, startAnimation]);
+  }, [mode, status, getOnChainAddress, writeContractAsync, startAnimation]);
 
+  // ── cash out ─────────────────────────────────────────────────────────────────
+  const cashOut = useCallback(() => {
+    if (status !== "result" || streak < CASHOUT_MIN_STREAK) return;
+    const finalStreak = seriesStreakRef.current;
+    seriesStreakRef.current = 0;
+    _finishSeries(0, finalStreak, "cashout");
+  }, [status, streak, _finishSeries]);
+
+  // ── reset ────────────────────────────────────────────────────────────────────
   const reset = useCallback(() => {
+    // If abandoning an active on-chain series, send abandonSession
+    if ((status === "playing" || status === "result") && mode === "onchain") {
+      const contractAddress = getOnChainAddress();
+      if (contractAddress) {
+        writeContractAsync({
+          address: contractAddress,
+          abi: COINFLIP_ABI,
+          functionName: "abandonSession",
+        }).catch(() => {/* noop */});
+      }
+    }
+
     s.current.flipping = false;
     s.current.landed = false;
     s.current.particles = [];
     s.current.choice = null;
     s.current.lastWin = null;
     pendingChoiceRef.current = null;
-    pendingTxHashRef.current = undefined;
+    seriesStreakRef.current = 0;
     setChoice(null);
     setStatus("idle");
     setResult(null);
     setMessage("");
-    setTxHash(undefined);
-  }, []);
+    setStreak(0);
+    setStartTxHash(undefined);
+    setEndTxHash(undefined);
+    pendingEndRef.current = null;
+  }, [status, mode, getOnChainAddress, writeContractAsync]);
 
   const setGameMode = useCallback((m: GameMode) => {
     setMode(m);
     reset();
   }, [reset]);
 
+  const canCashOut = status === "result" && streak >= CASHOUT_MIN_STREAK;
+
   return {
     canvasRef,
     mode, status, choice, result, landedSide,
-    stats, streak, message,
-    flip, reset, setGameMode, setLabels,
+    stats, streak, message, canCashOut,
+    flip, reset, cashOut, setGameMode, setLabels,
+    CASHOUT_MIN_STREAK,
   };
 }

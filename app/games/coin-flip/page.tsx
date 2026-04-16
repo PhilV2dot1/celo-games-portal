@@ -18,7 +18,6 @@ import {
 const BTC_LOGO = "https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/btc.svg";
 const ETH_LOGO = "https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/eth.svg";
 
-// Replace {BTC} and {ETH} tokens in a string with inline logo images
 function withLogos(text: string) {
   const parts = text.split(/(\{BTC\}|\{ETH\})/);
   return parts.map((part, i) => {
@@ -35,10 +34,16 @@ export default function CoinFlipPage() {
   const { t } = useLanguage();
   const { vibrate } = useHaptic();
 
-  const isWaitingTx = game.status === "waiting_tx";
-  const isFlipping = game.status === "flipping";
-  const isResult = game.status === "result";
-  const isIdle = game.status === "idle";
+  const isWaitingStart = game.status === "waiting_start";
+  const isWaitingEnd   = game.status === "waiting_end";
+  const isFlipping     = game.status === "flipping";
+  const isResult       = game.status === "result";
+  const isIdle         = game.status === "idle";
+  const isOver         = game.status === "gameover" || game.status === "cashout";
+
+  // Series in progress: can flip again after a win result
+  const canFlipAgain = isResult && game.result === "win";
+  const buttonsDisabled = isFlipping || isWaitingStart || isWaitingEnd || (isResult && game.result === "lose");
 
   // Labels for canvas (translated)
   const labelHeads = t("games.coinflip.heads") || "Heads";
@@ -57,7 +62,7 @@ export default function CoinFlipPage() {
     game.reset();
   }, [game, vibrate]);
 
-  const winMsg = t("games.coinflip.win") || "🎉 Bien joué !";
+  const winMsg  = t("games.coinflip.win")  || "🎉 Bien joué !";
   const loseMsg = t("games.coinflip.lose") || "😔 Pas de chance...";
 
   return (
@@ -82,10 +87,7 @@ export default function CoinFlipPage() {
 
         {/* Mode toggle */}
         <div className="mb-6 flex justify-center">
-          <ModeToggle
-            mode={game.mode}
-            onModeChange={game.setGameMode}
-          />
+          <ModeToggle mode={game.mode} onModeChange={game.setGameMode} />
         </div>
 
         {/* Wallet (onchain) */}
@@ -95,18 +97,19 @@ export default function CoinFlipPage() {
           </div>
         )}
 
-        {/* Streak banner */}
+        {/* Streak / multiplier banner — same style as Hi-Lo */}
         <AnimatePresence>
-          {game.streak >= 3 && (
+          {game.streak >= 2 && !isOver && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="mb-4 text-center bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/40 rounded-xl py-2 px-4"
+              key={game.streak}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="mb-4 text-center"
             >
-              <span className="text-yellow-500 dark:text-yellow-400 font-bold text-lg">
-                🔥 {t("games.coinflip.streak")} {game.streak} !
-              </span>
+              <div className="inline-block px-5 py-2 rounded-full bg-yellow-100 dark:bg-yellow-500/20 border border-yellow-400 dark:border-yellow-500/60 text-yellow-700 dark:text-yellow-400 font-black text-lg animate-pulse">
+                🔥 {t("games.coinflip.streak") || "Série"} {game.streak} !
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -126,7 +129,7 @@ export default function CoinFlipPage() {
         <AnimatePresence>
           {isResult && (
             <motion.div
-              key={game.result}
+              key={`${game.result}-${game.streak}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -137,26 +140,22 @@ export default function CoinFlipPage() {
           )}
         </AnimatePresence>
 
-        {/* Choice buttons */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        {/* Choice buttons — active during idle, result-win */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
           {/* BTC — Heads */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => handleFlip("heads")}
-            disabled={isFlipping || isWaitingTx}
+            disabled={buttonsDisabled}
             className={`relative flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border-2 font-bold text-lg transition-all shadow-lg
-              ${isFlipping || isWaitingTx
+              ${buttonsDisabled
                 ? "opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
                 : isResult && game.landedSide === "heads"
                   ? "border-orange-400 bg-orange-500/20 text-orange-600 dark:text-orange-300 shadow-orange-500/30 shadow-xl"
                   : "border-orange-400/50 bg-orange-500/10 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 hover:border-orange-400 cursor-pointer"
               }`}
           >
-            <img
-              src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/btc.svg"
-              alt="BTC"
-              className="w-10 h-10"
-            />
+            <img src={BTC_LOGO} alt="BTC" className="w-10 h-10" />
             <span className="text-sm font-semibold tracking-wide">{labelHeads}</span>
             <span className="text-xs text-orange-400/70">Bitcoin</span>
             {isResult && game.choice === "heads" && (
@@ -170,20 +169,16 @@ export default function CoinFlipPage() {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => handleFlip("tails")}
-            disabled={isFlipping || isWaitingTx}
+            disabled={buttonsDisabled}
             className={`relative flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border-2 font-bold text-lg transition-all shadow-lg
-              ${isFlipping || isWaitingTx
+              ${buttonsDisabled
                 ? "opacity-50 cursor-not-allowed border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
                 : isResult && game.landedSide === "tails"
                   ? "border-indigo-400 bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 shadow-indigo-500/30 shadow-xl"
                   : "border-indigo-400/50 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20 hover:border-indigo-400 cursor-pointer"
               }`}
           >
-            <img
-              src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@latest/svg/color/eth.svg"
-              alt="ETH"
-              className="w-10 h-10"
-            />
+            <img src={ETH_LOGO} alt="ETH" className="w-10 h-10" />
             <span className="text-sm font-semibold tracking-wide">{labelTails}</span>
             <span className="text-xs text-indigo-400/70">Ethereum</span>
             {isResult && game.choice === "tails" && (
@@ -194,6 +189,22 @@ export default function CoinFlipPage() {
           </motion.button>
         </div>
 
+        {/* Cash out button — visible when streak ≥ min and last flip was a win */}
+        <AnimatePresence>
+          {game.canCashOut && (
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={game.cashOut}
+              className="w-full mb-4 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white font-black text-base shadow-lg transition-all"
+            >
+              💰 {t("games.coinflip.cashOut") || "Encaisser la série"} ({game.streak} {t("games.coinflip.streak") || "série"})
+            </motion.button>
+          )}
+        </AnimatePresence>
+
         {/* Status hint / replay */}
         <div className="text-center mb-8">
           {isIdle && (
@@ -201,17 +212,49 @@ export default function CoinFlipPage() {
               {t("games.coinflip.tapToFlip")}
             </p>
           )}
-          {isWaitingTx && (
-            <p className="text-amber-500 dark:text-amber-400 text-sm animate-pulse">
-              {t("games.coinflip.waitingTx")}
-            </p>
+          {isWaitingStart && (
+            <div className="flex flex-col items-center gap-2">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="w-6 h-6 border-4 border-emerald-500 border-t-transparent rounded-full"
+              />
+              <p className="text-amber-500 dark:text-amber-400 text-sm">
+                {t("games.coinflip.waitingStart") || "Signature de la transaction de début…"}
+              </p>
+            </div>
+          )}
+          {isWaitingEnd && (
+            <div className="flex flex-col items-center gap-2">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full"
+              />
+              <p className="text-indigo-400 dark:text-indigo-300 text-sm">
+                {t("games.coinflip.waitingEnd") || "Enregistrement de la série on-chain…"}
+              </p>
+            </div>
           )}
           {isFlipping && (
             <p className="text-indigo-500 dark:text-indigo-300 text-sm animate-pulse">
               {t("games.coinflip.flipping")}
             </p>
           )}
-          {isResult && (
+          {canFlipAgain && (
+            <p className="text-green-600 dark:text-green-400 text-sm font-semibold">
+              {t("games.coinflip.continueOrCashOut") || "Continue ta série ou encaisse !"}
+            </p>
+          )}
+          {isResult && game.result === "lose" && (
+            <button
+              onClick={handleReset}
+              className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors shadow"
+            >
+              {t("games.coinflip.flipAgain")}
+            </button>
+          )}
+          {isOver && (
             <button
               onClick={handleReset}
               className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors shadow"
@@ -221,12 +264,48 @@ export default function CoinFlipPage() {
           )}
         </div>
 
+        {/* End-of-series result screens */}
+        <AnimatePresence>
+          {game.status === "gameover" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center mb-5 p-5 rounded-2xl bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-500/40"
+            >
+              <div className="text-4xl mb-2">💥</div>
+              <p className="text-red-600 dark:text-red-400 font-black text-2xl mb-1">
+                {t("games.hilo.gameOver") || "Game Over !"}
+              </p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                {t("games.coinflip.streak") || "Série"} : {game.stats.bestStreak > 0 ? game.stats.bestStreak : 0}
+              </p>
+            </motion.div>
+          )}
+          {game.status === "cashout" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center mb-5 p-5 rounded-2xl bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-500/40"
+            >
+              <div className="text-4xl mb-2">💰</div>
+              <p className="text-yellow-700 dark:text-yellow-400 font-black text-2xl mb-1">
+                {t("games.hilo.cashedOut") || "Encaissé !"}
+              </p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                {t("games.coinflip.streak") || "Série"} : {game.streak}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Stats */}
         <div className="grid grid-cols-4 gap-3 mb-8">
           {[
-            { label: t("stats.played") || "Parties", value: game.stats.games },
-            { label: t("stats.wins") || "Victoires", value: game.stats.wins },
-            { label: t("games.coinflip.streak") || "Série", value: game.streak },
+            { label: t("stats.played")              || "Parties", value: game.stats.games },
+            { label: t("stats.wins")                || "Victoires", value: game.stats.wins },
+            { label: t("games.coinflip.streak")     || "Série", value: game.streak },
             { label: t("games.coinflip.bestStreak") || "Record", value: game.stats.bestStreak },
           ].map(({ label, value }) => (
             <div key={label} className="bg-white/70 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-center">
@@ -245,6 +324,9 @@ export default function CoinFlipPage() {
             <li>{withLogos(t("games.coinflip.rule1"))}</li>
             <li>{t("games.coinflip.rule2")}</li>
             <li>{t("games.coinflip.rule3")}</li>
+            <li className="text-yellow-600 dark:text-yellow-400 font-medium">
+              {t("games.coinflip.rule4") || `Enchaîne ${game.CASHOUT_MIN_STREAK}+ victoires consécutives pour débloquer le Cash Out — une seule tx on-chain par série !`}
+            </li>
           </ul>
         </div>
 
