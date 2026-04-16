@@ -6,7 +6,6 @@ import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   coinbaseWallet,
   walletConnectWallet,
-  injectedWallet,
   rabbyWallet,
   braveWallet,
   metaMaskWallet,
@@ -43,7 +42,6 @@ const connectors = connectorsForWallets(
       wallets: [
         walletConnectWallet,
         phantomWallet,
-        injectedWallet,
       ],
     },
   ],
@@ -56,12 +54,15 @@ const connectors = connectorsForWallets(
   }
 );
 
+// Stable injected connector instance for MiniPay (window.ethereum)
+const injectedConnector = injected({ shimDisconnect: false });
+
 export const config = createConfig({
   chains: [celo],
   multiInjectedProviderDiscovery: false,
   connectors: [
     // MiniPay uses the injected window.ethereum provider — must be first for auto-connect
-    injected({ shimDisconnect: false }),
+    injectedConnector,
     // Farcaster Mini App connector (only active inside Farcaster/Warpcast)
     farcasterMiniApp(),
     ...connectors,

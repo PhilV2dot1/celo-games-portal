@@ -49,12 +49,15 @@ export function WalletConnect() {
 
   // Filter connectors based on context and deduplicate
   const availableConnectors = connectors.filter((connector, index, arr) => {
+    // MiniPay uses its own UI path — never show connectors list inside MiniPay
+    if (isInMiniPay) return false;
     // If not in Farcaster, hide Farcaster connector
     if (connector.name === "Farcaster Wallet" && !isInFarcaster) {
       return false;
     }
     // Hide generic "Injected" if a named injected wallet (MetaMask, Rabby, etc.) is present
-    if (connector.name === "Injected") {
+    // but only when NOT in MiniPay (MiniPay uses injected connector exclusively)
+    if (connector.name === "Injected" && !isInMiniPay) {
       const hasNamedInjected = arr.some(
         (c) => c.type === "injected" && c.name !== "Injected"
       );

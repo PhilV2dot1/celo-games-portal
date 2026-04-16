@@ -57,17 +57,21 @@ const MiniPayContext = createContext<MiniPayContextType>({ isInMiniPay: false })
 
 export const useMiniPayContext = () => useContext(MiniPayContext);
 
+// Stable connector instance — defined at module level to avoid re-creation on each render
+const miniPayConnector = injected({ shimDisconnect: false });
+
 /**
  * Inner component — rendered inside WagmiProvider so it can call useConnect.
  * Detects MiniPay and auto-connects the injected provider on mount.
+ * Must be inside WagmiProvider to use wagmi hooks.
  */
 function MiniPayAutoConnect({ isInMiniPay }: { isInMiniPay: boolean }) {
   const { connect } = useConnect();
 
   useEffect(() => {
     if (!isInMiniPay) return;
-    // MiniPay pre-grants wallet access — connect silently on load
-    connect({ connector: injected() });
+    // MiniPay pre-grants wallet access — connect silently on load, no user prompt
+    connect({ connector: miniPayConnector });
   }, [isInMiniPay, connect]);
 
   return null;

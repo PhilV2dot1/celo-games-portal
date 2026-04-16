@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useConnect, useAccount } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 // Extend Window to include MiniPay-specific provider properties
 declare global {
@@ -26,56 +25,22 @@ export function detectMiniPay(): boolean {
 
 interface UseMiniPayReturn {
   isInMiniPay: boolean;
-  isAutoConnecting: boolean;
-  isAutoConnected: boolean;
 }
 
 /**
- * Hook that detects MiniPay environment and auto-connects the injected wallet.
- * In MiniPay:
- *  - wallet is pre-granted, no user prompt needed
- *  - hide all "Connect Wallet" UI
- *  - auto-connect on mount using the injected provider
+ * Lightweight hook — detection only.
+ * Auto-connect is handled by MiniPayAutoConnect inside Providers (inside WagmiProvider).
  */
 export function useMiniPay(): UseMiniPayReturn {
   const [isInMiniPay, setIsInMiniPay] = useState(false);
-  const [isAutoConnecting, setIsAutoConnecting] = useState(false);
-  const [isAutoConnected, setIsAutoConnected] = useState(false);
-
-  const { connect } = useConnect();
   const { isConnected } = useAccount();
 
-  const autoConnect = useCallback(async () => {
-    if (!detectMiniPay()) return;
-    if (isConnected) {
-      setIsAutoConnected(true);
-      return;
-    }
-    setIsAutoConnecting(true);
-    try {
-      connect({ connector: injected() });
-      setIsAutoConnected(true);
-    } catch {
-      // MiniPay provider available but connection failed — silent fail
-    } finally {
-      setIsAutoConnecting(false);
-    }
-  }, [connect, isConnected]);
-
   useEffect(() => {
-    if (detectMiniPay()) {
-      setIsInMiniPay(true);
-      autoConnect();
-    }
-  }, [autoConnect]);
+    setIsInMiniPay(detectMiniPay());
+  }, []);
 
-  // If already connected when entering MiniPay, mark as auto-connected
-  useEffect(() => {
-    if (isInMiniPay && isConnected) {
-      setIsAutoConnected(true);
-      setIsAutoConnecting(false);
-    }
-  }, [isInMiniPay, isConnected]);
+  // Keep isConnected in deps to silence lint — not used but keeps hook alive
+  void isConnected;
 
-  return { isInMiniPay, isAutoConnecting, isAutoConnected };
+  return { isInMiniPay };
 }
