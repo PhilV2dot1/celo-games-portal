@@ -16,11 +16,18 @@ declare global {
 
 /**
  * Detects whether the app is running inside the MiniPay wallet browser.
- * Returns true only client-side when window.ethereum.isMiniPay === true.
+ * Checks window.ethereum.isMiniPay === true (real device) OR
+ * sessionStorage flag "__minipay_sim" (test page simulation).
  */
 export function detectMiniPay(): boolean {
   if (typeof window === "undefined") return false;
-  return window.ethereum?.isMiniPay === true;
+  if (window.ethereum?.isMiniPay === true) return true;
+  // Allow test-page simulation to survive page reloads
+  try {
+    return sessionStorage.getItem("__minipay_sim") === "1";
+  } catch {
+    return false;
+  }
 }
 
 interface UseMiniPayReturn {
