@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, ReactNode, createContext, useContext } from "react";
-import { WagmiProvider } from "wagmi";
+import { WagmiProvider, useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { config } from "@/lib/wagmi";
@@ -16,6 +17,8 @@ import { ChainThemeProvider } from "@/components/shared/ChainThemeProvider";
 import { NotificationProvider } from "@/lib/notifications/NotificationContext";
 import { OnboardingModal } from "@/components/shared/OnboardingModal";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { MiniPayBanner } from "@/components/shared/MiniPayBanner";
+import { detectMiniPay } from "@/hooks/useMiniPay";
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -32,7 +35,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Create context for Farcaster state
+// ── Farcaster context ─────────────────────────────────────────────────────────
 interface FarcasterContextType {
   isInFarcaster: boolean;
   isSDKReady: boolean;
@@ -45,15 +48,46 @@ const FarcasterContext = createContext<FarcasterContextType>({
 
 export const useFarcaster = () => useContext(FarcasterContext);
 
+// ── MiniPay context ───────────────────────────────────────────────────────────
+interface MiniPayContextType {
+  isInMiniPay: boolean;
+}
+
+const MiniPayContext = createContext<MiniPayContextType>({ isInMiniPay: false });
+
+export const useMiniPayContext = () => useContext(MiniPayContext);
+
+/**
+ * Inner component — rendered inside WagmiProvider so it can call useConnect.
+ * Detects MiniPay and auto-connects the injected provider on mount.
+ */
+function MiniPayAutoConnect({ isInMiniPay }: { isInMiniPay: boolean }) {
+  const { connect } = useConnect();
+
+  useEffect(() => {
+    if (!isInMiniPay) return;
+    // MiniPay pre-grants wallet access — connect silently on load
+    connect({ connector: injected() });
+  }, [isInMiniPay, connect]);
+
+  return null;
+}
+
 export function Providers({ children }: { children: ReactNode }) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [isInFarcaster, setIsInFarcaster] = useState(false);
+  const [isInMiniPay, setIsInMiniPay] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
-      // Check if in Farcaster context
+      // Detect MiniPay first (before Farcaster — these are mutually exclusive)
+      const inMiniPay = detectMiniPay();
+      setIsInMiniPay(inMiniPay);
+
+      // Check if in Farcaster context (not applicable inside MiniPay)
       const inFC =
+        !inMiniPay &&
         typeof window !== "undefined" &&
         ((window as Window & { fc?: unknown; farcaster?: unknown }).fc !== undefined ||
           (window as Window & { fc?: unknown; farcaster?: unknown }).farcaster !== undefined ||
@@ -62,16 +96,19 @@ export function Providers({ children }: { children: ReactNode }) {
       setIsInFarcaster(inFC);
 
       // ALWAYS initialize Farcaster SDK (it calls ready() to dismiss splash)
-      try {
-        const success = await initializeFarcaster();
-        if (!success && inFC) {
-          console.warn("Farcaster SDK initialization returned false");
-          setInitError("SDK initialization failed");
-        }
-      } catch (error) {
-        console.error("SDK initialization error:", error);
-        if (inFC) {
-          setInitError(error instanceof Error ? error.message : "Unknown error");
+      // Skip in MiniPay to avoid SDK conflicts
+      if (!inMiniPay) {
+        try {
+          const success = await initializeFarcaster();
+          if (!success && inFC) {
+            console.warn("Farcaster SDK initialization returned false");
+            setInitError("SDK initialization failed");
+          }
+        } catch (error) {
+          console.error("SDK initialization error:", error);
+          if (inFC) {
+            setInitError(error instanceof Error ? error.message : "Unknown error");
+          }
         }
       }
 
@@ -97,6 +134,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <LanguageProvider>
         <AudioProvider>
           <FarcasterContext.Provider value={{ isInFarcaster, isSDKReady: !initError }}>
+          <MiniPayContext.Provider value={{ isInMiniPay }}>
           <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <RainbowKitProvider
@@ -108,10 +146,13 @@ export function Providers({ children }: { children: ReactNode }) {
                 borderRadius: 'large',
               })}
             >
+              {/* Auto-connect injected wallet when inside MiniPay */}
+              <MiniPayAutoConnect isInMiniPay={isInMiniPay} />
               <AuthProvider>
                 <ChainThemeProvider>
                   <ToastProvider>
                     <NotificationProvider>
+                      <MiniPayBanner />
                       {initError && isInFarcaster && (
                         <div className="bg-chain/5 border-l-4 border-chain p-3 text-xs text-yellow-700">
                           ⚠️ Farcaster SDK: {initError}
@@ -126,7 +167,8 @@ export function Providers({ children }: { children: ReactNode }) {
               </AuthProvider>
             </RainbowKitProvider>
           </QueryClientProvider>
-        </WagmiProvider>
+          </WagmiProvider>
+          </MiniPayContext.Provider>
           </FarcasterContext.Provider>
         </AudioProvider>
       </LanguageProvider>

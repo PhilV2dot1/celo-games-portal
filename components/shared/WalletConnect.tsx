@@ -2,7 +2,7 @@
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { motion } from "framer-motion";
-import { useFarcaster } from "../providers";
+import { useFarcaster, useMiniPayContext } from "../providers";
 import { useChainSelector } from "@/hooks/useChainSelector";
 import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -22,6 +22,7 @@ export function WalletConnect() {
   const { connect, connectors, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
   const { isInFarcaster, isSDKReady } = useFarcaster();
+  const { isInMiniPay } = useMiniPayContext();
   const { t } = useLanguage();
 
   // Connector descriptions with i18n
@@ -64,6 +65,37 @@ export function WalletConnect() {
     if (firstIndex !== index) return false;
     return true;
   });
+
+  // ── MiniPay: wallet is pre-granted, no connect UI needed ────────────────────
+  if (isInMiniPay) {
+    if (isConnected && address) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 bg-green-900/30 border border-green-500/40 rounded-xl px-3 py-2"
+        >
+          <span className="text-lg">📱</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-green-300 text-xs font-bold">
+              {t("wallet.miniPayConnected") || "MiniPay"}
+            </span>
+            <span className="font-mono text-xs text-gray-400">
+              {address.slice(0, 6)}…{address.slice(-4)}
+            </span>
+          </div>
+          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse ml-auto" />
+        </motion.div>
+      );
+    }
+    // Still auto-connecting
+    return (
+      <div className="flex items-center gap-2 text-gray-400 text-xs px-2 py-2">
+        <div className="w-3 h-3 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+        <span>{t("wallet.miniPayConnecting") || "Connecting MiniPay…"}</span>
+      </div>
+    );
+  }
 
   if (isConnected && address) {
     return (

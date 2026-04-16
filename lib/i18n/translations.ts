@@ -906,6 +906,17 @@ export const translations = {
       // Errors & Warnings
       farcasterNotReady: 'Farcaster SDK not ready. Some features may not work.',
       noConnectors: 'No wallet connectors available',
+
+      // MiniPay
+      miniPayConnected: 'MiniPay',
+      miniPayConnecting: 'Connecting MiniPay…',
+      miniPayMode: 'MiniPay · On-Chain',
+    },
+
+    // MiniPay
+    miniPay: {
+      bannerTitle: 'MiniPay',
+      bannerSubtitle: 'Wallet connected · On-chain mode enabled',
     },
 
     // Header
@@ -2446,6 +2457,17 @@ export const translations = {
       // Errors & Warnings
       farcasterNotReady: 'SDK Farcaster pas prêt. Certaines fonctionnalités peuvent ne pas fonctionner.',
       noConnectors: 'Aucun connecteur de wallet disponible',
+
+      // MiniPay
+      miniPayConnected: 'MiniPay',
+      miniPayConnecting: 'Connexion MiniPay…',
+      miniPayMode: 'MiniPay · On-Chain',
+    },
+
+    // MiniPay
+    miniPay: {
+      bannerTitle: 'MiniPay',
+      bannerSubtitle: 'Wallet connecté · Mode on-chain activé',
     },
 
     // Header

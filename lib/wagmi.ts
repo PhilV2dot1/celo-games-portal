@@ -1,4 +1,5 @@
 import { createConfig, http, cookieStorage, createStorage } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { celo } from "wagmi/chains";
 import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
@@ -59,6 +60,8 @@ export const config = createConfig({
   chains: [celo],
   multiInjectedProviderDiscovery: false,
   connectors: [
+    // MiniPay uses the injected window.ethereum provider — must be first for auto-connect
+    injected({ shimDisconnect: false }),
     // Farcaster Mini App connector (only active inside Farcaster/Warpcast)
     farcasterMiniApp(),
     ...connectors,
