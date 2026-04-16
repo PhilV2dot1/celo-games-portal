@@ -72,7 +72,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function injectFakeProvider(addLog: (m: string) => void) {
   if (typeof window === "undefined") return;
-  (window as Window & { ethereum?: unknown }).ethereum = {
+
+  const fakeProvider = {
     isMiniPay: true,
     isMetaMask: false,
     selectedAddress: FAKE_ADDRESS,
@@ -84,7 +85,7 @@ function injectFakeProvider(addLog: (m: string) => void) {
         case "eth_accounts":
           return [FAKE_ADDRESS];
         case "eth_chainId":
-          return "0xa4ec"; // 42220 Celo
+          return "0xa4ec"; // Celo = 42220
         case "net_version":
           return "42220";
         case "eth_blockNumber":
@@ -101,7 +102,21 @@ function injectFakeProvider(addLog: (m: string) => void) {
     removeListener: (_: string, __: () => void) => {},
     emit: (_: string) => {},
   };
-  addLog("🔧 Faux provider injecté dans window.ethereum");
+
+  // Rabby/MetaMask define window.ethereum as getter-only via Object.defineProperty.
+  // A direct assignment throws "Cannot set property ... which has only a getter".
+  // We must redefine the property descriptor to make it writable/configurable.
+  try {
+    Object.defineProperty(window, "ethereum", {
+      value: fakeProvider,
+      writable: true,
+      configurable: true,
+    });
+    addLog("🔧 Faux provider injecté via Object.defineProperty");
+  } catch {
+    // Fallback: some environments won't allow even redefining — log and continue
+    addLog("⚠ Impossible d'injecter le provider (propriété non reconfigurable)");
+  }
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
