@@ -419,11 +419,43 @@ export function useHiLo() {
     resetGame();
   }, [resetGame]);
 
+  // Force-close a stuck on-chain session (e.g. "Session already active" error)
+  const [isAbandoning, setIsAbandoning] = useState(false);
+  const forceAbandon = useCallback(async () => {
+    const contractAddress = getContractAddress_();
+    if (!contractAddress) return;
+    setIsAbandoning(true);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: HILO_ABI,
+        functionName: "abandonSession",
+      });
+    } catch {
+      // user rejected or no session — ignore
+    } finally {
+      setIsAbandoning(false);
+      // Reset local state too
+      setStatus("idle");
+      setCurrentCard(null);
+      setNextCard(null);
+      setHistory([]);
+      setStreak(0);
+      setMultiplier(1);
+      setGuessResult(null);
+      setDeck([]);
+      setStartTxHash(undefined);
+      setEndTxHash(undefined);
+      pendingEndRef.current = null;
+    }
+  }, [getContractAddress_, writeContractAsync]);
+
   return {
     mode, status,
     currentCard, nextCard, history,
     streak, multiplier, guessResult, probabilities,
     stats, deck,
     startGame, guess, cashOut, resetGame, setGameMode,
+    forceAbandon, isAbandoning,
   };
 }

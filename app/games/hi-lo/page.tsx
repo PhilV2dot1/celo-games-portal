@@ -283,6 +283,19 @@ export default function HiLoPage() {
                 : (t("games.hilo.playAgain") || "Play Again")}
             </button>
           )}
+
+          {/* Force-abandon stuck session */}
+          {game.mode === "onchain" && game.status === "idle" && (
+            <button
+              onClick={game.forceAbandon}
+              disabled={game.isAbandoning}
+              className="w-full mt-2 py-2.5 rounded-xl bg-red-900/30 hover:bg-red-900/50 border border-red-500/40 text-red-400 hover:text-red-300 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {game.isAbandoning
+                ? "⏳ Closing session…"
+                : "⚠️ " + (t("games.hilo.forceAbandon") || "Close stuck session on-chain")}
+            </button>
+          )}
         </div>
 
         {/* Result Screens */}
