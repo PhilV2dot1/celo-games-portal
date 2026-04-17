@@ -631,11 +631,46 @@ export function useCoinFlip() {
 
   const canCashOut = status === "result" && streak >= CASHOUT_MIN_STREAK;
 
+  // Force-close a stuck on-chain session (e.g. "Session already active" error)
+  const [isAbandoning, setIsAbandoning] = useState(false);
+  const forceAbandon = useCallback(async () => {
+    const contractAddress = getOnChainAddress();
+    if (!contractAddress) return;
+    setIsAbandoning(true);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: COINFLIP_ABI,
+        functionName: "abandonSession",
+      });
+    } catch {
+      // user rejected or no session — ignore
+    } finally {
+      setIsAbandoning(false);
+      s.current.flipping = false;
+      s.current.landed = false;
+      s.current.particles = [];
+      s.current.choice = null;
+      s.current.lastWin = null;
+      pendingChoiceRef.current = null;
+      seriesStreakRef.current = 0;
+      setChoice(null);
+      setStatus("idle");
+      setResult(null);
+      setMessage("");
+      setStreak(0);
+      setStartTxHash(undefined);
+      setEndTxHash(undefined);
+      pendingEndRef.current = null;
+    }
+  }, [getOnChainAddress, writeContractAsync]);
+
   return {
     canvasRef,
     mode, status, choice, result, landedSide,
     stats, streak, message, canCashOut,
     flip, reset, cashOut, setGameMode, setLabels,
+    forceAbandon, isAbandoning,
     CASHOUT_MIN_STREAK,
   };
 }

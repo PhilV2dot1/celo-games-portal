@@ -205,6 +205,19 @@ export default function CoinFlipPage() {
           )}
         </AnimatePresence>
 
+        {/* Force-abandon stuck session */}
+        {game.mode === "onchain" && isIdle && (
+          <button
+            onClick={game.forceAbandon}
+            disabled={game.isAbandoning}
+            className="w-full mb-4 py-2.5 rounded-xl bg-red-900/30 hover:bg-red-900/50 border border-red-500/40 text-red-400 hover:text-red-300 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {game.isAbandoning
+              ? "⏳ Closing session…"
+              : "⚠️ " + (t("games.hilo.forceAbandon") || "Close stuck session on-chain")}
+          </button>
+        )}
+
         {/* Status hint / replay */}
         <div className="text-center mb-8">
           {isIdle && (
