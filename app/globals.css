@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* MiniPay / mobile WebView — prevent horizontal overflow on all pages */
+html, body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Bottom nav safe area — adds padding on mobile to avoid content hiding behind BottomNav */
 @media (max-width: 767px) {
   .has-bottom-nav {

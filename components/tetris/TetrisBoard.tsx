@@ -88,7 +88,7 @@ export const TetrisBoard = memo(function TetrisBoard({
         style={{
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
           gap: "1px",
-          width: `${COLS * 32}px`,
+          width: "100%",
         }}
       >
         {displayGrid.map((row, rowIdx) =>
@@ -98,7 +98,7 @@ export const TetrisBoard = memo(function TetrisBoard({
                 <div
                   key={rowIdx * COLS + colIdx}
                   className="bg-gray-800/40 dark:bg-gray-800/25"
-                  style={{ width: 32, height: 32, borderRadius: 2 }}
+                  style={{ aspectRatio: "1/1", borderRadius: 2 }}
                 />
               );
             }
@@ -109,8 +109,7 @@ export const TetrisBoard = memo(function TetrisBoard({
               <div
                 key={rowIdx * COLS + colIdx}
                 style={{
-                  width: 32,
-                  height: 32,
+                  aspectRatio: "1/1",
                   borderRadius: 3,
                   background: colors.bg,
                   boxShadow: `inset 2px 2px 0 ${colors.light}, inset -2px -2px 0 ${colors.dark}`,

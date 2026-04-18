@@ -27,7 +27,7 @@ export const viewport: Viewport = {
   ],
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
 };
 
 export const metadata: Metadata = {
@@ -92,6 +92,7 @@ export const metadata: Metadata = {
     'dapp-description': siteDescription,
     'dapp-network': 'celo',
     'mobile-web-app-capable': 'yes',
+    'color-scheme': 'light dark',
     // Talent.app project verification
     'talentapp:project_verification': 'eb4d3ab607f351341b62045f43a42a6fcf7611403c918dbc109221e969fa2dfd0cc0b38a5845293270483e12a0e63f31e286c7c00f49580ec997f5939e0d6c1a',
   },
