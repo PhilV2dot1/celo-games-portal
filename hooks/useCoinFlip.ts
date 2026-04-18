@@ -54,24 +54,23 @@ const CASHOUT_MIN_STREAK = 3;
 
 const COINFLIP_ABI = [
   {
-    name: "startSession",
+    name: "startGame",
     type: "function",
     stateMutability: "nonpayable",
     inputs: [],
     outputs: [],
   },
   {
-    name: "endSession",
+    name: "endGame",
     type: "function",
     stateMutability: "nonpayable",
     inputs: [
-      { name: "outcome", type: "uint8" },    // 0 = WIN (cashout), 1 = LOSE
-      { name: "streak",  type: "uint256" },
+      { name: "won", type: "bool" },
     ],
     outputs: [],
   },
   {
-    name: "abandonSession",
+    name: "abandonGame",
     type: "function",
     stateMutability: "nonpayable",
     inputs: [],
@@ -458,8 +457,8 @@ export function useCoinFlip() {
         const hash = await writeContractAsync({
           address: contractAddress,
           abi: COINFLIP_ABI,
-          functionName: "endSession",
-          args: [outcome, BigInt(finalStreak)],
+          functionName: "endGame",
+          args: [outcome === 0],
         });
         setEndTxHash(hash);
       } catch {
@@ -570,7 +569,7 @@ export function useCoinFlip() {
         const hash = await writeContractAsync({
           address: contractAddress,
           abi: COINFLIP_ABI,
-          functionName: "startSession",
+          functionName: "startGame",
         });
         setStartTxHash(hash);
       } catch {
@@ -602,7 +601,7 @@ export function useCoinFlip() {
         writeContractAsync({
           address: contractAddress,
           abi: COINFLIP_ABI,
-          functionName: "abandonSession",
+          functionName: "abandonGame",
         }).catch(() => {/* noop */});
       }
     }
@@ -641,7 +640,7 @@ export function useCoinFlip() {
       await writeContractAsync({
         address: contractAddress,
         abi: COINFLIP_ABI,
-        functionName: "abandonSession",
+        functionName: "abandonGame",
       });
     } catch {
       // user rejected or no session — ignore
