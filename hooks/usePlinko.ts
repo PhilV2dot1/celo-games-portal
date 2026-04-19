@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 import { useLocalStats } from "@/hooks/useLocalStats";
 
@@ -199,7 +200,7 @@ export function usePlinko() {
 
   const { address, chainId } = useAccount();
   const contractAddress = getContractAddress("plinko", chainId);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const { recordGame } = useLocalStats();
   // Stable ref so finalizeGame doesn't recreate on every recordGame identity change
   const recordGameRef = useRef(recordGame);

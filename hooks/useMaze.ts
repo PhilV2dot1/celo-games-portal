@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { MAZE_CONTRACT_ABI } from "@/lib/contracts/maze-abi";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 import {
@@ -120,7 +121,7 @@ export function useMaze() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('maze', chain?.id);
   const gameAvailable = isGameAvailableOnChain('maze', chain?.id);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
 
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });
   const { isSuccess: endConfirmed, isError: endFailed } = useWaitForTransactionReceipt({ hash: endTxHash });

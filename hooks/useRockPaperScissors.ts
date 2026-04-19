@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt, usePublicClient } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { parseEventLogs } from "viem";
 import { RPS_CONTRACT_ABI } from "@/lib/contracts/rps-abi";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
@@ -44,7 +45,7 @@ export function useRockPaperScissors() {
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   // Wagmi hooks
-  const { writeContract, data: hash, isPending: isWritePending } = useWriteContract();
+  const { writeContract, data: hash, isPending: isWritePending } = useMiniPayWriteContract();
   const { data: receipt, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({ hash });
   const publicClient = usePublicClient();
 

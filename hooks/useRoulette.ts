@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 
 // ========================================
@@ -410,7 +411,7 @@ export function useRoulette() {
   });
 
   const { address, chain } = useAccount();
-  const { writeContract, writeContractAsync } = useWriteContract();
+  const { writeContract, writeContractAsync } = useMiniPayWriteContract();
 
   // Load stats
   useEffect(() => {

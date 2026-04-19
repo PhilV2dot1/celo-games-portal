@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { useLocalStats } from "@/hooks/useLocalStats";
 import { getContractAddress } from "@/lib/contracts/addresses";
 
@@ -614,7 +615,7 @@ export function useSpaceInvaders() {
 
   const { recordGame } = useLocalStats();
   const { chain } = useAccount();
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const contractAddress = getContractAddress("spaceinvaders", chain?.id);
   const contractAddressRef = useRef(contractAddress);
   contractAddressRef.current = contractAddress;

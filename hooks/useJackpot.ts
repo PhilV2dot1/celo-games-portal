@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { useWriteContract, useAccount, usePublicClient } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { decodeEventLog } from "viem";
 import { JACKPOT_CONTRACT_ABI } from "@/lib/contracts/jackpot-abi";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
@@ -55,7 +56,7 @@ export function useJackpot() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('jackpot', chain?.id);
   const gameAvailable = isGameAvailableOnChain('jackpot', chain?.id);
-  const { writeContractAsync, isPending } = useWriteContract();
+  const { writeContractAsync, isPending } = useMiniPayWriteContract();
   const publicClient = usePublicClient();
 
   const spin = useCallback(async () => {

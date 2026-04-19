@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import {
   MINESWEEPER_CONTRACT_ABI,
 } from "@/lib/contracts/minesweeper-abi";
@@ -302,7 +303,7 @@ export function useMinesweeper() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('minesweeper', chain?.id);
   const gameAvailable = isGameAvailableOnChain('minesweeper', chain?.id);
-  const { writeContractAsync, isPending } = useWriteContract();
+  const { writeContractAsync, isPending } = useMiniPayWriteContract();
 
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });
   const { isSuccess: endConfirmed, isError: endFailed } = useWaitForTransactionReceipt({ hash: endTxHash });

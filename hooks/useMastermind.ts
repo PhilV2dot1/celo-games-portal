@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import { useAccount,  useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import {
   Code,
   Guess,
@@ -54,7 +55,7 @@ export function useMastermind() {
 
   // Wagmi hooks
   const { address, isConnected, chain } = useAccount();
-  const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
+  const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useMiniPayWriteContract();
   const { data: receipt, isLoading: isConfirming } = useWaitForTransactionReceipt({ hash });
 
   const contractAddress = getContractAddress('mastermind', chain?.id);

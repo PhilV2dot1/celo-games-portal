@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount,  useReadContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getRandomWord, isValidWord } from '@/lib/games/wordle-words';
 
 export type GameMode = 'free' | 'onchain';
@@ -141,7 +142,7 @@ export function useWordle(contractAddress?: `0x${string}` | null) {
     finalMessage: string;
   } | null>(null);
 
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
 
   // Wait for startGame confirmation
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({

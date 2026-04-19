@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { Card, createShuffledDeck, determineWinner, Outcome } from "@/lib/games/blackjack-cards";
 import { CONTRACT_ABI } from "@/lib/contracts/blackjack-abi";
 import { getContractAddress, isGameAvailableOnChain, getExplorerTxUrl } from "@/lib/contracts/addresses";
@@ -40,7 +41,7 @@ export function useBlackjack() {
   const [showDealerCard, setShowDealerCard] = useState(false);
 
   // Wagmi hooks
-  const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
+  const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useMiniPayWriteContract();
   const { data: receipt, error: receiptError, isLoading: isConfirming } = useWaitForTransactionReceipt({
     hash,
     timeout: 120_000, // 2 minute timeout for better reliability on Celo

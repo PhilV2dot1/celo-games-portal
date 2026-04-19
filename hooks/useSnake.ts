@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ========================================
@@ -162,7 +163,7 @@ export function useSnake() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('snake', chain?.id);
   const gameAvailable = isGameAvailableOnChain('snake', chain?.id);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
 
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });
   const { isSuccess: endConfirmed, isError: endFailed } = useWaitForTransactionReceipt({ hash: endTxHash });

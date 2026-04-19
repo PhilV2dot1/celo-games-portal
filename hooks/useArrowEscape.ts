@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 
 // ========================================
@@ -734,7 +735,7 @@ function calcStars(moves: number, optimalMoves: number): number {
 
 export function useArrowEscape(): UseArrowEscapeReturn {
   const { chainId } = useAccount();
-  const { writeContract, writeContractAsync } = useWriteContract();
+  const { writeContract, writeContractAsync } = useMiniPayWriteContract();
 
   const [level, setLevel] = useState(1);
   const [arrows, setArrows] = useState<Arrow[]>(() => initArrows(LEVELS[0]));

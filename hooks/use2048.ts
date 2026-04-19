@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { GAME2048_CONTRACT_ABI } from "@/lib/contracts/2048-abi";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 import {
@@ -25,7 +26,7 @@ export function use2048() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('2048', chain?.id);
   const gameAvailable = isGameAvailableOnChain('2048', chain?.id);
-  const { writeContractAsync, isPending } = useWriteContract();
+  const { writeContractAsync, isPending } = useMiniPayWriteContract();
 
   const handleMove = useCallback((direction: Direction) => {
     setGrid((currentGrid) => {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract, usePublicClient, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useReadContract, usePublicClient, useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import type { GameMode, GameResult } from "@/lib/types";
 import {
   YAHTZEE_CONTRACT_ABI,
@@ -494,7 +495,7 @@ export function useYahtzee() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('yahtzee', chain?.id);
   const gameAvailable = isGameAvailableOnChain('yahtzee', chain?.id);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const publicClient = usePublicClient();
 
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });

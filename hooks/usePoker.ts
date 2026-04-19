@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { Card, createShuffledDeck } from "@/lib/games/poker-cards";
 import { HandResult, evaluateBestHand, determineWinners } from "@/lib/games/poker-evaluator";
 import { POKER_ABI } from "@/lib/contracts/poker-abi";
@@ -96,9 +97,9 @@ export function usePoker() {
   const [sessionActive, setSessionActive] = useState(false);
 
   // Onchain — three separate write instances: startSession, endSession, abandonSession
-  const { writeContract: writeStart, data: startHash, isPending: isStartPending, error: startError, reset: resetStart } = useWriteContract();
-  const { writeContract: writeEnd, data: endHash, isPending: isEndPending, error: endError, reset: resetEnd } = useWriteContract();
-  const { writeContract: writeAbandon, data: abandonHash, isPending: isAbandonPending, error: abandonError, reset: resetAbandon } = useWriteContract();
+  const { writeContract: writeStart, data: startHash, isPending: isStartPending, error: startError, reset: resetStart } = useMiniPayWriteContract();
+  const { writeContract: writeEnd, data: endHash, isPending: isEndPending, error: endError, reset: resetEnd } = useMiniPayWriteContract();
+  const { writeContract: writeAbandon, data: abandonHash, isPending: isAbandonPending, error: abandonError, reset: resetAbandon } = useMiniPayWriteContract();
 
   const { data: startReceipt, error: startReceiptError, isLoading: isStartConfirming } = useWaitForTransactionReceipt({
     hash: startHash, timeout: 120_000, confirmations: 1,

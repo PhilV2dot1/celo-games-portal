@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract } from "wagmi";
+import { useAccount,  useReadContract } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress, isGameAvailableOnChain } from "@/lib/contracts/addresses";
 
 // ============================================================================
@@ -354,7 +355,7 @@ export function useSolitaire() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('solitaire', chain?.id);
   const gameAvailable = isGameAvailableOnChain('solitaire', chain?.id);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const { data: onChainStats, refetch: refetchStats } = useReadContract({
     address: contractAddress!,
     abi: SOLITAIRE_CONTRACT_ABI,

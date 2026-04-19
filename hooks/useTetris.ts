@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 import { TETRIS_CONTRACT_ABI } from "@/lib/contracts/tetris-abi";
 import {
@@ -111,7 +112,7 @@ export function useTetris() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress("tetris", chain?.id);
 
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const { refetch: refetchStats } = useReadContract({
     address: contractAddress as `0x${string}`,
     abi: TETRIS_CONTRACT_ABI,

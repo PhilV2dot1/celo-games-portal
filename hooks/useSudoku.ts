@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useReadContract, useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import {
   SUDOKU_CONTRACT_ABI,
 } from "@/lib/contracts/sudoku-abi";
@@ -249,7 +250,7 @@ export function useSudoku() {
   const { address, isConnected, chain } = useAccount();
   const contractAddress = getContractAddress('sudoku', chain?.id);
   const gameAvailable = isGameAvailableOnChain('sudoku', chain?.id);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
 
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({ hash: startTxHash });
   const { isSuccess: endConfirmed, isError: endFailed } = useWaitForTransactionReceipt({ hash: endTxHash });

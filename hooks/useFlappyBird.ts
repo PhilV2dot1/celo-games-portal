@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContract,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 
 // ========================================
@@ -179,7 +180,7 @@ export function useFlappyBird() {
 
   const { address, chainId } = useAccount();
   const contractAddress = getContractAddress("flappybird", chainId);
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
 
   // Wait for startGame confirmation
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({

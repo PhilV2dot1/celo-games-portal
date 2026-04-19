@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount,  useWaitForTransactionReceipt } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 import { useLocalStats } from "@/hooks/useLocalStats";
 
@@ -173,7 +174,7 @@ export function useHiLo() {
   } | null>(null);
 
   const { address, chain } = useAccount();
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const { recordGame } = useLocalStats();
   const recordGameRef = useRef(recordGame);
   useEffect(() => { recordGameRef.current = recordGame; }, [recordGame]);

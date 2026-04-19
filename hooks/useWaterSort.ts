@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
+import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 import { useLocalStats } from "@/hooks/useLocalStats";
 
@@ -200,7 +201,7 @@ export function useWaterSort() {
 
   const [pourAnim, setPourAnim] = useState<PourAnim | null>(null);
 
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useMiniPayWriteContract();
   const { recordGame } = useLocalStats();
   const recordGameRef = useRef(recordGame);
   useEffect(() => { recordGameRef.current = recordGame; }, [recordGame]);
