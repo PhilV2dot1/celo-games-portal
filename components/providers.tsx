@@ -27,10 +27,9 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      // Optimize for blockchain reads
       networkMode: 'online',
-      gcTime: 0, // Don't cache blockchain reads globally
-      staleTime: 0, // Always consider blockchain data stale
+      gcTime: 1000 * 60 * 5,  // keep cache 5 min
+      staleTime: 1000 * 30,   // data fresh for 30s
     },
   },
 });
@@ -78,60 +77,33 @@ function MiniPayAutoConnect({ isInMiniPay }: { isInMiniPay: boolean }) {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [isInFarcaster, setIsInFarcaster] = useState(false);
   const [isInMiniPay, setIsInMiniPay] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
-    const load = async () => {
-      // Detect MiniPay first (before Farcaster — these are mutually exclusive)
-      const inMiniPay = detectMiniPay();
-      setIsInMiniPay(inMiniPay);
+    // Detect MiniPay first (synchronous — no delay)
+    const inMiniPay = detectMiniPay();
+    setIsInMiniPay(inMiniPay);
 
-      // Check if in Farcaster context (not applicable inside MiniPay)
-      const inFC =
-        !inMiniPay &&
-        typeof window !== "undefined" &&
-        ((window as Window & { fc?: unknown; farcaster?: unknown }).fc !== undefined ||
-          (window as Window & { fc?: unknown; farcaster?: unknown }).farcaster !== undefined ||
-          document.referrer.includes("warpcast.com"));
+    const inFC =
+      !inMiniPay &&
+      typeof window !== "undefined" &&
+      ((window as Window & { fc?: unknown; farcaster?: unknown }).fc !== undefined ||
+        (window as Window & { fc?: unknown; farcaster?: unknown }).farcaster !== undefined ||
+        document.referrer.includes("warpcast.com"));
 
-      setIsInFarcaster(inFC);
+    setIsInFarcaster(inFC);
 
-      // ALWAYS initialize Farcaster SDK (it calls ready() to dismiss splash)
-      // Skip in MiniPay to avoid SDK conflicts
-      if (!inMiniPay) {
-        try {
-          const success = await initializeFarcaster();
-          if (!success && inFC) {
-            console.warn("Farcaster SDK initialization returned false");
-            setInitError("SDK initialization failed");
-          }
-        } catch (error) {
-          console.error("SDK initialization error:", error);
-          if (inFC) {
-            setInitError(error instanceof Error ? error.message : "Unknown error");
-          }
-        }
-      }
-
-      // Always set as loaded to allow app to function
-      setIsSDKLoaded(true);
-    };
-    load();
+    // Fire-and-forget — never blocks render. Skip in MiniPay to avoid SDK conflicts.
+    if (!inMiniPay) {
+      initializeFarcaster().then((success) => {
+        if (!success && inFC) setInitError("SDK initialization failed");
+      }).catch((error) => {
+        if (inFC) setInitError(error instanceof Error ? error.message : "Unknown error");
+      });
+    }
   }, []);
-
-  if (!isSDKLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800">
-        <div className="text-center">
-          <div className="text-yellow-400 text-xl font-semibold mb-2">Loading...</div>
-          <div className="text-sm text-gray-300">Initializing Celo Games Portal</div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ThemeProvider>
