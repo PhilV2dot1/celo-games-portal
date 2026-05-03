@@ -373,6 +373,25 @@ export function useWaterSort() {
     setPourAnim(null);
   }, [writeContractAsync]);
 
+  // Force-reset even when pourAnim is stuck — bypasses the animation lock
+  const abandonGame = useCallback(() => {
+    setPourAnim(null);
+    if (modeRef.current === "onchain" && contractAddressRef.current && sessionActiveRef.current) {
+      sessionActiveRef.current = false;
+      writeContractAsync({
+        address: contractAddressRef.current as `0x${string}`,
+        abi: WATERSORT_ABI,
+        functionName: "abandonSession",
+        args: [],
+      }).catch(() => {});
+    }
+    const config = LEVEL_CONFIGS[difficultyRef.current];
+    setTubes(generatePuzzle(config.numCryptos, config.numTubes));
+    setStatus("idle");
+    setMoves(0);
+    setSelectedTube(null);
+  }, [writeContractAsync]);
+
   const runCountdown = useCallback((onComplete: () => void) => {
     setStatus("countdown");
     setCountdown(3);
@@ -429,6 +448,7 @@ export function useWaterSort() {
     cryptos: CRYPTOS,
     selectTube,
     resetGame,
+    abandonGame,
     newGame,
     startGame,
     setGameMode,
