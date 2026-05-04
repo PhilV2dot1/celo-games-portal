@@ -17,8 +17,8 @@ const geistMono = localFont({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://celo-games-portal.vercel.app';
-const siteTitle = 'Celo Games Portal - Play Mini-Games on Celo Blockchain';
-const siteDescription = 'Play 27 mini-games on Celo! Blackjack, Poker, Snake, Wordle, Tetris, Crypto Higher/Lower and more. Free mode, on-chain & multiplayer. MiniPay compatible.';
+const siteTitle = 'Celo Games Portal — 27 Games on Celo, MiniPay Ready';
+const siteDescription = '🎮 27 mini-games on Celo blockchain — free, on-chain & multiplayer! Blackjack, Poker, Snake, Tetris, Wordle, Flappy Bird, Water Sort, Minesweeper, Solitaire, Yahtzee, Sudoku, Mastermind, Connect 5, Maze, Memory, 2048, Plinko, Crypto H/L, Coin Flip & more. MiniPay compatible!';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
+        url: `${siteUrl}/api/og`,
         width: 1200,
         height: 630,
         alt: 'Celo Games Portal — 27 mini-games on Celo blockchain',
@@ -67,13 +67,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: siteTitle,
     description: siteDescription,
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/api/og`],
   },
   other: {
     // Farcaster Mini App frame
     'fc:frame': JSON.stringify({
       version: 'next',
-      imageUrl: `${siteUrl}/og-image.png`,
+      imageUrl: `${siteUrl}/api/og`,
       button: {
         title: '🎮 Play Now',
         action: {
