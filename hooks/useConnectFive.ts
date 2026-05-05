@@ -577,19 +577,9 @@ export function useConnectFive() {
         setMessage("⚠️ Unable to connect to blockchain");
         return;
       }
-      setStatus("waiting_start");
-      setMessage("Sign transaction to start...");
-      try {
-        const hash = await writeContractAsync({
-          address: contractAddress,
-          abi: CONNECTFIVE_CONTRACT_ABI,
-          functionName: "startGame",
-        });
-        setStartTxHash(hash);
-      } catch {
-        setMessage("Transaction rejected");
-        setStatus("idle");
-      }
+      setStatus("playing");
+      setMessage("Your turn - drop a piece!");
+      writeContractAsync({ address: contractAddress, abi: CONNECTFIVE_CONTRACT_ABI, functionName: "startGame" }).catch(() => {});
       return;
     }
 

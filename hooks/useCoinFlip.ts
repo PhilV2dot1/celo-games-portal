@@ -563,21 +563,9 @@ export function useCoinFlip() {
 
     const contractAddress = getOnChainAddress();
     if (contractAddress) {
-      // On-chain: sign startSession once for the whole series
-      setStatus("waiting_start");
-      pendingChoiceRef.current = chosen;
-      try {
-        const hash = await writeContractAsync({
-          address: contractAddress,
-          abi: COINFLIP_ABI,
-          functionName: "startGame",
-        });
-        setStartTxHash(hash);
-      } catch {
-        pendingChoiceRef.current = null;
-        setStatus("idle");
-        setChoice(null);
-      }
+      // On-chain: start animation immediately, fire tx non-blocking
+      startAnimation(chosen);
+      writeContractAsync({ address: contractAddress, abi: COINFLIP_ABI, functionName: "startGame" }).catch(() => {});
       return;
     }
 
