@@ -6,11 +6,8 @@ import { useAccount } from "wagmi";
 // Extend Window to include MiniPay-specific provider properties
 declare global {
   interface Window {
-    ethereum?: {
-      isMiniPay?: boolean;
-      request?: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-      [key: string]: unknown;
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ethereum?: any;
   }
 }
 
