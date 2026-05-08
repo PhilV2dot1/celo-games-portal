@@ -255,7 +255,12 @@ export function useBrickBreaker() {
     animId: 0,
     lastTime: 0,
     shooting: false,
-    respawnTimer: 0, // ms remaining before next ball spawns after losing a life
+    respawnTimer: 0,
+    // Keyboard state for continuous movement
+    keysHeld: { left: false, right: false },
+    keySpeed: 0, // current keyboard velocity (px/frame), accelerates while held
+    // Touch state for relative drag
+    lastTouchX: null as number | null,
   });
 
   // Wallet / contract
@@ -400,8 +405,25 @@ export function useBrickBreaker() {
     const dt = Math.min(timestamp - s.lastTime, 32); // cap at 32ms
     s.lastTime = timestamp;
 
-    // Direct paddle movement — no lag
-    s.paddle.x = Math.max(0, Math.min(CANVAS_W - s.paddle.width, s.paddleTargetX));
+    // Keyboard: accelerate while held, decelerate on release
+    const KEY_ACCEL = 1.8;
+    const KEY_MAX = 18;
+    const KEY_FRICTION = 0.75;
+    if (s.keysHeld.left || s.keysHeld.right) {
+      const dir = s.keysHeld.right ? 1 : -1;
+      s.keySpeed = Math.min(KEY_MAX, (Math.abs(s.keySpeed) + KEY_ACCEL)) * dir;
+      s.paddleTargetX += s.keySpeed;
+    } else if (s.keySpeed !== 0) {
+      s.keySpeed *= KEY_FRICTION;
+      if (Math.abs(s.keySpeed) < 0.5) s.keySpeed = 0;
+      s.paddleTargetX += s.keySpeed;
+    }
+    s.paddleTargetX = Math.max(0, Math.min(CANVAS_W - s.paddle.width, s.paddleTargetX));
+
+    // Smooth lerp toward target (mouse/touch precision, keyboard feel)
+    const lerpFactor = 0.22;
+    s.paddle.x += (s.paddleTargetX - s.paddle.x) * lerpFactor;
+    s.paddle.x = Math.max(0, Math.min(CANVAS_W - s.paddle.width, s.paddle.x));
 
     const scoreGained = { v: 0 };
     const toRemoveBalls: number[] = [];
@@ -737,11 +759,35 @@ export function useBrickBreaker() {
   // CONTROLS
   // ======================================
 
+  // Mouse: set target to cursor position (lerp handles smoothing)
   const movePaddleTo = useCallback((clientX: number, canvasRect: DOMRect) => {
-    const relX = clientX - canvasRect.left;
     const scaleX = CANVAS_W / canvasRect.width;
-    const targetX = relX * scaleX - stateRef.current.paddle.width / 2;
+    const targetX = (clientX - canvasRect.left) * scaleX - stateRef.current.paddle.width / 2;
     stateRef.current.paddleTargetX = Math.max(0, Math.min(CANVAS_W - stateRef.current.paddle.width, targetX));
+  }, []);
+
+  // Touch: relative drag — delta from previous touch position
+  const handleTouchStart = useCallback((clientX: number) => {
+    stateRef.current.lastTouchX = clientX;
+  }, []);
+
+  const handleTouchDrag = useCallback((clientX: number, canvasRect: DOMRect) => {
+    const s = stateRef.current;
+    if (s.lastTouchX === null) { s.lastTouchX = clientX; return; }
+    const scaleX = CANVAS_W / canvasRect.width;
+    const delta = (clientX - s.lastTouchX) * scaleX;
+    s.lastTouchX = clientX;
+    s.paddleTargetX = Math.max(0, Math.min(CANVAS_W - s.paddle.width, s.paddleTargetX + delta));
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    stateRef.current.lastTouchX = null;
+  }, []);
+
+  // Keyboard: set held state (game loop handles acceleration)
+  const setKeyHeld = useCallback((key: "left" | "right", held: boolean) => {
+    stateRef.current.keysHeld[key] = held;
+    if (!held) { /* let friction in game loop handle decel */ }
   }, []);
 
   const movePaddleByDelta = useCallback((delta: number) => {
@@ -892,5 +938,9 @@ export function useBrickBreaker() {
     setGameMode,
     movePaddleTo,
     movePaddleByDelta,
+    handleTouchStart,
+    handleTouchDrag,
+    handleTouchEnd,
+    setKeyHeld,
   };
 }
