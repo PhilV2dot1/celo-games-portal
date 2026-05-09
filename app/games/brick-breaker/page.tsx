@@ -107,6 +107,7 @@ export default function BrickBreakerPage() {
     };
   }, [game]);
 
+  const isWaitingStart = game.status === "waiting_start";
   const isCountdown = game.status === "countdown";
   const isFinished = game.status === "finished";
   const isIdle = game.status === "idle";
@@ -230,6 +231,14 @@ export default function BrickBreakerPage() {
                     GO!
                   </motion.div>
                 )}
+              </div>
+            )}
+
+            {/* Waiting for tx overlay */}
+            {isWaitingStart && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-black/70 backdrop-blur-sm gap-3 z-10">
+                <div className="w-10 h-10 border-4 border-sky-400 border-t-transparent rounded-full animate-spin" />
+                <p className="text-white font-bold text-base">{game.message}</p>
               </div>
             )}
 
