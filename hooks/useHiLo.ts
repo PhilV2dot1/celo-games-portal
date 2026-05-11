@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAccount,  useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, usePublicClient, useWaitForTransactionReceipt } from "wagmi";
 import { useMiniPayWriteContract } from "@/hooks/useMiniPayWriteContract";
 import { getContractAddress } from "@/lib/contracts/addresses";
 import { useLocalStats } from "@/hooks/useLocalStats";
@@ -174,6 +174,7 @@ export function useHiLo() {
   } | null>(null);
 
   const { address, chain } = useAccount();
+  const publicClient = usePublicClient();
   const { writeContractAsync } = useMiniPayWriteContract();
   const { recordGame } = useLocalStats();
   const recordGameRef = useRef(recordGame);
@@ -309,6 +310,31 @@ export function useHiLo() {
     const gameResult = outcome === 0 ? "win" : "lose";
     const contractAddress = getContractAddress_();
     if (contractAddress) {
+      // Simulate first — if the contract has no active session (e.g. expired), skip the tx
+      // entirely rather than showing a failed simulation prompt on Ledger/hardware wallets.
+      let sessionValid = true;
+      if (publicClient && address) {
+        try {
+          await publicClient.simulateContract({
+            address: contractAddress,
+            abi: HILO_ABI,
+            functionName: "endSession",
+            args: [outcome, BigInt(finalStreak), BigInt(score)],
+            account: address,
+          });
+        } catch {
+          sessionValid = false;
+        }
+      }
+
+      if (!sessionValid) {
+        saveStats(statsUpdate);
+        setStats(statsUpdate);
+        recordGameRef.current("hilo", "onchain", gameResult);
+        setStatus(finalStatus);
+        return;
+      }
+
       // On-chain: send endSession, wait for confirmation before showing result
       setStatus("waiting_end");
       pendingEndRef.current = { outcome, streak: finalStreak, score, finalStatus, statsUpdate };
@@ -335,7 +361,7 @@ export function useHiLo() {
       recordGameRef.current("hilo", "free", gameResult);
       setStatus(finalStatus);
     }
-  }, [getContractAddress_, writeContractAsync]);
+  }, [getContractAddress_, writeContractAsync, publicClient, address]);
 
   const guess = useCallback((direction: "higher" | "lower") => {
     if (status !== "playing" || !currentCard || deck.length === 0) return;
