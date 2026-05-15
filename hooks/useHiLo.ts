@@ -274,17 +274,20 @@ export function useHiLo() {
     const contractAddress = getContractAddress_();
 
     if (contractAddress) {
-      // On-chain: prepare deck, wait for tx confirmation before allowing play.
-      // Abandon any stale session first to prevent #-39000.
+      // On-chain: abandon stale session (wait for confirmation), then startSession.
+      // .finally() was a race condition — abandonSession must be mined first.
       prepareDeck();
       setStatus("waiting_start");
-      writeContractAsync({ address: contractAddress, abi: HILO_ABI, functionName: "abandonSession" })
-        .catch(() => {})
-        .finally(() => {
-          writeContractAsync({ address: contractAddress, abi: HILO_ABI, functionName: "startSession" })
-            .then((hash) => setStartTxHash(hash))
-            .catch(() => { setStatus("idle"); });
-        });
+      (async () => {
+        try {
+          const abandonHash = await writeContractAsync({ address: contractAddress, abi: HILO_ABI, functionName: "abandonSession" });
+          if (publicClient) await publicClient.waitForTransactionReceipt({ hash: abandonHash });
+        } catch { /* no active session to abandon — that's fine */ }
+        try {
+          const hash = await writeContractAsync({ address: contractAddress, abi: HILO_ABI, functionName: "startSession" });
+          setStartTxHash(hash);
+        } catch { setStatus("idle"); }
+      })();
     } else {
       // Free mode: start immediately
       prepareDeck();
