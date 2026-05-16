@@ -179,6 +179,10 @@ export function useHiLo() {
   const { recordGame } = useLocalStats();
   const recordGameRef = useRef(recordGame);
   useEffect(() => { recordGameRef.current = recordGame; }, [recordGame]);
+  const publicClientRef = useRef(publicClient);
+  const addressRef = useRef(address);
+  useEffect(() => { publicClientRef.current = publicClient; }, [publicClient]);
+  useEffect(() => { addressRef.current = address; }, [address]);
 
   // Wait for startSession confirmation
   const { isSuccess: startConfirmed, isError: startFailed } = useWaitForTransactionReceipt({
@@ -279,10 +283,12 @@ export function useHiLo() {
       prepareDeck();
       setStatus("waiting_start");
       (async () => {
+        const pc = publicClientRef.current;
+        const addr = addressRef.current;
         let sessionBlocked = false;
-        if (publicClient && address) {
+        if (pc && addr) {
           try {
-            await publicClient.simulateContract({ address: contractAddress, abi: HILO_ABI, functionName: "startSession", account: address });
+            await pc.simulateContract({ address: contractAddress, abi: HILO_ABI, functionName: "startSession", account: addr });
           } catch {
             sessionBlocked = true;
           }
@@ -290,7 +296,7 @@ export function useHiLo() {
         if (sessionBlocked) {
           try {
             const abandonHash = await writeContractAsync({ address: contractAddress, abi: HILO_ABI, functionName: "abandonSession" });
-            if (publicClient) await publicClient.waitForTransactionReceipt({ hash: abandonHash });
+            if (pc) await pc.waitForTransactionReceipt({ hash: abandonHash });
           } catch { /* ignore */ }
         }
         try {
